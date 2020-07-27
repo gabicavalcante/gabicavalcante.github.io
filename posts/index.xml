@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Posts on My New Hugo Site</title>
+    <title>Posts on gabi cavalcante</title>
     <link>https://gabicavalcante.github.io/posts/</link>
-    <description>Recent content in Posts on My New Hugo Site</description>
+    <description>Recent content in Posts on gabi cavalcante</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Sat, 03 Aug 2019 00:00:00 +0000</lastBuildDate>
@@ -27,6 +27,17 @@
       
       <guid>https://gabicavalcante.github.io/posts/introduction/</guid>
       <description>&lt;p&gt;Hugo is a fast and modern static site generator written in Go, and designed to make website creation fun again.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Take a picture with OpenCv and Galileo</title>
+      <link>https://gabicavalcante.github.io/posts/my-first-post/</link>
+      <pubDate>Sat, 16 Jan 2016 13:44:03 +0000</pubDate>
+      
+      <guid>https://gabicavalcante.github.io/posts/my-first-post/</guid>
+      <description>Hello,
+I will give you step by step tutorial how take your picture with the Intel Galileo and the OpenCv (and a camera, of course). So, conect your camera in the USB output of the Galileo (you can check if it&amp;rsquo;s ok seeing the device appears in /dev).
+If you don&amp;rsquo;t have the OpenCv in your computer (opkg list-installed | grep python-opencv), then add the repositories available in the file *.</description>
     </item>
     
   </channel>
