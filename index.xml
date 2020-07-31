@@ -35,11 +35,16 @@
       <pubDate>Sat, 05 Nov 2016 21:05:33 +0530</pubDate>
       
       <guid>https://gabicavalcante.github.io/about/</guid>
-      <description>A minimal, responsive and light theme for Hugo inspired by Linux console.
-Installation $ mkdir themes $ cd themes $ git submodule add https://github.com/mrmierzejewski/hugo-theme-console.git hugo-theme-console See the Hugo documentation for more information.
-Configuration Set theme parameter in your config file:
-theme = &amp;quot;hugo-theme-console&amp;quot; License Copyright © 2020 Marcin Mierzejewski
-The theme is released under the MIT License. Check the original theme license for additional licensing information.</description>
+      <description>&lt;p&gt;Hi! My name is Gabi Cavalcante. I&amp;rsquo;m a software engineer passionate for Python, Data Science, Distribute Systems, Tests and Quality Engenier.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>Curriculum</title>
+      <link>https://gabicavalcante.github.io/cv/</link>
+      <pubDate>Sat, 05 Nov 2016 21:05:33 +0530</pubDate>
+      
+      <guid>https://gabicavalcante.github.io/cv/</guid>
+      <description>&lt;p&gt;Hi! My name is Gabi Cavalcante. I&amp;rsquo;m a software engineer passionate for Python, Data Science, Distribute Systems, Tests and Quality Engenier.&lt;/p&gt;</description>
     </item>
     
     <item>
