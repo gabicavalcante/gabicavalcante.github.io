@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>gabi cavalcante/posts/python-django-cicd/</title>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <meta name="googlebot" content="index,follow,snippet,archive">
+    <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/terminal-0.7.1.min.css">
+    <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/animate-3.7.2.min.css">
+    <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/console.css">
+    <style>
+        pre { 
+          background-color: white !important;
+        }
+    </style>
+    
+      <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+       <meta property="og:title" content="Python, Django and GitHub CI/CD" />
+<meta property="og:description" content="" />
+<meta property="og:type" content="article" />
+<meta property="og:url" content="https://gabicavalcante.github.io/posts/python-django-cicd/" /><meta property="article:published_time" content="2019-09-30T00:00:00+00:00" />
+
+
+
+<meta name="twitter:title" content="Python, Django and GitHub CI/CD"/>
+<meta name="twitter:description" content="GitHub Actions was introduced last year, and it’s an API for cause and effect on GitHub. You can orchestrate any workflow, based on any event, you can have your workflow run on push events to master and release branches, or only run on pull_request events that target the master branch, or run every day of the week at Friday 02:00. The workflows are code in a repository, as you will see in this project, so you can create, share, reuse, and fork."/>
+
+</head>
+<body class="terminal">
+    <div class="container">
+        <div class="terminal-nav">
+          <header class="terminal-logo">
+            <div class="logo terminal-prompt">
+              
+              
+              <a href="https://gabicavalcante.github.io/" class="no-style site-name">gabi cavalcante</a>:~# 
+              <a href='https://gabicavalcante.github.io/posts'>posts</a>/<a href='https://gabicavalcante.github.io/posts/python-django-cicd'>python-django-cicd</a>/</div></header>
+          <nav class="terminal-menu">
+            <ul vocab="https://schema.org/" typeof="BreadcrumbList">
+                
+                <li><a href="https://gabicavalcante.github.io/about/" typeof="ListItem">about/</a></li>
+                
+                <li><a href="https://gabicavalcante.github.io/posts/" typeof="ListItem">posts/</a></li>
+                
+                <li><a href="https://gabicavalcante.github.io/cv/" typeof="ListItem">cv/</a></li>
+                
+            </ul>
+          </nav>
+        </div>
+    </div>
+
+    <div class="container animated zoomIn fast">
+        
+<h1>Python, Django and GitHub CI/CD</h1>
+
+Sep. 30, 2019
+
+    // <a href="https://www.linkedin.com/in/gabrielacavalcante/">Linkedin</a>
+
+
+    // <a href="https://www.twitter.com/_gabiCavalcante">Twitter</a>
+
+
+    // <a href="https://www.github.com/gabicavalcante">Github</a>
+
+<br/><br/>
+<p>GitHub Actions was introduced last year, and it’s an API for cause and effect on GitHub. You can orchestrate any workflow, based on any event, you can have your workflow run on push events to master and release branches, or only run on <code>pull_request</code> events that target the master branch, or run every day of the week at Friday 02:00. The workflows are code in a repository, as you will see in this project, so you can create, share, reuse, and fork.</p>
+<p>I’m working in a Django project and when I started I found a problem: there was not CI/CD working or integration/unit test. In the past I used the GitLab CI/CD, but now the code was hosted on GitHub. So, my challenge was create tests to my Django project (it was implemented before I got the job) and create CI/CD pipeline for integrating it with GitHub CI/CD. For this tutorial, the application that I’m gonna show you, demonstrates CRUD operations using class based views in Django (you can find here). It also includes UI for all CRUD views and it’s based on the semaphoreci.com tutorial.</p>
+<ul>
+<li>Local project setup</li>
+</ul>
+<pre><code>$ virtualenv -p python3 env
+</code></pre><ul>
+<li>Download the project</li>
+</ul>
+<pre><code>$ git clone https://github.com/gabicavalcante/django-test-ci.git
+</code></pre><ul>
+<li>Install pip requirements</li>
+</ul>
+<pre><code>$ pip install -r requirements.txt
+</code></pre><ul>
+<li>Create a new psql database</li>
+</ul>
+<pre><code>postgres=# create database pydjango;
+</code></pre><p>Setup your database credentials and <code>SITE_URL</code> in <code>settings.py</code> file available inside core folder.</p>
+<p>Once you have setup your database, open command prompt and run the migrate command to create the application default database and the superuser.</p>
+<pre><code>(env) $ python manage.py migrate
+(env) $ python manage.py createsuperuser
+</code></pre><p>After all of the above command run successfully, let’s run:</p>
+<pre><code>(env) $ python manage.py runserver
+</code></pre><p>And visit the web browser with http://127.0.0.1:8000</p>
+<h1 id="environment-variables">Environment variables</h1>
+<p>The following environment variables can be set to override defaults:</p>
+<ul>
+<li><code>SECRET_KEY</code>: Django secret key.</li>
+<li><code>DB_ENGINE</code>: Django database backend.</li>
+<li><code>DB_NAME</code>: database name.</li>
+<li><code>DB_HOST</code>: database hostname.</li>
+<li><code>DB_PORT</code>: database port.</li>
+<li><code>DB_USER</code>: database user.</li>
+<li><code>DB_PASSWORD</code>: database password.</li>
+</ul>
+<h1 id="test-with-pytest">Test with PyTest</h1>
+<p>To tell <code>pytest</code> witch Django settings that should be used for tests runs, we need to setup a <code>pytest</code> configuration file, called <code>pytest.ini</code> in our project root directory. The file contains:</p>
+<pre><code>[pytest]
+DJANGO_SETTINGS_MODULE=core.test_settings
+addopts = --nomigrations --cov=. --cov-report=html
+</code></pre><p>To run the tests, we can invoke directly <code>pytest</code> command instead of <code>manage.py test</code>. The pytest-django is designed to run with the pytest command, but in case of you want to use <code>manage.py test</code> with pytest-django, you can create <a href="https://pytest-django.readthedocs.io/en/latest/faq.html#how-can-i-use-manage-py-test-with-pytest-django">a simple test runner</a>.</p>
+
+
+        <div class="footer">
+    Powered by <a href="https://gohugo.io/">Hugo</a> with
+    <a href="https://github.com/mrmierzejewski/hugo-theme-console/">Console Theme</a>. 
+</div>
+
+    </div>
+  </body>
+</html>

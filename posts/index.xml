@@ -6,38 +6,36 @@
     <description>Recent content in Posts on gabi cavalcante</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sat, 03 Aug 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Sun, 22 Dec 2019 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://gabicavalcante.github.io/posts/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>Introduction</title>
-      <link>https://gabicavalcante.github.io/posts/what-is-hugo/</link>
-      <pubDate>Sat, 03 Aug 2019 00:00:00 +0000</pubDate>
+      <title>Vamos trocar umas ideias sobre comunicação</title>
+      <link>https://gabicavalcante.github.io/posts/lets-talk-about-communication/</link>
+      <pubDate>Sun, 22 Dec 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://gabicavalcante.github.io/posts/what-is-hugo/</guid>
-      <description>&lt;p&gt;Hugo is an open-source project and lives by the work of its contributors. There are plenty of open issues, and we need your help to make Hugo even more awesome. You don&amp;rsquo;t need to be a Go guru to contribute to the project&amp;rsquo;s development.&lt;/p&gt;</description>
+      <guid>https://gabicavalcante.github.io/posts/lets-talk-about-communication/</guid>
+      <description>&lt;p&gt;A ideia aqui é juntar sugestões que podem te ajudar caso você queira/vá dar um curso/aula/palestra e esteja preocupada em como fazer isso. Juntei algumas coisas que observei ao longo desses anos trabalhando no &lt;a href=&#34;http://brasil.pyladies.com/about/&#34;&gt;PyLadies Brasil&lt;/a&gt;, e talvez você possa aproveitar um pouco disso :) A ideia do post surgiu de uma conversar no grupo do &lt;a href=&#34;https://www.instagram.com/pyladiesnatal/?hl=pt-br&#34;&gt;PyLadies Natal&lt;/a&gt;, então a própria construção dessas sugestões foi algo coletivo.&lt;/p&gt;</description>
     </item>
     
     <item>
-      <title>What is Hugo</title>
-      <link>https://gabicavalcante.github.io/posts/introduction/</link>
-      <pubDate>Mon, 01 Jul 2019 00:00:00 +0000</pubDate>
+      <title>Creating Pdf with Latex and Django</title>
+      <link>https://gabicavalcante.github.io/posts/creating-pdf-with-latex-and-django/</link>
+      <pubDate>Tue, 01 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://gabicavalcante.github.io/posts/introduction/</guid>
-      <description>&lt;p&gt;Hugo is a fast and modern static site generator written in Go, and designed to make website creation fun again.&lt;/p&gt;</description>
+      <guid>https://gabicavalcante.github.io/posts/creating-pdf-with-latex-and-django/</guid>
+      <description>&lt;p&gt;When I started in my new jog, the fist task was: reports. It was great because I didn’t know the software, but when I open the file that created PDFs, I found something really messed up. I needed define each position of every thing (columns, rows, title…) in my document, and define that in centimetres. So, a task that should take some time, would take much more.&lt;/p&gt;</description>
     </item>
     
     <item>
-      <title>Take a picture with OpenCv and Galileo</title>
-      <link>https://gabicavalcante.github.io/posts/my-first-post/</link>
-      <pubDate>Sat, 16 Jan 2016 13:44:03 +0000</pubDate>
+      <title>Python, Django and GitHub CI/CD</title>
+      <link>https://gabicavalcante.github.io/posts/python-django-cicd/</link>
+      <pubDate>Mon, 30 Sep 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://gabicavalcante.github.io/posts/my-first-post/</guid>
-      <description>Hello,
-I will give you step by step tutorial how take your picture with the Intel Galileo and the OpenCv (and a camera, of course). So, conect your camera in the USB output of the Galileo (you can check if it&amp;rsquo;s ok seeing the device appears in /dev).
-If you don&amp;rsquo;t have the OpenCv in your computer (opkg list-installed | grep python-opencv), then add the repositories available in the file *.</description>
+      <guid>https://gabicavalcante.github.io/posts/python-django-cicd/</guid>
+      <description>&lt;p&gt;GitHub Actions was introduced last year, and it’s an API for cause and effect on GitHub. You can orchestrate any workflow, based on any event, you can have your workflow run on push events to master and release branches, or only run on &lt;code&gt;pull_request&lt;/code&gt; events that target the master branch, or run every day of the week at Friday 02:00. The workflows are code in a repository, as you will see in this project, so you can create, share, reuse, and fork.&lt;/p&gt;</description>
     </item>
     
   </channel>

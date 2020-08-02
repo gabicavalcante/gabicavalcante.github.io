@@ -5,28 +5,35 @@
         
         <url>
             <loc>https://gabicavalcante.github.io/</loc>
-            <lastmod>2019-08-03T00:00:00+00:00</lastmod>
-        </url>
-        
-    
-        
-        <url>
-            <loc>https://gabicavalcante.github.io/posts/what-is-hugo/</loc>
-            <lastmod>2019-08-03T00:00:00+00:00</lastmod>
+            <lastmod>2019-12-22T00:00:00+00:00</lastmod>
         </url>
         
     
         
         <url>
             <loc>https://gabicavalcante.github.io/posts/</loc>
-            <lastmod>2019-08-03T00:00:00+00:00</lastmod>
+            <lastmod>2019-12-22T00:00:00+00:00</lastmod>
         </url>
         
     
         
         <url>
-            <loc>https://gabicavalcante.github.io/posts/introduction/</loc>
-            <lastmod>2019-07-01T00:00:00+00:00</lastmod>
+            <loc>https://gabicavalcante.github.io/posts/lets-talk-about-communication/</loc>
+            <lastmod>2019-12-22T00:00:00+00:00</lastmod>
+        </url>
+        
+    
+        
+        <url>
+            <loc>https://gabicavalcante.github.io/posts/creating-pdf-with-latex-and-django/</loc>
+            <lastmod>2019-10-01T00:00:00+00:00</lastmod>
+        </url>
+        
+    
+        
+        <url>
+            <loc>https://gabicavalcante.github.io/posts/python-django-cicd/</loc>
+            <lastmod>2019-09-30T00:00:00+00:00</lastmod>
         </url>
         
     
@@ -41,13 +48,6 @@
         <url>
             <loc>https://gabicavalcante.github.io/cv/</loc>
             <lastmod>2016-11-05T21:05:33+05:30</lastmod>
-        </url>
-        
-    
-        
-        <url>
-            <loc>https://gabicavalcante.github.io/posts/my-first-post/</loc>
-            <lastmod>2016-01-16T13:44:03+00:00</lastmod>
         </url>
         
     
