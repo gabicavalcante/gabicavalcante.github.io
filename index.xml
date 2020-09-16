@@ -6,10 +6,30 @@
     <description>Recent content on gabi cavalcante</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
-    <lastBuildDate>Sun, 22 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 02 Sep 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="https://gabicavalcante.github.io/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Notes about multi-objective evolutionary algorithms</title>
+      <link>https://gabicavalcante.github.io/posts/notes-about-multi-objective-algorithms/</link>
+      <pubDate>Wed, 02 Sep 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://gabicavalcante.github.io/posts/notes-about-multi-objective-algorithms/</guid>
+      <description>&lt;p&gt;Hi everyone! I&amp;rsquo;m decided to write a few notes about the topic that I&amp;rsquo;m studying ate the moment. Would not be a big tutorial, just notes and observations.&lt;/p&gt;</description>
+    </item>
+    
+    <item>
+      <title>A guide to setup plots using seaborn facegrid/replot plots</title>
+      <link>https://gabicavalcante.github.io/posts/matplotlib-searborn-replot/</link>
+      <pubDate>Sat, 15 Aug 2020 00:00:00 +0000</pubDate>
+      
+      <guid>https://gabicavalcante.github.io/posts/matplotlib-searborn-replot/</guid>
+      <description>&lt;p&gt;Using searborn and matplotlib to make great plobs isn&amp;rsquo;t easy.
+I have been loiking on the internet for complete tutorials about how to setup a good plot, but I only found small peaces of tips.
+So now I want to show the final plots that I build.&lt;/p&gt;</description>
+    </item>
     
     <item>
       <title>Vamos trocar umas ideias sobre comunicação</title>
@@ -27,17 +47,6 @@
       
       <guid>https://gabicavalcante.github.io/posts/creating-pdf-with-latex-and-django/</guid>
       <description>&lt;p&gt;When I started in my new jog, the fist task was: reports. It was great because I didn’t know the software, but when I open the file that created PDFs, I found something really messed up. I needed define each position of every thing (columns, rows, title…) in my document, and define that in centimetres. So, a task that should take some time, would take much more.&lt;/p&gt;</description>
-    </item>
-    
-    <item>
-      <title>A guide to setup  plots using seaborn facegrid/replot plots</title>
-      <link>https://gabicavalcante.github.io/posts/matplotlib-searborn-replot/</link>
-      <pubDate>Mon, 30 Sep 2019 00:00:00 +0000</pubDate>
-      
-      <guid>https://gabicavalcante.github.io/posts/matplotlib-searborn-replot/</guid>
-      <description>&lt;p&gt;Using searborn and matplotlib to make great plobs isn&amp;rsquo;t easy.
-I have been loiking on the internet for complete tutorials about how to setup a good plot, but I only found small peaces of tips.
-So now I want to show the final plots that I build.&lt;/p&gt;</description>
     </item>
     
     <item>
