@@ -18,8 +18,8 @@
       
       <guid>https://gabicavalcante.github.io/posts/matplotlib-searborn-replot/</guid>
       <description>&lt;p&gt;Using searborn and matplotlib to make great plobs isn&amp;rsquo;t easy.
-I have been loiking on the internet for complete tutorials about how to setup a good plot, but I only found small peaces of tips.
-So now I want to show the final plots that I build.&lt;/p&gt;</description>
+I have been looking on the internet for complete tutorials about how to setup a good plot, but I only found small peaces of code.
+So now I want to show a few tips to plot data using the Google Global Mobility Report and matplotlib.&lt;/p&gt;</description>
     </item>
     
     <item>

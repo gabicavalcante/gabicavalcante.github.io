@@ -1,22 +1,41 @@
 <!DOCTYPE html>
 <html lang="en-us">
+
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>gabi cavalcante/about/</title>
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="all,follow">
-    <meta name="googlebot" content="index,follow,snippet,archive">
-    <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/terminal-0.7.1.min.css">
-    <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/animate-3.7.2.min.css">
-    <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/console.css">
-    <style>
-        pre { 
-          background-color: white !important;
-        }
-    </style>
-    
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>gabi cavalcante/about/</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/terminal-0.7.1.min.css">
+  <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/animate-3.7.2.min.css">
+  <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/console.css">
+  <style>
+    pre {
+      background-color: black !important;
+    }
+
+    .terminal code {
+      font-weight: inherit;
+      background-color: #080000;
+      font-family: var(--mono-font-stack);
+      color: white;
+    }
+
+    pre code {
+      overflow-x: scroll;
+      padding: 0;
+      margin: 0;
+      display: inline;
+      min-width: 100%;
+      font-family: var(--mono-font-stack);
+    }
+
+     
+  </style>
+  
       <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -45,42 +64,48 @@
 <meta name="twitter:description" content="Hi! My name is Gabi Cavalcante. I&rsquo;m a software engineer passionate for Python, Data Science, Distribute Systems, Tests and Quality Engenier."/>
 
 </head>
-<body class="terminal">
-    <div class="container">
-        <div class="terminal-nav">
-          <header class="terminal-logo">
-            <div class="logo terminal-prompt">
-              
-              
-              <a href="https://gabicavalcante.github.io/" class="no-style site-name">gabi cavalcante</a>:~# 
-              <a href='https://gabicavalcante.github.io/about'>about</a>/</div></header>
-          <nav class="terminal-menu">
-            <ul vocab="https://schema.org/" typeof="BreadcrumbList">
-                
-                <li><a href="https://gabicavalcante.github.io/about/" typeof="ListItem">about/</a></li>
-                
-                <li><a href="https://gabicavalcante.github.io/posts/" typeof="ListItem">posts/</a></li>
-                
-                <li><a href="https://gabicavalcante.github.io/cv/" typeof="ListItem">cv/</a></li>
-                
-            </ul>
-          </nav>
-        </div>
-    </div>
 
-    <div class="container animated zoomIn fast">
-        
+<body class="terminal">
+  <div class="container">
+    <div class="terminal-nav">
+      <header class="terminal-logo">
+        <div class="logo terminal-prompt">
+          
+          
+          <a href="https://gabicavalcante.github.io/"
+            class="no-style site-name">gabi cavalcante</a>:~#
+          <a
+            href='https://gabicavalcante.github.io/about'>about</a>/
+        </div>
+      </header>
+      <nav class="terminal-menu">
+        <ul vocab="https://schema.org/" typeof="BreadcrumbList">
+          
+          <li><a href="https://gabicavalcante.github.io/about/" typeof="ListItem">about/</a></li>
+          
+          <li><a href="https://gabicavalcante.github.io/posts/" typeof="ListItem">posts/</a></li>
+          
+          <li><a href="https://gabicavalcante.github.io/cv/" typeof="ListItem">cv/</a></li>
+          
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container animated zoomIn fast">
+    
 <h1>About</h1>
 <p>Hi! My name is <strong>Gabi Cavalcante</strong>. I&rsquo;m a software engineer passionate for Python, Data Science, Distribute Systems, Tests and Quality Engenier.</p>
 <p>I work at <a href="https://www.cloudia.com.br/">Cloudia</a>, we build a intelligent virtual assistant for medical clnics. I specificly work with the chatbot and creating solutions focusing in tests and estability. Now my challage is to optimizate the data processing and the transfer of a large amount of data between the services.</p>
 <p>At Cloudia I work mostly with Python, and web frameworks like <a href="">Flask</a> and <a href="">FastAPI</a>, but I also build a <a href="https://github.com/gabicavalcante/chatbot-load-testing">chatbot load testing in Golang</a>, to simulate many users seding messages to a bot and register a few metrics (CPU, memory, threads, uptime), the idea is check the performance of a bot keeping a conversation. Another tecnology that I use is the Redis Queue, recentily to build a broadcast microservice using FastAPI.</p>
 <p>But, stop talking about work, I&rsquo;m graduated in Information Technology at the Federal University of Rio Grande do Norte (UFRN) with Sandwich Degree (2015-2016) fulled funded in France (Polytech Nice Sophia) by the exchange program BRAFITEC. I am also a of the founder of PyLadies of Brasil. And I love coffe =)</p>
 
-        <div class="footer">
+    <div class="footer">
     Powered by <a href="https://gohugo.io/">Hugo</a> with
     <a href="https://github.com/mrmierzejewski/hugo-theme-console/">Console Theme</a>. 
 </div>
 
-    </div>
-  </body>
+  </div>
+</body>
+
 </html>

@@ -1,22 +1,41 @@
 <!DOCTYPE html>
 <html lang="en-us">
+
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>gabi cavalcante/posts/creating-pdf-with-latex-and-django/</title>
-    
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="robots" content="all,follow">
-    <meta name="googlebot" content="index,follow,snippet,archive">
-    <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/terminal-0.7.1.min.css">
-    <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/animate-3.7.2.min.css">
-    <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/console.css">
-    <style>
-        pre { 
-          background-color: white !important;
-        }
-    </style>
-    
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>gabi cavalcante/posts/creating-pdf-with-latex-and-django/</title>
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="all,follow">
+  <meta name="googlebot" content="index,follow,snippet,archive">
+  <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/terminal-0.7.1.min.css">
+  <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/animate-3.7.2.min.css">
+  <link rel="stylesheet" href="https://gabicavalcante.github.io/hugo-theme-console/css/console.css">
+  <style>
+    pre {
+      background-color: black !important;
+    }
+
+    .terminal code {
+      font-weight: inherit;
+      background-color: #080000;
+      font-family: var(--mono-font-stack);
+      color: white;
+    }
+
+    pre code {
+      overflow-x: scroll;
+      padding: 0;
+      margin: 0;
+      display: inline;
+      min-width: 100%;
+      font-family: var(--mono-font-stack);
+    }
+
+     
+  </style>
+  
       <!--[if lt IE 9]>
           <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
           <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -32,31 +51,37 @@
 <meta name="twitter:description" content="When I started in my new jog, the fist task was: reports. It was great because I didn’t know the software, but when I open the file that created PDFs, I found something really messed up. I needed define each position of every thing (columns, rows, title…) in my document, and define that in centimetres. So, a task that should take some time, would take much more."/>
 
 </head>
-<body class="terminal">
-    <div class="container">
-        <div class="terminal-nav">
-          <header class="terminal-logo">
-            <div class="logo terminal-prompt">
-              
-              
-              <a href="https://gabicavalcante.github.io/" class="no-style site-name">gabi cavalcante</a>:~# 
-              <a href='https://gabicavalcante.github.io/posts'>posts</a>/<a href='https://gabicavalcante.github.io/posts/creating-pdf-with-latex-and-django'>creating-pdf-with-latex-and-django</a>/</div></header>
-          <nav class="terminal-menu">
-            <ul vocab="https://schema.org/" typeof="BreadcrumbList">
-                
-                <li><a href="https://gabicavalcante.github.io/about/" typeof="ListItem">about/</a></li>
-                
-                <li><a href="https://gabicavalcante.github.io/posts/" typeof="ListItem">posts/</a></li>
-                
-                <li><a href="https://gabicavalcante.github.io/cv/" typeof="ListItem">cv/</a></li>
-                
-            </ul>
-          </nav>
-        </div>
-    </div>
 
-    <div class="container animated zoomIn fast">
-        
+<body class="terminal">
+  <div class="container">
+    <div class="terminal-nav">
+      <header class="terminal-logo">
+        <div class="logo terminal-prompt">
+          
+          
+          <a href="https://gabicavalcante.github.io/"
+            class="no-style site-name">gabi cavalcante</a>:~#
+          <a
+            href='https://gabicavalcante.github.io/posts'>posts</a>/<a
+            href='https://gabicavalcante.github.io/posts/creating-pdf-with-latex-and-django'>creating-pdf-with-latex-and-django</a>/
+        </div>
+      </header>
+      <nav class="terminal-menu">
+        <ul vocab="https://schema.org/" typeof="BreadcrumbList">
+          
+          <li><a href="https://gabicavalcante.github.io/about/" typeof="ListItem">about/</a></li>
+          
+          <li><a href="https://gabicavalcante.github.io/posts/" typeof="ListItem">posts/</a></li>
+          
+          <li><a href="https://gabicavalcante.github.io/cv/" typeof="ListItem">cv/</a></li>
+          
+        </ul>
+      </nav>
+    </div>
+  </div>
+
+  <div class="container animated zoomIn fast">
+    
 <h1>Creating Pdf with Latex and Django</h1>
 
 Oct. 1, 2019
@@ -118,11 +143,12 @@ PDF <span style="color:#f92672">=</span> compile_template_to_pdf(template_name, 
 </code></pre></div><p>The default LaTeX interpreter is set to <code>lualatex</code>. This but you can change by the setting <code>LATEX_INTERPRETER</code>, for instance: <code>LATEX_INTERPRETER = 'pdflatex'</code>. To work properly, the interpreter needs to be installed on your system.</p>
 
 
-        <div class="footer">
+    <div class="footer">
     Powered by <a href="https://gohugo.io/">Hugo</a> with
     <a href="https://github.com/mrmierzejewski/hugo-theme-console/">Console Theme</a>. 
 </div>
 
-    </div>
-  </body>
+  </div>
+</body>
+
 </html>
