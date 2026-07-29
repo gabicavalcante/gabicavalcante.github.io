@@ -117,10 +117,15 @@ hardening measures survived the bumps untouched — `persist-credentials: false`
 the hardcoded `HUGO_DEB_SHA256`, the checksum step, and the per-job permission
 split.
 
-These were five major-version jumps merged together, so if the build starts
-misbehaving, this is the first place to look — `upload-pages-artifact` v3→v5 and
-`deploy-pages` v4→v5 are the likeliest to have changed behaviour. `git revert`
-of the relevant merge is the fast way back.
+The upgraded workflow **has since built and deployed successfully** — a fresh
+deployment landed at 21:55:42 UTC on 2026-07-29 and the full URL set, the
+alias redirect, both images and the homepage overrides all verified against it.
+So the five bumps are proven working, not just merged.
+
+They were still five major-version jumps merged together, so if the build starts
+misbehaving later, this is the first place to look — `upload-pages-artifact`
+v3→v5 and `deploy-pages` v4→v5 are the likeliest to have changed behaviour.
+`git revert` of the relevant merge commit is the fast way back.
 
 ### Confirm the CI runs actually went green
 Never verified per-run status — `gh` isn't authenticated in the environment
