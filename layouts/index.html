@@ -1,0 +1,41 @@
+{{/*
+  Overrides the theme's homepage. Three reasons this file has to exist:
+
+  1. The theme hardcodes its own blurb ("Console is a minimal, responsive and
+     light theme...") with no config hook, so the only way to show the real
+     about text is to override. Here it comes from the about page's summary --
+     the <!--more--> divider in content/about/index.md decides where it ends --
+     so the homepage and /about/ can never disagree.
+  2. The theme lists `first 3` posts; this site has always shown 4.
+  3. The theme prints a "Latest photos" heading outside the guard that checks
+     whether a /photos section exists, so a site without photos gets a stray
+     empty heading. Dropped, since there is no /photos section.
+
+  Kept deliberately close to the upstream template otherwise, so diffing
+  against it after a theme update stays easy.
+*/}}
+{{ define "main" }}
+
+<h1>About</h1>
+
+{{ with .Site.GetPage "/about" }}
+  {{ .Summary }}
+  <p><a href="{{ .RelPermalink }}">(more)</a></p>
+{{ end }}
+<br/>
+
+<h1>Latest posts</h1>
+
+<div class="posts-list">
+{{ with .Site.GetPage "/posts" }}
+    {{ range first 4 (sort .Pages "Date" "desc" (where .Pages ".Params.private" "!=" true)) }}
+        <div class="post">
+            <div class="date">{{ .Date | time.Format ":date_medium" }}</div>
+            <h1><a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a></h1>
+            {{ .Summary }}
+        </div>
+    {{ end }}
+{{ end }}
+</div>
+
+{{ end }}

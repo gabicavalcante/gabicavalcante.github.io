@@ -5,6 +5,8 @@ date = "2019-12-22"
 
 A ideia aqui é juntar sugestões que podem te ajudar caso você queira/vá dar um curso/aula/palestra e esteja preocupada em como fazer isso. Juntei algumas coisas que observei ao longo desses anos trabalhando no [PyLadies Brasil](http://brasil.pyladies.com/about/), e talvez você possa aproveitar um pouco disso :) A ideia do post surgiu de uma conversa no grupo do [PyLadies Natal](https://www.instagram.com/pyladiesnatal/?hl=pt-br), então a própria construção dessas sugestões foi algo coletivo.
 
+<!--more-->
+
 Uma das coisas que sempre faço logo no começo das atividades **é perguntar a experiência que o pessoal tem naquilo que estou falando sobre**. Às vezes a gente supõe um nível, e a galera tem outro, e rola um grande desencontro de informação. Algumas vezes eu ainda chego a preparar materiais alternativos (ou diferentes exercícios), que eu possa usar dependendo da experiência das pessoas com quem estou falando (ex: se são iniciantes, se já tem conhecimento mas não experiência prática, etc).
 
 Algo que também é interessante é **sempre que usar uma expressão em inglês, também usar a equivalente em português**. A gente está em uma área carregada de expressões técnicas em inglês, é até bom o pessoal saber por exemplo o que é _“debug”_ ou _“webscraping”_, mas soltar a expressões sem dar uma tradução pode dificultar o entendimento de algumas pessoas. Então quando for falar a expressão em inglês, também fale em português junto.

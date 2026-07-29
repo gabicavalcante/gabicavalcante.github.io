@@ -5,6 +5,8 @@ date = "2019-10-01"
 
 When I started in my new job, the first task was: reports. It was great because I didn’t know the software, but when I open the file that created PDFs, I found something really messed up. I needed define each position of every thing (columns, rows, title…) in my document, and define that in centimetres. So, a task that should take some time, would take much more.
 
+<!--more-->
+
 But I remembered that Latex can easily created PDF, could I use it with Django? So I found [django-tex](https://github.com/weinbusch/django-tex), a simple Django app to render LaTeX templates and compile them into PDF files. You just need a local Latex installations and jinja2 templating engine for templates rendering. In my case, [I did a fork of the project](https://github.com/gabicavalcante/django-tex) and included some escape character and filters for templates.
 
 - Add `django_tex` to your `INSTALLED_APPS` setting:
