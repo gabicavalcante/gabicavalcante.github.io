@@ -50,6 +50,11 @@ jobs:
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4.4.0
         with:
           submodules: false
+          # Do not leave a GITHUB_TOKEN in .git/config, where every later step
+          # in the job could read it. Nothing here pushes from CI. Scraping
+          # credentials out of the runner is exactly what the tj-actions
+          # payload did.
+          persist-credentials: false
 
       # The theme is a Hugo Module, so `hugo` shells out to the Go toolchain.
       # Without this the build fails resolving the module.
