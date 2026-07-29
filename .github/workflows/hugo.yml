@@ -25,12 +25,22 @@ jobs:
       # Keep in step with the Hugo used locally. The theme needs >= 0.146.
       # Standard edition is enough: the theme ships plain CSS, no SCSS.
       HUGO_VERSION: 0.164.0
+      # sha256 of hugo_${HUGO_VERSION}_linux-amd64.deb. Deliberately hardcoded
+      # rather than read from the release's own checksums.txt: a checksum
+      # fetched from the same release proves nothing if that release is
+      # tampered with. Pinning it here means swapping the asset breaks the
+      # build. Update this whenever HUGO_VERSION changes.
+      HUGO_DEB_SHA256: 06f51ad0ec83e399e08a46a960f32453c109d6aad93e51ff8e659cdd5e51be7b
     steps:
       - name: Install Hugo CLI
         run: |
-          wget -O "${{ runner.temp }}/hugo.deb" \
+          set -euo pipefail
+          deb="${{ runner.temp }}/hugo.deb"
+          wget -qO "$deb" \
             "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.deb"
-          sudo dpkg -i "${{ runner.temp }}/hugo.deb"
+          # Verify before handing it to dpkg, which runs as root.
+          echo "${HUGO_DEB_SHA256}  ${deb}" | sha256sum --check --strict -
+          sudo dpkg -i "$deb"
 
       # All actions are pinned to full commit SHAs, not tags. Tags are mutable:
       # the tj-actions/changed-files compromise (CVE-2025-30066) retagged
