@@ -3,7 +3,8 @@ name: Deploy Hugo site to Pages
 on:
   push:
     branches: [main]
-  # Lets the site be built and deployed from a branch before `main` is cut over.
+  # Manual re-run, e.g. to redeploy without a new commit. Note GitHub only
+  # offers this trigger for workflows present on the default branch.
   workflow_dispatch:
 
 # Default for every job: read the repo and nothing more. `pages: write` and
