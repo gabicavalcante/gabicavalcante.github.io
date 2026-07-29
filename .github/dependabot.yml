@@ -1,0 +1,27 @@
+version: 2
+
+# Pinning actions to SHAs (see hugo.yml) trades mutability for staleness:
+# nothing tells you a pinned action shipped a security fix. Dependabot closes
+# that gap by opening PRs that bump the SHA and its version comment together.
+#
+# These PRs do not execute hugo.yml -- it only triggers on push to main and
+# workflow_dispatch -- so reviewing them carries no build-time risk.
+updates:
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "ci"
+
+  # The console theme is a Hugo Module, so it is a Go dependency. It executes
+  # templates at build time, so read the diff before merging a bump rather
+  # than merging on green.
+  - package-ecosystem: gomod
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps"
