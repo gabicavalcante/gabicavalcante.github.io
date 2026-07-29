@@ -96,8 +96,10 @@ Known limits, all upstream:
 - Only `linkedin` and `twitter` render in post headers. The pre-2026 site also
   showed a Github link; restoring it needs a `layouts/posts/single.html`
   override, which was declined as not worth the maintenance.
-- The build prints a `.Site.LanguageCode was deprecated` warning. That is the
-  theme's template, not this config — this site uses `locale`.
+- The build prints a `.Site.LanguageCode was deprecated` warning. It is neither
+  this config (which uses `locale`) nor the theme (no `rss.xml`, and its
+  `sitemap.xml` doesn't reference it) — it comes from Hugo's own embedded
+  `_internal/rss.xml`. Nothing to fix locally.
 
 ## CI security posture — don't undo these
 
@@ -128,6 +130,13 @@ There are **no secrets in this repo** and the workflow has no `pull_request` or
 `issue_comment` trigger, so fork PRs execute nothing. Keep it that way: adding
 `pull_request_target` would open the "pwn request" class that most public-repo
 Actions compromises rely on.
+
+## Open work
+
+`TODO.md` tracks everything deferred during the reconstruction — stale `/about/`
+and `/cv/` copy, the fate of the 4 draft posts, the optional Hugo `[security]`
+block, and the pending action major upgrades. Check it before starting anything;
+several entries are decisions for Gabi rather than mechanical work.
 
 ## Working here
 
