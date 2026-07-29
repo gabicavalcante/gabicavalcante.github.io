@@ -6,6 +6,8 @@ aliases = ["/posts/matplotlib-searborn-replot/"]
 
 Using seaborn and matplotlib to make great plots isn’t easy. I have been looking on the internet for complete tutorials about how to setup a good plot, but I only found small pieces of code. So now I want to show a few tips to plot data using the Google Global Mobility Report and matplotlib.
 
+<!--more-->
+
 You can run the code using colab, find the complete tutorial here. But now, let’s start import all libraries that we need.
 
 ```python

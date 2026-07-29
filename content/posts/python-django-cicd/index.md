@@ -5,6 +5,8 @@ date = "2019-09-30"
 
 GitHub Actions was introduced last year, and it’s an API for cause and effect on GitHub. You can orchestrate any workflow, based on any event, you can have your workflow run on push events to master and release branches, or only run on `pull_request` events that target the master branch, or run every day of the week at Friday 02:00. The workflows are code in a repository, as you will see in this project, so you can create, share, reuse, and fork.
 
+<!--more-->
+
 I’m working in a Django project and when I started I found a problem: there was no CI/CD working or integration/unit test. In the past I used the GitLab CI/CD, but now the code was hosted on GitHub. So, my challenge was create tests to my Django project (it was implemented before I got the job) and create CI/CD pipeline for integrating it with GitHub CI/CD. For this tutorial, the application that I’m gonna show you, demonstrates CRUD operations using class based views in Django (you can find here). It also includes UI for all CRUD views and it’s based on the semaphoreci.com tutorial.
 
 - Local project setup
