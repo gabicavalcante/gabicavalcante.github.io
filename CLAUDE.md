@@ -99,6 +99,36 @@ Known limits, all upstream:
 - The build prints a `.Site.LanguageCode was deprecated` warning. That is the
   theme's template, not this config — this site uses `locale`.
 
+## CI security posture — don't undo these
+
+The workflow is hardened against the 2025 Actions supply-chain pattern. Four
+rules, all of which look like noise until they matter:
+
+- **Actions are pinned to full commit SHAs**, with the version in a trailing
+  comment. Never "simplify" these back to `@v4`. Tags are mutable — the
+  tj-actions/changed-files compromise (CVE-2025-30066) retagged existing
+  versions to a commit that leaked runner secrets into public build logs.
+- **`HUGO_DEB_SHA256` must be updated whenever `HUGO_VERSION` changes**, or the
+  build fails the integrity check by design. Get the value from the release's
+  `hugo_<version>_checksums.txt` and confirm it against a local `sha256sum`.
+- **`pages: write` / `id-token: write` live on the `deploy` job only.** Don't
+  move them back to the workflow level; the build job runs third-party code and
+  should not be able to publish.
+- **`persist-credentials: false` on checkout.** Nothing pushes from CI, so no
+  token should sit in `.git/config`.
+
+Dependabot watches `github-actions` and `gomod` weekly. Actions bumps are
+routine; **theme bumps deserve a diff read**, because a Hugo Module executes
+templates during the build. Hugo's default policy limits the damage —
+`security.funcs.getenv` allowlists only `^HUGO_` and `^CI$`, so a theme cannot
+read `GITHUB_TOKEN` — but `resources.GetRemote` can still reach any HTTPS host.
+Inspect the effective policy with `hugo config --format json`.
+
+There are **no secrets in this repo** and the workflow has no `pull_request` or
+`issue_comment` trigger, so fork PRs execute nothing. Keep it that way: adding
+`pull_request_target` would open the "pwn request" class that most public-repo
+Actions compromises rely on.
+
 ## Working here
 
 - Pushing to `main` deploys. There is no review gate, so push only when asked.
