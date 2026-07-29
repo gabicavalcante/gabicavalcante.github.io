@@ -6,12 +6,13 @@ on:
   # Lets the site be built and deployed from a branch before `main` is cut over.
   workflow_dispatch:
 
-# Least privilege: read the repo, publish to Pages, and mint the OIDC token
-# deploy-pages needs. Nothing else.
+# Default for every job: read the repo and nothing more. `pages: write` and
+# `id-token: write` are granted only to the deploy job that actually needs
+# them, so a compromise in the build job -- the one that runs third-party
+# actions and fetches a remote Hugo module -- cannot publish to Pages or mint
+# an OIDC token.
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
 # Never let two deploys race; queue instead of cancelling a live deploy.
 concurrency:
@@ -73,6 +74,11 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    # Job-level permissions replace the workflow default. deploy-pages needs
+    # exactly these two; it does no checkout, so contents is not granted.
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
