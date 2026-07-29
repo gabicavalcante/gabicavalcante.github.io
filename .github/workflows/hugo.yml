@@ -1,0 +1,67 @@
+name: Deploy Hugo site to Pages
+
+on:
+  push:
+    branches: [main]
+  # Lets the site be built and deployed from a branch before `main` is cut over.
+  workflow_dispatch:
+
+# Least privilege: read the repo, publish to Pages, and mint the OIDC token
+# deploy-pages needs. Nothing else.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Never let two deploys race; queue instead of cancelling a live deploy.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      # Keep in step with the Hugo used locally. The theme needs >= 0.146.
+      # Standard edition is enough: the theme ships plain CSS, no SCSS.
+      HUGO_VERSION: 0.164.0
+    steps:
+      - name: Install Hugo CLI
+        run: |
+          wget -O "${{ runner.temp }}/hugo.deb" \
+            "https://github.com/gohugoio/hugo/releases/download/v${HUGO_VERSION}/hugo_${HUGO_VERSION}_linux-amd64.deb"
+          sudo dpkg -i "${{ runner.temp }}/hugo.deb"
+
+      - uses: actions/checkout@v4
+        with:
+          submodules: false
+
+      # The theme is a Hugo Module, so `hugo` shells out to the Go toolchain.
+      # Without this the build fails resolving the module.
+      - uses: actions/setup-go@v5
+        with:
+          go-version: "1.26"
+          cache-dependency-path: go.sum
+
+      - name: Setup Pages
+        id: pages
+        uses: actions/configure-pages@v5
+
+      - name: Build
+        env:
+          HUGO_ENVIRONMENT: production
+        run: hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

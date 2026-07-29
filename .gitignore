@@ -1,0 +1,7 @@
+# Hugo build output — deployed by GitHub Actions, never committed.
+/public/
+/resources/_gen/
+.hugo_build.lock
+
+# Hugo module cache
+/_vendor/
