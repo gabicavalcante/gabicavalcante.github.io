@@ -102,6 +102,12 @@ Known limits, all upstream:
 ## Working here
 
 - Pushing to `main` deploys. There is no review gate, so push only when asked.
+- The `github-pages` environment carries a **deployment-branch policy**. It was
+  created pinned to `master`, so the rename to `main` made every deploy fail with
+  *"Branch main is not allowed to deploy to github-pages due to environment
+  protection rules"* while the build itself passed. If the default branch is ever
+  renamed again, update Settings → Environments → `github-pages` → Deployment
+  branches first.
 - Before changing content, check the rendered result against the
   `pre-hugo-rebuild` tag if fidelity matters.
 - The `about/` and `cv/` text is **stale as of 2026** — it describes working at
