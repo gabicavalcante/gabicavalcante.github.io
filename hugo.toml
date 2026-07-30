@@ -13,9 +13,18 @@ enableRobotsTXT = true
 
 [markup]
   [markup.highlight]
-    # Pinned to reproduce the original site's inline-styled code blocks.
-    style = "monokai"
-    noClasses = true
+    # Class-based, NOT inline. `noClasses = true` (Chroma's default) writes the
+    # style's background-color inline on the <pre>, but terminal.css repaints
+    # `pre code` with the page background -- so the highlight background
+    # survived only in the <pre>'s padding and read as a thick dark frame
+    # around a light code block. That is what monokai looked like here.
+    #
+    # With classes, colours come from assets/css/custom.css, which the theme
+    # picks up on its own (see the `resources.Get "css/custom.css"` block in
+    # the theme's baseof.html). That file deliberately ships NO background, so
+    # the block keeps the theme's own background in both light and dark mode.
+    # Regenerate it with `hugo gen chromastyles` -- see its header comment.
+    noClasses = false
 
 [params]
   # The original site rendered the full site name, not the two-char mobile form.
