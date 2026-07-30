@@ -1,5 +1,5 @@
 +++
-title = "Creating Pdf with Latex and Django"
+title = "Creating PDF with Latex and Django"
 date = "2019-10-01"
 +++
 
