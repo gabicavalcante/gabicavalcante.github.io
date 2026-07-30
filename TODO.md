@@ -1,23 +1,5 @@
 # TODO
 
--[ ] `/about/` and `/cv/` are six years stale. `content/about/index.md`, `content/cv.md`.
--[ ] review typos
-
-### Small content defects found but not changed
-Judged out of scope for a typo pass:
-
-- `content/posts/matplotlib-seaborn-relplot/index.md` — "You can run the code
-  using colab, find the complete tutorial here." Neither "colab" nor "here" was
-  ever a link in the original HTML. Dead references; add the URLs or reword.
-- `content/cv.md:146,148` — the same talk listed twice, same conference
-  ("Campus Party Recife 2016"), conflicting dates `Aug/19` and `Aug/16`. One is
-  probably wrong.
-- `content/cv.md` — "Out/18" uses the Portuguese month abbreviation in an
-  otherwise English CV.
-- `content/posts/lets-talk-about-communication/index.md` — "eles podem nunca
-  fazer que não estão entendendo" reads garbled ("falar"?). Left alone rather
-  than guess at your meaning.
-
 ---
 
 ## Security hardening

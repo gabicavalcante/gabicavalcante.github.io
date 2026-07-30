@@ -5,3 +5,7 @@
 
 # Hugo module cache
 /_vendor/
+# Agent tooling and local-only files (the CV PDF that /cv/ is written from).
+.agents/
+.local/
+.claude/
