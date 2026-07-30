@@ -5,11 +5,6 @@
 The Hugo **source** for a personal blog published at
 <https://gabicavalcante.github.io> via GitHub Pages.
 
-Until July 2026 this repo held only the *output* of a Hugo build — the source
-lived on a machine that no longer exists. The source here was reconstructed from
-that built HTML. The old output is preserved in the `pre-hugo-rebuild` tag; it is
-the reference for any question about what the site used to look like.
-
 `public/` is **built by CI and never committed.** Pages is configured with
 Source = "GitHub Actions", not "deploy from a branch". Committing build output
 back into this repo is what previously left four posts as live-but-unlisted URLs:
@@ -23,9 +18,6 @@ Both tools are already installed and on the interactive `PATH`:
   CSS, so extended is not needed)
 - `go` 1.26.5 → `/usr/local/go/bin/go` — required because the theme is a Hugo
   Module and Hugo shells out to the Go toolchain
-
-**Gotcha:** neither is on the `PATH` of a non-interactive shell. Scripts and
-tooling need `PATH=/usr/local/go/bin:$HOME/.local/bin:$PATH`.
 
 ```bash
 hugo server -D          # local preview; -D is required to see the 4 drafts
@@ -87,7 +79,9 @@ Keep it close to upstream so it stays easy to diff after a theme update.
 ## Theme
 
 [hugo-theme-console](https://github.com/mrmierzejewski/hugo-theme-console),
-pulled in as a Hugo Module. **Upstream publishes no git tags**, so `go.mod` pins
+pulled in as a Hugo Module. 
+The theme is based on a modern and minimal [Terminal CSS](https://terminalcss.xyz/) framework.
+**Upstream publishes no git tags**, so `go.mod` pins
 a commit pseudo-version (`v0.0.0-20260618131919-0418631e543a`) and `go.sum` locks
 the hash. Pin a new commit deliberately; don't float.
 
@@ -130,13 +124,6 @@ There are **no secrets in this repo** and the workflow has no `pull_request` or
 `issue_comment` trigger, so fork PRs execute nothing. Keep it that way: adding
 `pull_request_target` would open the "pwn request" class that most public-repo
 Actions compromises rely on.
-
-## Open work
-
-`TODO.md` tracks everything deferred during the reconstruction — stale `/about/`
-and `/cv/` copy, the fate of the 4 draft posts, the optional Hugo `[security]`
-block, and the pending action major upgrades. Check it before starting anything;
-several entries are decisions for Gabi rather than mechanical work.
 
 ## Working here
 
