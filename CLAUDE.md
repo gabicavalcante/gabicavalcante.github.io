@@ -34,7 +34,7 @@ layouts/index.html        homepage override — see below, do not delete
 .github/workflows/hugo.yml
 content/
   about/index.md              page bundle; no image (me2.jpg was removed)
-  cv.md                       14 markdown tables
+  cv.md                      
   posts/_index.md             cascades linkedin/twitter to every post
   posts/<slug>/index.md       one bundle per post
 ```
@@ -136,9 +136,10 @@ Actions compromises rely on.
   branches first.
 - Before changing content, check the rendered result against the
   `pre-hugo-rebuild` tag if fidelity matters.
-- The `about/` and `cv/` text is **stale as of 2026** — it describes working at
-  Cloudia and "planning on enrolling as an M.Sc. student". Left as-is on purpose;
-  rewriting it is a content decision, not a migration one.
+- `about/` and `cv/` were rewritten on 2026-07-30 against a CV PDF kept outside
+  the repo (`.local/`, gitignored). **That PDF is the source of truth for dates**
+  — it is what settled two one-month disagreements the old page had. Update it
+  first, then the page.
 - `categories/` and `tags/` pages generate but are empty: no post declares terms.
 - If a `CNAME` is ever re-added, `baseURL` in `hugo.toml` must change with it.
   That mismatch is why the old `gabicavalcante.me` domain misbehaved.
