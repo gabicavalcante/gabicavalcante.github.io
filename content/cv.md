@@ -168,15 +168,6 @@ In December/2013 I started to work remotely as an Python Developer Intern at Anc
 | English | Professional working |
 | French | A2 | 
 
-# Volunteer Work
-
-| Event | Role | Locality | Date |
-| --- | --- | --- | --- |
-| Pyladies Brazil | Founder | Brazil | 2014 |
-| Django Girls Natal | Mentor | Brazil | Apr/16 |
-| Django Girls Natal | Organizer | Brazil | Apr/17 |
-| Django Girls Natal | Organizer | Brazil | Apr/18 | 
-
 # Talks and Workshops
 
 | Title | Type | Conference | Locality | Date |
@@ -195,6 +186,6 @@ In December/2013 I started to work remotely as an Python Developer Intern at Anc
 
 - [Build a Secure Twilio Webhook with Python and FastAPI](https://www.twilio.com/blog/build-secure-twilio-webhook-python-fastapi)
 - [Build a Secret Santa Bot for WhatsApp Using Python and Twilio](https://www.twilio.com/blog/build-secret-santa-bot-whatsapp-python-twilio)
-- Build an SMS Microservice Using Python, Twilio and Redis Pub/Sub — Twilio, 2020
+- [Build an SMS Microservice Using Python, Twilio and Redis Pub/Sub](https://www.twilio.com/en-us/blog/developers/community/sms-microservice-python-twilio-redis-pub-sub)
 - [Python, Django and GitHub CI/CD](https://medium.com/@_gabiCavalcante/python-django-and-github-ci-cd-65f9eae7e6fa)
 - [WebScraping, Python e Ordem da Câmara dos Vereadores](https://medium.com/@_gabiCavalcante/webscraping-python-e-ordem-da-c%C3%A2mara-dos-deputados-f6b46a088228)

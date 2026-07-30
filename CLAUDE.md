@@ -34,7 +34,7 @@ layouts/index.html        homepage override — see below, do not delete
 .github/workflows/hugo.yml
 content/
   about/index.md              page bundle; no image (me2.jpg was removed)
-  cv.md                       15 markdown tables
+  cv.md                       14 markdown tables
   posts/_index.md             cascades linkedin/twitter to every post
   posts/<slug>/index.md       one bundle per post
 ```
