@@ -124,18 +124,6 @@ With the visibility that cloud computing has been acquiring, it is observed that
 
 ---
 
-### – Anchor Loans
-
-| Title | Start | End |
-| --- | --- | --- |
-| Python Developer | 12/2013 | 03/2014 | 
-
-In December 2013 I started to work remotely as a Python Developer Intern at Anchor Loans. I was working on projects including the internal administrative systems.
-
-**Technologies**: Python, Pyramid Framework, MongoDB.
-
----
-
 # Education
 
 | School | Year | Type Major |
