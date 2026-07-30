@@ -1,29 +1,69 @@
 +++
 title = "Curriculum"
-date = "2020-07-31"
+date = "2026-07-30"
 +++
 
-Hi! My name is Gabi Cavalcante. I’m a software engineer passionate for Python, Data Science, Distributed Systems, Tests and Quality Engineer.
+Hi! My name is Gabi Cavalcante. I’m a full-stack engineer and tech lead with 9+ years of professional software engineering experience, including 5+ years leading Python/Django SaaS platform teams on Azure. I combine hands-on full-stack delivery with engineering leadership across data platform, infrastructure, and security/compliance work.
 
-I hold a BSc in Information Technology from Universidade Federal do Rio Grande do Norte (UFRN), Natal, Brazil, obtained in 2018. During the 2015-2016 academic year, I was awarded a scholarship by the BRAFITEC exchange program, and studied at Polytech Nice Sophia, France. Currently, I am an undergraduate in Computer Science at UFRN, planning on enrolling as an M.Sc. student.
+I hold a BSc in Information Technology from Universidade Federal do Rio Grande do Norte (UFRN), Natal, Brazil, obtained in 2016. During the 2015-2016 academic year, I was awarded a scholarship by the BRAFITEC exchange program, and studied at Polytech Nice Sophia, France.
 
-Areas of interest include Self-adaptive Systems, Data Science, Automatization, Tests, Quality Engineer. I am also one of the founders of PyLadies of Brasil.
+Areas of interest include Data Platforms, Distributed Systems, Automatization, Tests, Quality Engineer. I am also one of the founders of PyLadies of Brasil.
+
+# Skills
+
+| Area | |
+| --- | --- |
+| Languages | Python, JavaScript/Node.js, Golang |
+| Frameworks | Django, Flask, FastAPI |
+| Data | PostgreSQL, MongoDB, Redis, RabbitMQ, Elasticsearch, Celery |
+| Cloud & Infra | Azure, GCP, Docker, Terraform, GitHub Actions, CircleCI |
+| Practices | TDD (pytest), code review, system design, SOC 2 compliance |
 
 # Positions
 
-### – Cloudia
+### – Vinta Software
 
 | Title | Start |
 | --- | --- |
-| Python Dev | 03/2019 | 
+| Tech Lead | 09/2021 |
 
-**Technologies**: Python, Flask Framework, Mysql, Pipelines CI/CD, Pytest.
+**Technologies**: Python, Django, React, PostgreSQL, Azure, Celery, Terraform, GitHub Actions, Pytest.
 
-I work at [Cloudia](https://www.cloudia.com.br/), we build an intelligent virtual assistant for medical clinics. I specifically work with the chatbot and creating solutions focusing in tests and stability. Now my challenge is to optimize the data processing and the transfer of a large amount of data between the services.
+I work at [Vinta Software](https://www.vinta.com.br/), where I lead the Data Platform and Platform/Infrastructure team, focusing on API orchestration, data ingestion, and platform security and reliability. Before this team I led a full-stack App Squad building with Django and React, with my own focus on the backend architecture.
 
-At Cloudia I work mostly with Python, and web frameworks like [Flask](http://flask.palletsprojects.com) and [FastAPI](http://fastapi.tiangolo.com), but I also build a [chatbot load testing in Golang](https://github.com/gabicavalcante/chatbot-load-testing), to simulate many users sending messages to a bot and register a few metrics (CPU, memory, threads, uptime), the idea is check the performance of a bot keeping a conversation. Another technology that I use is the Redis Queue, recently to build a broadcast microservice using FastAPI.
+I own the API architecture for integrations with multiple external systems, including direct trademark office integrations, to extract and normalize global trademark data at scale. On the performance side, I optimized PostgreSQL queries on a 25M-row table, cutting a timing-out query to ~54 seconds through histogram-based rewrites and keyset pagination.
 
-I also made a CI/CD to run our tests and deploy the code using Github Actions, so now all pull request only can be merged if all tests passed ;)
+I also drove the technical evidence and architecture documentation for our SOC 2 Type II certification and for an enterprise client security review, covering access lifecycle, audit logging, and Azure architecture diagrams. More recently I built an AI-assisted code review skill to catch Django migrations that risk production downtime or table locks before merge.
+
+Leading the team is the other half of the job: 1:1s, career development conversations, and mentoring; partnering with Product and Design on roadmap priorities, technical feasibility, and delivery timelines; running incident management and post-incident reviews for production issues; and upholding engineering practices like TDD, pair programming, and structured code review across the team.
+
+---
+
+### – Stone
+
+| Title | Start | End |
+| --- | --- | --- |
+| Software Engineer | 10/2020 | 08/2021 |
+
+**Technologies**: Python, Flask Framework, FastAPI, Node.js, GCP (BigQuery, Cloud Functions, Cloud Run), Azure Pipelines, MongoDB, Postgres, MySQL.
+
+I worked on the Governance team at [Stone](https://www.stone.com.br/), building developer-experience tooling to ensure compliance with regulatory bodies. Much of the work was automating manual processes and strengthening controls, so the internal developer tools would hold up as the company scaled.
+
+---
+
+### – Cloudia
+
+| Title | Start | End |
+| --- | --- | --- |
+| Software Engineer | 03/2020 | 09/2020 |
+
+**Technologies**: Python, Flask Framework, FastAPI, Golang, Redis Queue, Mysql, Pipelines CI/CD, Pytest.
+
+At Cloudia we built an intelligent virtual assistant for medical clinics. I specifically worked with the chatbot and creating solutions focusing in tests and stability, and my challenge there was to optimize the data processing and the transfer of a large amount of data between the services.
+
+I worked mostly with Python, and web frameworks like [Flask](http://flask.palletsprojects.com) and [FastAPI](http://fastapi.tiangolo.com), but I also built a [chatbot load testing in Golang](https://github.com/gabicavalcante/chatbot-load-testing), to simulate many users sending messages to a bot and register a few metrics (CPU, memory, threads, uptime), the idea being to check the performance of a bot keeping a conversation. Another technology that I used is the Redis Queue, to build a broadcast microservice using FastAPI.
+
+I also made a CI/CD to run our tests and deploy the code using Github Actions, so all pull requests could only be merged if all tests passed ;)
 
 ---
 
@@ -57,7 +97,7 @@ I provided solutions for the backend side of Crossmappers, using technologies as
 
 | Title | Start | End |
 | --- | --- | --- |
-| Developer and Researcher | 04/2017 | 04/2019 | 
+| Developer and Researcher | 05/2017 | 05/2019 | 
 
 Federated identity management model provides a solution for credential access proliferation, such as based on passwords. However, it only takes the attacker to find out one password in order to personify the user in all federated service providers. The multi-factor authentication emerge as a solution to increase the authentication process robustness.
 
@@ -85,7 +125,7 @@ In turn, the second one refers to the development of an autonomous smart hotspot
 
 | Title | Start | End |
 | --- | --- | --- |
-| Developer and Researcher | 04/2014 | 07/2015 | 
+| Developer and Researcher | 05/2014 | 07/2015 | 
 
 Scientific Initiation Scholarship at the Digital Metropolis Institute (IMD), under orientation of Carlos Eduardo da Silva. I was working on a tool to a Multicriteria Approaches for Cloud Services Selection, to solve the issue of selection of cloud services based on the analysis and use of methods, models and algorithms for selection which meet multiple criteria.
 
@@ -111,9 +151,8 @@ In December/2013 I started to work remotely as an Python Developer Intern at Anc
 
 | School | Year | Type Major |
 | --- | --- | --- |
-| Federal University of Rio Grande do Norte | 2016 - in progress | Bachelor |
-| Université Nice Sophia Antipolis | 2015-2016 | Sandwich Degree (exchange program BRAFITEC) |
-| Federal University of Rio Grande do Norte | 2012-2016 | Bachelor | 
+| Université Nice Sophia Antipolis | 2015-2016 | Sandwich Degree (exchange program BRAFITEC), Informatique et Gestion |
+| Federal University of Rio Grande do Norte | 2012-2016 | BSc, Information Technology |
 
 # Small Courses
 
@@ -126,7 +165,7 @@ In December/2013 I started to work remotely as an Python Developer Intern at Anc
 | Language | Level |
 | --- | --- |
 | Portuguese | Native |
-| English | Intermediate |
+| English | Professional working |
 | French | A2 | 
 
 # Volunteer Work
@@ -142,14 +181,20 @@ In December/2013 I started to work remotely as an Python Developer Intern at Anc
 
 | Title | Type | Conference | Locality | Date |
 | --- | --- | --- | --- | --- |
-| Web Scraping | Talk |  | [Slides](https://slides.com/gabicavalcante/web-scraping) |  |
-| Python: O poder da linguagem, diversidade e mercado de trabalho | Talk | Campus Party Recife 2016 | Natal, Brazil | Aug/19 |
-| What I learned with PyLadies | Talk | 1° PyLadies Brazil Conf | Natal, Brazil | Out/18 |
+| [Web Scraping](https://slides.com/gabicavalcante/web-scraping) | Talk | — | — | — |
+| What I learned with PyLadies | Talk | 1° PyLadies Brazil Conf | Natal, Brazil | Oct/18 |
 | Python: O poder da linguagem, diversidade e mercado de trabalho | Talk | Campus Party Recife 2016 | Natal, Brazil | Aug/16 | 
+
+# Publications
+
+- Multi-Factor Authentication for Shibboleth Identity Providers — Journal of Internet Services and Applications, 2020
+- Google COVID-19 Community Mobility Reports: Insights from Multi-Criteria Decision Making
+- A Multi-Objective Time Series Analysis of Community Mobility Reduction Comparing First and Second COVID-19 Waves
 
 # Articles
 
 - [Build a Secure Twilio Webhook with Python and FastAPI](https://www.twilio.com/blog/build-secure-twilio-webhook-python-fastapi)
 - [Build a Secret Santa Bot for WhatsApp Using Python and Twilio](https://www.twilio.com/blog/build-secret-santa-bot-whatsapp-python-twilio)
+- Build an SMS Microservice Using Python, Twilio and Redis Pub/Sub — Twilio, 2020
 - [Python, Django and GitHub CI/CD](https://medium.com/@_gabiCavalcante/python-django-and-github-ci-cd-65f9eae7e6fa)
 - [WebScraping, Python e Ordem da Câmara dos Vereadores](https://medium.com/@_gabiCavalcante/webscraping-python-e-ordem-da-c%C3%A2mara-dos-deputados-f6b46a088228)
