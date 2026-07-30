@@ -3,21 +3,10 @@ title = "Curriculum"
 date = "2026-07-30"
 +++
 
-Hi! My name is Gabi Cavalcante. I’m a full-stack engineer and tech lead with 9+ years of professional software engineering experience, including 5+ years leading Python/Django SaaS platform teams on Azure. I combine hands-on full-stack delivery with engineering leadership across data platform, infrastructure, and security/compliance work.
+Hi! My name is Gabi Cavalcante. 
+I’m a full-stack engineer and tech lead with 9+ years of software engineering experience, including 5+ years leading Python/Django SaaS platform teams on Azure. I combine hands-on full-stack delivery with engineering leadership across data platform, infrastructure, and security/compliance work.
 
-I hold a BSc in Information Technology from Universidade Federal do Rio Grande do Norte (UFRN), Natal, Brazil, obtained in 2016. During the 2015-2016 academic year, I was awarded a scholarship by the BRAFITEC exchange program, and studied at Polytech Nice Sophia, France.
-
-Areas of interest include Data Platforms, Distributed Systems, Automatization, Tests, Quality Engineer. I am also one of the founders of PyLadies of Brasil.
-
-# Skills
-
-| Area | |
-| --- | --- |
-| Languages | Python, JavaScript/Node.js, Golang |
-| Frameworks | Django, Flask, FastAPI |
-| Data | PostgreSQL, MongoDB, Redis, RabbitMQ, Elasticsearch, Celery |
-| Cloud & Infra | Azure, GCP, Docker, Terraform, GitHub Actions, CircleCI |
-| Practices | TDD (pytest), code review, system design, SOC 2 compliance |
+I've been spending a lot of time thinking about API design, PostgreSQL performance, cloud infrastructure, observability, and how to build software that stays maintainable as teams grow.
 
 # Positions
 
@@ -79,15 +68,13 @@ I worked at TSMX developing solutions for the management system for internet pro
 
 ---
 
-### – Surfmappers/Crossmappers
+### – Surfmappers
 
 | Title | Start | End |
 | --- | --- | --- |
 | Back-end Python Dev | 01/2019 | 07/2019 | 
 
-[Surfmappers](https://www.surfmappers.com/home) is a marketplace for surf photos, a platform to help photographers to sell surf shots. The company created a similar solution for CrossFit athletes, the [Crossmappers](https://www.crossmappers.com/).
-
-I provided solutions for the backend side of Crossmappers, using technologies as Python, Pyramid, Flask and MongoDB. I developed a solution for face recognition to find the athletes faces in the snaps and suggest for them buy it. I used the [MAX-Facial-Recognizer](https://github.com/gabicavalcante/MAX-Facial-Recognizer), a project developed as part of the IBM Code Model Asset Exchange using a model is based on the [FaceNet model](https://github.com/davidsandberg/facenet).
+[Surfmappers](https://www.surfmappers.com/surfer/p/albums) is a marketplace for surf photos, a platform to help photographers to sell surf shots. I provided solutions for the backend, using technologies as Python, Pyramid, Flask and MongoDB. I developed a solution for face recognition to find the athletes faces in the snaps and suggest for them buy it. I used the [MAX-Facial-Recognizer](https://github.com/gabicavalcante/MAX-Facial-Recognizer), a project developed as part of the IBM Code Model Asset Exchange using a model is based on the [FaceNet model](https://github.com/davidsandberg/facenet).
 
 **Technologies**: Python, Flask Framework, Pyramid Framework, Mongo.
 
