@@ -1,7 +1,6 @@
 +++
 title = "About"
 date = "2026-07-30"
-image = "me2.jpg"
 +++
 
 Hi! My name is **Gabi Cavalcante**. I’m a full-stack engineer and tech lead based in Campinas, Brazil, with 9+ years of Python behind me — mostly Django, plus the data platform and infrastructure that sits around it.
