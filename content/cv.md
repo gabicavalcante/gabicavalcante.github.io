@@ -143,27 +143,16 @@ In December 2013 I started to work remotely as a Python Developer Intern at Anch
 | Université Nice Sophia Antipolis | 2015-2016 | Sandwich Degree (exchange program BRAFITEC), Informatique et Gestion |
 | Federal University of Rio Grande do Norte | 2012-2016 | BSc, Information Technology |
 
-# Small Courses
-
-| Course Name | Year | Institution | Certificate |
-| --- | --- | --- | --- |
-| MongoDB Basics | 2020 | MongoDB University | [Link](https://university.mongodb.com/course_completion/c4c38ed7-fe17-4877-a2fc-8c096451b9b8/printable) | 
-
 # Languages
 
 | Language | Level |
 | --- | --- |
 | Portuguese | Native |
 | English | Professional working |
-| French | A2 | 
 
 # Talks and Workshops
 
-| Title | Type | Conference | Locality | Date |
-| --- | --- | --- | --- | --- |
-| [Web Scraping](https://slides.com/gabicavalcante/web-scraping) | Talk | — | — | — |
-| What I learned with PyLadies | Talk | 1° PyLadies Brazil Conf | Natal, Brazil | Oct/18 |
-| Python: O poder da linguagem, diversidade e mercado de trabalho | Talk | Campus Party Recife 2016 | Natal, Brazil | Aug/16 | 
+- [Web Scraping](https://slides.com/gabicavalcante/web-scraping) — slides
 
 # Publications
 
