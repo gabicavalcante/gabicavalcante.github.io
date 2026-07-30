@@ -1,39 +1,7 @@
 # TODO
 
-Loose ends from the July 2026 Hugo source reconstruction. Nothing here is
-broken — the site builds, deploys and is verified against the `pre-hugo-rebuild`
-tag. These are decisions deferred or work deliberately left out of scope.
-
-Roughly ordered by value, not urgency.
-
----
-
-## Content — your call, not mechanical
-
-### `/about/` and `/cv/` are six years stale
-The highest-value item on this list, and the only one a visitor notices.
-
-Both pages still describe 2020: "I work at Cloudia", "Now my challenge is to
-optimizate the data processing", and under Education, "2016 - in progress".
-`/cv/` has no position after 03/2019–present at Cloudia, and states "planning on
-enrolling as an M.Sc. student".
-
-The migration fixed typos only — rewriting your bio is a content decision.
-Files: `content/about/index.md`, `content/cv.md`.
-
-### Decide the fate of the 4 draft posts
-All four are `draft: true` and currently 404. They were reachable-but-unlisted
-before the rebuild.
-
-| post | what it is | suggestion |
-|---|---|---|
-| `my-first-post` | yours, 2016, OpenCv + Intel Galileo | publish or delete — it's real writing |
-| `notes-about-multi-objective-algorithms` | yours, unfinished — stops mid-outline at `### wfg tookit` | finish or delete |
-| `introduction`, `what-is-hugo` | the **theme's demo posts**, copied in during 2020 setup | delete; upstream boilerplate, not yours |
-
-Typos in `notes-about-multi-objective-algorithms` were left verbatim on purpose
-("undestand", "Wailking Fish Group", "tread-off", "tookit") — no point editing
-prose that's getting rewritten.
+-[ ] `/about/` and `/cv/` are six years stale. `content/about/index.md`, `content/cv.md`.
+-[ ] review typos
 
 ### Small content defects found but not changed
 Judged out of scope for a typo pass:
@@ -49,11 +17,6 @@ Judged out of scope for a typo pass:
 - `content/posts/lets-talk-about-communication/index.md` — "eles podem nunca
   fazer que não estão entendendo" reads garbled ("falar"?). Left alone rather
   than guess at your meaning.
-
-### Is `me2.jpg` meant to be visible?
-It's only the `og:image` for social cards, never displayed on the page. That's
-faithful to the old site, which had no `<img>` either — but if you meant to have
-a photo on `/about/`, it never appeared.
 
 ---
 
@@ -127,13 +90,6 @@ misbehaving later, this is the first place to look — `upload-pages-artifact`
 v3→v5 and `deploy-pages` v4→v5 are the likeliest to have changed behaviour.
 `git revert` of the relevant merge commit is the fast way back.
 
-### Confirm the CI runs actually went green
-Never verified per-run status — `gh` isn't authenticated in the environment
-where this work was done, so only the live site's `last-modified` header was
-available as evidence. That confirmed *a* deployment landed, but not that every
-individual run succeeded, across ten commits (five hardening + five Dependabot
-merges). One glance at the Actions tab closes this out.
-
 ---
 
 ## Site hygiene
@@ -142,16 +98,6 @@ merges). One glance at the Actions tab closes this out.
 Both build and sit in `sitemap.xml`, and both list nothing — no post declares
 any term. Either start tagging posts, or suppress the taxonomies in `hugo.toml`
 so you stop publishing two empty pages.
-
-### Hugo deprecation warning on every build
-```
-WARN  deprecated: .Site.LanguageCode was deprecated in Hugo v0.158.0
-```
-Traced: **not** our config (which uses `locale`) and **not** the theme (no
-`rss.xml`; its `sitemap.xml` doesn't reference it). It comes from Hugo's own
-embedded `_internal/rss.xml`. Nothing to fix — it resolves when Hugo updates
-that template. Suppressible with a custom `layouts/rss.xml` if the noise ever
-bothers you.
 
 ---
 
@@ -174,10 +120,6 @@ bothers you.
 
 Not tasks. Recorded so nobody later mistakes them for bugs.
 
-- Dates render `Aug 15, 2020` instead of `Aug. 15, 2020` — newer Hugo/theme
-  `:date_medium` formatting.
 - The `// Github` link is gone from post headers; the current theme reads only
   `linkedin` and `twitter`. Restoring it needs a `layouts/posts/single.html`
   override, declined as not worth the maintenance.
-- The theme's vendored CSS moved on (terminal 0.7.4, animate 4.1.1 vs the old
-  0.7.1 / 3.7.2), so small visual drift is expected.
