@@ -56,10 +56,12 @@ content/
 - **Renaming a slug requires an `aliases` entry.** `matplotlib-seaborn-relplot`
   carries `aliases = ["/posts/matplotlib-searborn-replot/"]` so the old
   misspelled URL still redirects. Do the same for any future rename.
-- **4 posts are drafts** (`introduction`, `what-is-hugo`, `my-first-post`,
-  `notes-about-multi-objective-algorithms`) and produce no pages. The first two
-  are the *theme's own demo content*, copied in during the 2020 setup — that is
-  why their titles look swapped. Not Gabi's writing.
+- **2 posts are drafts** (`notes-about-multi-objective-algorithms`,
+  `take-picture-with-opencv-galileo`) and produce no pages. Confirm with
+  `hugo list drafts` rather than trusting this line. The theme's own demo
+  content (`introduction`, `what-is-hugo`, `my-first-post`), copied in during
+  the 2020 setup, was deleted in ac2678e; it still exists at the
+  `pre-hugo-rebuild` tag, which is why the old site has those URLs.
 - Post content is mixed English and Brazilian Portuguese while the site declares
   `en-us`. Keep a post in whatever language it already uses.
 
