@@ -5,6 +5,18 @@ locale = "en-us"
 defaultContentLanguage = "en"
 enableRobotsTXT = true
 
+# Term pages are titled from the term itself, so without this Hugo title-cases
+# them and `data-visualization` renders as `Data-Visualization`. Must stay at
+# the top level -- putting it after [params] makes it a param, where nothing
+# reads it.
+capitalizeListTitles = false
+
+# Declaring this replaces Hugo's defaults, which are tags AND categories.
+# Nothing on the site sets a category, and the default left an empty
+# /categories/ page in the build and the sitemap.
+[taxonomies]
+  tag = "tags"
+
 # Theme is pulled in as a Hugo Module, pinned in go.mod / go.sum.
 # Update with: hugo mod get -u github.com/mrmierzejewski/hugo-theme-console
 [module]
