@@ -1,6 +1,7 @@
 +++
 title = "Python, Django and GitHub CI"
 date = "2019-09-30"
+tags = ["python", "django", "ci-cd"]
 +++
 
 GitHub Actions was introduced last year, and it’s an API for cause and effect on GitHub. You can orchestrate any workflow, based on any event, you can have your workflow run on push events to master and release branches, or only run on `pull_request` events that target the master branch, or run every day of the week at Friday 02:00. The workflows are code in a repository, as you will see in this project, so you can create, share, reuse, and fork.

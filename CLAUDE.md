@@ -31,11 +31,13 @@ hugo mod get -u github.com/mrmierzejewski/hugo-theme-console   # update theme
 hugo.toml                 baseURL, nav (params.navlinks), monokai highlighting
 go.mod / go.sum           theme module, pinned by commit
 layouts/index.html        homepage override — see below, do not delete
+layouts/posts/single.html post override: Github link + tag links
+layouts/_default/terms.html  /tags/ index — see Taxonomy below
 .github/workflows/hugo.yml
 content/
   about/index.md              page bundle; no image (me2.jpg was removed)
   cv.md                      
-  posts/_index.md             cascades linkedin/twitter to every post
+  posts/_index.md             cascades linkedin/twitter/github to every post
   posts/<slug>/index.md       one bundle per post
 ```
 
@@ -87,9 +89,16 @@ the hash. Pin a new commit deliberately; don't float.
 
 Known limits, all upstream:
 
-- Only `linkedin` and `twitter` render in post headers. The pre-2026 site also
-  showed a Github link; restoring it needs a `layouts/posts/single.html`
-  override, which was declined as not worth the maintenance.
+- Only `linkedin` and `twitter` render in post headers, and tags render
+  nowhere at all. Both are fixed by `layouts/posts/single.html`, which is why
+  that override now exists. The Github link had been declined on its own as
+  not worth the maintenance; tags needed the same file, so it came along.
+- The theme can never emit `article:tag` OpenGraph meta.
+  `partials/opengraph.html` nests the tag loop inside
+  `range .Site.Params.Authors`, which rebinds `.` to the author map, so
+  `.Params.tags` is empty inside it. Setting `[[params.Authors]]` does not
+  help; it only makes the sibling line emit an empty `article:section`.
+  Fixing it means overriding the partial, which is not worth it.
 - The build prints a `.Site.LanguageCode was deprecated` warning. It is neither
   this config (which uses `locale`) nor the theme (no `rss.xml`, and its
   `sitemap.xml` doesn't reference it) — it comes from Hugo's own embedded
@@ -140,6 +149,35 @@ Actions compromises rely on.
   the repo (`.local/`, gitignored). **That PDF is the source of truth for dates**
   — it is what settled two one-month disagreements the old page had. Update it
   first, then the page.
-- `categories/` and `tags/` pages generate but are empty: no post declares terms.
 - If a `CNAME` is ever re-added, `baseURL` in `hugo.toml` must change with it.
   That mismatch is why the old `gabicavalcante.me` domain misbehaved.
+
+## Taxonomy
+
+`tags` is the only taxonomy. `[taxonomies] tag = "tags"` in `hugo.toml`
+*replaces* Hugo's defaults, which are tags **and** categories; nothing here
+sets a category, and the default was building an empty `/categories/` page
+into the site and the sitemap.
+
+Hugo's two taxonomy template names are the reverse of what they sound like.
+Verified on 0.164, so don't re-derive it from the names:
+
+| URL | Page kind | Template |
+|---|---|---|
+| `/tags/` | `taxonomy` | `layouts/_default/terms.html` |
+| `/tags/<term>/` | `term` | `layouts/_default/taxonomy.html` |
+
+Only `terms.html` is overridden. Term pages have no `taxonomy.html`, so they
+fall through to the theme's `_default/list.html`, and a dated list of posts
+with summaries is the right thing there. `terms.html` exists because that same
+list template rendered each *term* as a fake post: empty summary, plus a
+meaningless date inherited from the newest post carrying it.
+
+`capitalizeListTitles = false` keeps term titles lowercase, so
+`data-visualization` does not render as `Data-Visualization`. It has to stay at
+the **top level** of `hugo.toml`; appended after `[params]` it silently becomes
+a param that nothing reads.
+
+Tags are lowercase and hyphenated, and posts carry two to four. Adding one is
+just `tags = [...]` in the post's front matter; every page under `/tags/` is
+generated, so never create files there.

@@ -2,6 +2,7 @@
 title = "A guide to setup plots using seaborn FacetGrid/relplot plots"
 date = "2020-08-15"
 aliases = ["/posts/matplotlib-searborn-replot/"]
+tags = ["python", "data-visualization"]
 +++
 
 Using seaborn and matplotlib to make great plots isn’t easy. I have been looking on the internet for complete tutorials about how to setup a good plot, but I only found small pieces of code. So now I want to show a few tips to plot data using the Google Global Mobility Report and matplotlib.

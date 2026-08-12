@@ -1,6 +1,7 @@
 +++
 title = "Reliability in Django and Celery: how tasks get lost"
 date = "2026-08-12"
+tags = ["python", "django", "celery", "reliability"]
 +++
 
 Every Django project I have worked on reaches the same moment. A request is too slow, someone moves the slow part into a Celery task, and the page gets fast. What usually goes unnoticed is that the function stopped being a function. It became a message, handed to a broker you do not control, to be run by a worker that might die halfway through. This post is my study guide for everything that can go wrong in that handoff, and what to do about each case.

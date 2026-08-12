@@ -1,6 +1,7 @@
 +++
 title = "Creating PDF with Latex and Django"
 date = "2019-10-01"
+tags = ["python", "django", "latex"]
 +++
 
 When I started in my new job, the first task was: reports. It was great because I didn’t know the software, but when I open the file that created PDFs, I found something really messed up. I needed define each position of every thing (columns, rows, title…) in my document, and define that in centimetres. So, a task that should take some time, would take much more.

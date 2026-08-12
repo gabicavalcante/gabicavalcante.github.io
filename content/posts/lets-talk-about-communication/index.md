@@ -1,6 +1,7 @@
 +++
 title = "Vamos trocar umas ideias sobre comunicação"
 date = "2019-12-22"
+tags = ["community", "speaking"]
 +++
 
 A ideia aqui é juntar sugestões que podem te ajudar caso você queira/vá dar um curso/aula/palestra e esteja preocupada em como fazer isso. Juntei algumas coisas que observei ao longo desses anos trabalhando no [PyLadies Brasil](http://brasil.pyladies.com/about/), e talvez você possa aproveitar um pouco disso :) A ideia do post surgiu de uma conversa no grupo do [PyLadies Natal](https://www.instagram.com/pyladiesnatal/?hl=pt-br), então a própria construção dessas sugestões foi algo coletivo.

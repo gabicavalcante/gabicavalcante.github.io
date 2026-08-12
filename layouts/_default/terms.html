@@ -1,0 +1,33 @@
+{{/*
+  Renders /tags/. Without this Hugo falls back to the theme's
+  _default/list.html, which is written for posts: each term came out as a fake
+  post with an empty summary and a meaningless date, inherited from the newest
+  post carrying it. This lists the terms with their post counts instead.
+
+  Hugo's two taxonomy template names are the reverse of what they sound like,
+  and this was verified on 0.164, not assumed:
+
+    /tags/         kind `taxonomy`  ->  _default/terms.html     (this file)
+    /tags/python/  kind `term`      ->  _default/taxonomy.html
+
+  Term pages are deliberately NOT overridden. With no taxonomy.html they fall
+  through to the theme's list.html, and a dated list of posts with summaries
+  is exactly right there.
+*/}}
+{{ define "main" }}
+<h1>{{ .Title }}</h1>
+<br/>
+{{ .Content }}
+
+<div class="posts-list">
+{{ range .Pages.ByTitle }}
+    <div class="post">
+        <p>
+            <h1><a href="{{ .Permalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a></h1>
+            {{ $n := len .Pages }}{{ $n }} post{{ if ne $n 1 }}s{{ end }}
+        </p>
+    </div>
+{{ end }}
+</div>
+
+{{ end }}
