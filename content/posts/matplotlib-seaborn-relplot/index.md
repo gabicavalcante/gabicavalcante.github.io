@@ -1,17 +1,20 @@
 +++
-title = "A guide to setup plots using seaborn FacetGrid/relplot plots"
+title = "A guide to setting up seaborn FacetGrid and relplot charts"
 date = "2020-08-15"
 aliases = ["/posts/matplotlib-searborn-replot/"]
 tags = ["python", "data-visualization"]
 +++
 
-Using seaborn and matplotlib to make great plots isn’t easy. I have been looking on the internet for complete tutorials about how to setup a good plot, but I only found small pieces of code. So now I want to show a few tips to plot data using the Google Global Mobility Report and matplotlib.
+Using seaborn and matplotlib to make great plots isn’t easy. I had been looking on the internet for complete tutorials on how to set up a good plot, but I only found small pieces of code. So here are a few tips for plotting data with the Google Global Mobility Report and matplotlib.
 
 <!--more-->
 
-You can run the code using colab, find the complete tutorial here. But now, let’s start import all libraries that we need.
+The whole thing is in [this Colab notebook](https://colab.research.google.com/drive/1uoqxox1vMnOseLjNM-VYKObCEH3j5qXO?usp=sharing) if you want to run it while you read. Let’s start by importing the libraries we need.
 
 ```python
+from datetime import datetime
+
+import matplotlib.dates as mdates
 import matplotlib.pyplot as plt
 import pandas as pd
 import seaborn as sns
@@ -40,111 +43,158 @@ column_names = {
 }
 data = dt_original.rename(columns=column_names)
 
+# the six columns we actually want to plot
+value_columns = ["retail", "grocery_pharmacy", "parks", "transit_stations", "workplaces", "residential"]
+
 # filter the data and drop unnecessary columns
 regions = ["Japan", "Canada", "Germany", "Argentina"]
 columns_to_drop = ["census_fips_code", "metro_area", "iso_3166_2_code", "sub_region_1", "sub_region_2", "country_region_code"]
 data = data.query(f"locality_name in {regions}").drop(columns=columns_to_drop)
+
+# the plots below cover the first months of the pandemic
+data = data[data["date"] <= "2020-09-15"]
 ```
 
-We have the data that we need, now we can build a simple plot to show the values of all categories over time.
+That last line matters if you download the file today. The report kept growing until Google stopped publishing it in October 2022, so the CSV now holds two and a half years instead of the six months I had, and the axis settings further down are tuned for the shorter window.
+
+We have the data we need. Now we can build a simple plot to show the values of all categories over time. One thing to be careful about here: `melt` takes every column that isn’t an `id_var`, so it pays to name the value columns. The mobility CSV picked up a `place_id` column after I first wrote this, and a stray text column mixed in with the numbers makes matplotlib read the y axis as categorical and fail with a `TypeError`.
 
 ```python
-# first we melt the dataframe, to transform some column in rows.
-long_data = data.melt(id_vars=["locality_name", "date"], var_name="category", value_name="value")
+# melt turns the category columns into rows. Naming value_vars matters: without
+# it, melt takes every column that isn't an id_var, and any leftover text column
+# ends up mixed in with the numbers.
+long_data = data.melt(
+    id_vars=["locality_name", "date"],
+    value_vars=value_columns,
+    var_name="category",
+    value_name="value",
+)
 long_regions_plot = sns.relplot(
-    x="date", 
-    y="value", 
-    hue="category", 
-    data = long_data, 
-    col="locality_name", 
-    col_wrap=2, 
-    kind="line", 
-    height=6, 
-    legend="brief", 
-    aspect=1.5, 
-    markers=True, 
-    dashes=True
+    x="date",
+    y="value",
+    hue="category",
+    data=long_data,
+    col="locality_name",
+    col_wrap=2,
+    kind="line",
+    height=6,
+    legend="brief",
+    aspect=1.5,
+    markers=True,
+    dashes=True,
 )
 ```
 
-![alt text](plot1.png)
+![Four line charts, one per country, each with every mobility category overlaid. The titles, legend and axis labels are too small to read.](plot1.png)
 
-Looks good! But I can’t read the title, the legend is small so the axis too.
+Looks good! But I can’t read the title, the legend is small, and so are the axis labels.
+
+The shaded bands around each line are worth a word too. The query keeps every row for those countries, the national ones and the sub-regional ones, so each line is the mean across all of them and the band is the confidence interval seaborn draws around it. If you want the national numbers on their own, keep the rows where `sub_region_1` is empty.
+
+## Making it readable
+
+One thing to know before fixing any of that: `relplot` doesn’t give you back an Axes, it gives you a [FacetGrid](https://seaborn.pydata.org/generated/seaborn.FacetGrid.html) — a grid of subplots sharing a single legend. That is why the rest of the code loops over `.axes` instead of calling `plt` once, and why the legend needs handling of its own.
+
+First, the style. It can be any one of `white`, `dark`, `whitegrid`, `darkgrid` or `ticks`:
 
 ```python
-import matplotlib.dates as mdates
-
-
-# you can set the style to be one of white, dark, whitegrid, darkgrid, ticks
 sns.set_style('darkgrid', {'legend.frameon': True})
+```
 
-# lets melt the data to plot
-id_vars = ["country_region_code", "locality_name", "date"]
+I narrowed this plot down to Argentina, because further down I want to mark the dates its restrictions started and eased:
+
+```python
 data_to_plot = data.melt(
-    id_vars,
-    var_name="category", 
-    value_name="value"
-).query('locality_name=="Argentina"')
+    id_vars=["locality_name", "date"],
+    value_vars=value_columns,
+    var_name="category",
+    value_name="value",
+).query('locality_name == "Argentina"')
 
+argentina_plot = sns.relplot(
+    x="date",
+    y="value",
+    hue="category",
+    data=data_to_plot,
+    col="locality_name",
+    col_wrap=2,
+    kind="line",
+    height=6,
+    legend="brief",
+    aspect=1.5,
+    markers=True,
+    dashes=True,
+)
+```
 
-long_regions_plot = sns.relplot(
-      x="date", 
-      y="value", 
-      hue="category", 
-      data = data_to_plot, 
-      col="locality_name", 
-      col_wrap=2, 
-      kind="line", 
-      height=6, 
-      legend="brief", 
-      aspect=1.5, 
-      markers=True, 
-      dashes=True
-  )
+Now the legend. The FacetGrid one sits outside the grid, so I drop it and build a per-subplot legend instead, with labels that read like English:
 
-        
-long_regions_plot._legend.remove()
+```python
+pretty_labels = {
+    "retail": "Retail & Recreation",
+    "grocery_pharmacy": "Grocery & Pharmacy",
+    "parks": "Parks",
+    "transit_stations": "Transit Stations",
+    "workplaces": "Workplaces",
+    "residential": "Residential",
+}
 
-# Iterate thorugh each axis
-for ax in long_regions_plot.axes:
-    ax.set(xlabel='Date', ylabel='') 
+argentina_plot._legend.remove()
+
+# .flat so this works whether or not col_wrap is set
+for ax in argentina_plot.axes.flat:
+    ax.set(xlabel='Date', ylabel='')
 
     handles, labels = ax.get_legend_handles_labels()
     if handles:
-      set_labels = ['Retail & Recreation', 'Grocery & Pharmacy', 'Parks', 'Transit Stations', 'Workplaces']
-      ax.legend(handles=handles[1:], labels=set_labels, title="", fontsize=11, title_fontsize=11)
-    
+        # pair every handle with its own label instead of slicing by position:
+        # older seaborn returned the hue title as the first handle, newer ones
+        # don't, and slicing shifts every label by one when that changes
+        pairs = [(handle, pretty_labels[label])
+                 for handle, label in zip(handles, labels)
+                 if label in pretty_labels]
+        ax.legend(
+            handles=[handle for handle, _ in pairs],
+            labels=[label for _, label in pairs],
+            title="",
+            fontsize=11,
+            title_fontsize=11,
+        )
 
-    # Make x and y-axis labels slightly larger
+    # make x and y-axis labels slightly larger
     ax.set_xlabel(ax.get_xlabel(), fontsize=14)
     ax.set_ylabel(ax.get_ylabel(), fontsize=14)
 
-    # Make title more human-readable and larger
+    # make the title more human-readable and larger
     if ax.get_title():
         final_txt = ax.get_title().split('=')[1].strip().capitalize()
         ax.set_title(final_txt, fontsize=20)
 
-    #set ticks every week
-    ax.xaxis.set_major_locator(mdates.WeekdayLocator())
-    
-    #set major ticks format
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b'))
+    # one tick every five weeks, labelled with month and year -- '%b' alone
+    # repeats itself once the range covers more than a single year
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%b %Y'))
     ax.xaxis.set_major_locator(mdates.WeekdayLocator(interval=5))
+```
 
+Last, the two dashed lines for the restriction dates, plus the tick size and a fixed range for the y axis so the plot doesn’t rescale itself when the data changes:
 
-# now I want to show line for restriction date and easy restriction date
-from datetime import datetime
-
-restriction_date = datetime.strptime('2020-02-23', '%Y-%m-%d') 
+```python
+restriction_date = datetime.strptime('2020-02-23', '%Y-%m-%d')
 ease_restriction_date = datetime.strptime("2020-05-11", '%Y-%m-%d')
 
 plt.axvline(restriction_date, color='k', linestyle='dashed', linewidth=1)
 plt.axvline(ease_restriction_date, color='k', linestyle='dashed', linewidth=1)
 
-# tick label size
-plt.tick_params(axis='both',labelsize=13)
+plt.tick_params(axis='both', labelsize=13)
 
-# set a range for y axis
-axes = plt.gca() 
+axes = plt.gca()
 axes.set_ylim([-120, 220])
 ```
+
+Those last few calls go through `plt.gca()`, so they only touch the current subplot. That is fine here because Argentina is the only one, but if you plot the four countries again you need to move them inside the loop, the same way as everything else.
+
+And that gives us this:
+
+![One large chart titled Argentina, with a readable legend naming all six mobility categories, month-and-year labels on the date axis, and two dashed vertical lines marking the restriction dates.](plot2.png)
+
+Same data, same seaborn call, just a readable version of it.
