@@ -179,7 +179,7 @@ for ax in argentina_plot.axes.flat:
 Last, the two dashed lines for the restriction dates, plus the tick size and a fixed range for the y axis so the plot doesn’t rescale itself when the data changes:
 
 ```python
-restriction_date = datetime.strptime('2020-02-23', '%Y-%m-%d')
+restriction_date = datetime.strptime('2020-03-20', '%Y-%m-%d')
 ease_restriction_date = datetime.strptime("2020-05-11", '%Y-%m-%d')
 
 plt.axvline(restriction_date, color='k', linestyle='dashed', linewidth=1)
@@ -190,6 +190,8 @@ plt.tick_params(axis='both', labelsize=13)
 axes = plt.gca()
 axes.set_ylim([-120, 220])
 ```
+
+Both dates are Argentina’s: mandatory isolation took effect on 20 March 2020 ([DNU 297/2020](https://www.boletinoficial.gob.ar/detalleAviso/primera/227042/20200320)), and restrictions started easing on 11 May.
 
 Those last few calls go through `plt.gca()`, so they only touch the current subplot. That is fine here because Argentina is the only one, but if you plot the four countries again you need to move them inside the loop, the same way as everything else.
 
