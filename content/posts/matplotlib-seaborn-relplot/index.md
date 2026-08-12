@@ -9,6 +9,8 @@ Using seaborn and matplotlib to make great plots isn’t easy. I had been lookin
 
 <!--more-->
 
+> **Update, August 2026.** The mobility report has changed since I wrote this. It gained a `place_id` column, and it now covers February 2020 to October 2022, when Google stopped publishing it — I was working with the first six months. The code below accounts for both: the `melt` calls name `value_vars`, and the data is cut back to the window the plots were made for.
+
 The whole thing is in [this Colab notebook](https://colab.research.google.com/drive/1uoqxox1vMnOseLjNM-VYKObCEH3j5qXO?usp=sharing) if you want to run it while you read. Let’s start by importing the libraries we need.
 
 ```python
@@ -55,9 +57,7 @@ data = data.query(f"locality_name in {regions}").drop(columns=columns_to_drop)
 data = data[data["date"] <= "2020-09-15"]
 ```
 
-That last line matters if you download the file today. The report kept growing until Google stopped publishing it in October 2022, so the CSV now holds two and a half years instead of the six months I had, and the axis settings further down are tuned for the shorter window.
-
-We have the data we need. Now we can build a simple plot to show the values of all categories over time. One thing to be careful about here: `melt` takes every column that isn’t an `id_var`, so it pays to name the value columns. The mobility CSV picked up a `place_id` column after I first wrote this, and a stray text column mixed in with the numbers makes matplotlib read the y axis as categorical and fail with a `TypeError`.
+We have the data we need. Now we can build a simple plot to show the values of all categories over time. One thing to be careful about here: `melt` takes every column that isn’t an `id_var`, so it pays to name the value columns. A stray text column mixed in with the numbers makes matplotlib read the y axis as categorical and fail with a `TypeError`.
 
 ```python
 # melt turns the category columns into rows. Naming value_vars matters: without
