@@ -4,9 +4,9 @@ date = "2026-07-30"
 +++
 
 Hi! My name is Gabi Cavalcante.
-I’m a full-stack engineer and tech lead with 9+ years of software engineering experience, including 5+ years leading Python/Django SaaS platform teams on Azure. I combine hands-on full-stack delivery with engineering leadership across data platform, infrastructure, and security/compliance work.
+I’m a full-stack engineer and tech lead with 9+ years of software engineering experience, including 5+ years leading Python/Django SaaS platform teams on Azure. I still write code, and I also lead the work on our data platform, infrastructure, and security and compliance.
 
-I’ve been spending a lot of time thinking about API design, PostgreSQL performance, cloud infrastructure, observability, and how to build software that stays maintainable as teams grow.
+I’ve been spending a lot of time thinking about API design, PostgreSQL performance, cloud infrastructure, observability, and how to keep software maintainable as a team grows.
 
 # Positions
 
@@ -18,15 +18,15 @@ I’ve been spending a lot of time thinking about API design, PostgreSQL perform
 
 **Technologies**: Python, Django, React, PostgreSQL, Azure, Celery, Terraform, GitHub Actions, Pytest.
 
-I work at [Vinta Software](https://www.vinta.com.br/), where I lead the Data Platform and Platform/Infrastructure team, focusing on API orchestration, data ingestion, and platform security and reliability. Before this team I led a full-stack App Squad building with Django and React, with my own focus on the backend architecture.
+I work at [Vinta Software](https://www.vinta.com.br/), where I lead the Data Platform and Platform/Infrastructure team. The work is API orchestration, data ingestion, and platform security and reliability. Before this team I led a full-stack App Squad building with Django and React, and my own focus was the backend architecture.
 
-I also drove the technical evidence and architecture documentation for our SOC 2 Type II certification and for an enterprise client security review, covering access lifecycle, audit logging, and Azure architecture diagrams. More recently I built an AI-assisted code review skill to catch Django migrations that risk production downtime or table locks before merge.
+I also drove the technical evidence and architecture documentation for our SOC 2 Type II certification and for an enterprise client security review. That meant writing up the access lifecycle and the audit logging, and drawing the Azure architecture diagrams. More recently I built an AI-assisted code review skill to catch Django migrations that risk production downtime or table locks before merge.
 
 I’m not an infra person, more of a DevOps one, so many of my achievements had an impact on the developer experience: a full CI/CD pipeline, security integrated into the CI, deployments using Docker, zero-downtime migrations, rollback strategies, etc.
 
 On the backend side, I’m excited about performance improvements. I optimized critical PostgreSQL jobs: a daily execution went from over 1 hour to under 2 minutes, and a monthly one from over 5 hours to under 5 minutes. I cut a critical report task from 33 minutes (p95) to 8 seconds. I rebuilt the platform’s worst-performing endpoint from scratch; response time went from 140 seconds to under 1 second.
 
-Leading the team is the other half of the job: 1:1s, career development conversations, and mentoring; partnering with Product and Design on roadmap priorities, technical feasibility, and delivery timelines; running incident management and post-incident reviews for production issues; and upholding engineering practices like TDD, pair programming, and structured code review across the team.
+Leading the team is the other half of the job: 1:1s, career development conversations, mentoring. I work with Product and Design on roadmap priorities, technical feasibility, and delivery timelines, and when production breaks I run the incident and the post-incident review. I also hold the team to TDD, pair programming, and structured code review.
 
 ---
 
@@ -38,7 +38,7 @@ Leading the team is the other half of the job: 1:1s, career development conversa
 
 **Technologies**: Python, Flask Framework, FastAPI, Node.js, GCP (BigQuery, Cloud Functions, Cloud Run), Azure Pipelines, MongoDB, PostgreSQL, MySQL.
 
-I worked on the Governance team at [Stone](https://www.stone.com.br/), building developer-experience tooling to ensure compliance with regulatory bodies. Much of the work was automating manual processes and strengthening controls, so the internal developer tools would hold up as the company scaled.
+I worked on the Governance team at [Stone](https://www.stone.com.br/), building developer-experience tooling for compliance with regulatory bodies. Most of the work was automating manual processes and strengthening controls, so those tools would keep up as the company grew.
 
 ---
 
@@ -140,11 +140,11 @@ With the visibility that cloud computing has been acquiring, it is observed that
 
 # Talks and Workshops
 
-- [Web Scraping](https://slides.com/gabicavalcante/web-scraping) — slides
+- [Web Scraping](https://slides.com/gabicavalcante/web-scraping) (slides)
 
 # Publications
 
-- Multi-Factor Authentication for Shibboleth Identity Providers — Journal of Internet Services and Applications, 2020
+- Multi-Factor Authentication for Shibboleth Identity Providers. Journal of Internet Services and Applications, 2020
 - Google COVID-19 Community Mobility Reports: Insights from Multi-Criteria Decision Making
 - A Multi-Objective Time Series Analysis of Community Mobility Reduction Comparing First and Second COVID-19 Waves
 
