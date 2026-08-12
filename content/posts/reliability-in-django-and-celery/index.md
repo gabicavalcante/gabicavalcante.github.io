@@ -4,7 +4,7 @@ date = "2026-08-12"
 tags = ["python", "django", "celery", "reliability"]
 +++
 
-Every Django project I have worked on reaches the same moment. A request is too slow, someone moves the slow part into a Celery task, and the page gets fast. What usually goes unnoticed is that the function stopped being a function. It became a message, handed to a broker you do not control, to be run by a worker that might die halfway through. This post is my study guide for everything that can go wrong in that handoff, and what to do about each case.
+Every Django project I have worked on reaches the same moment. A request is too slow, someone moves the slow part into a Celery task, and the page gets fast. Quietly, the function has stopped being a function. It became a message, handed to a broker you do not control, to be run by a worker that might die halfway through. This post is my study guide for everything that can go wrong in that handoff, and what to do about each case.
 
 <!--more-->
 
@@ -12,7 +12,7 @@ I wrote it from notes I collected while working on Django projects with Celery, 
 
 ## Where we start
 
-Here is an ordinary function. It creates an order, applies pricing rules, and assigns a fulfillment center.
+Here is an ordinary function. It creates an order, emails the customer, and assigns a fulfillment center.
 
 ```python
 @transaction.atomic
@@ -24,13 +24,7 @@ def create_order(cart, customer, source=ORDER_SOURCE.web, created_by=None):
         created_by=created_by,
     )
 
-    pricing_rules = customer.account.pricing_rules.filter(
-        is_draft=False,
-        is_active=True,
-        event=PRICING_EVENT.ORDER_CREATED,
-    )
-    if pricing_rules.exists():
-        apply_pricing_rules(pricing_rules=pricing_rules, order=order)
+    send_order_confirmation_email(order)
 
     assign_fulfillment_center(order)
     return order
@@ -38,27 +32,21 @@ def create_order(cart, customer, source=ORDER_SOURCE.web, created_by=None):
 
 `@transaction.atomic` means the whole block commits together or not at all. Hold on to that, because the first thing Celery does is break it.
 
-Right now this code is correct. It is only slow. The request takes four seconds, because pricing rules call a third party API and fulfillment scans inventory, and the user is watching a spinner. So we move the slow part to Celery.
+Right now this code is correct. It is only slow. The request takes four seconds, because the email goes out through a third party provider and assigning fulfillment scans inventory, and the customer is watching a spinner. So we move the slow part to Celery.
 
 ```python
 @transaction.atomic
 def create_order(cart, customer, source=ORDER_SOURCE.web, created_by=None):
     order = Order.objects.create(...)
 
-    pricing_rules = customer.account.pricing_rules.filter(...)
-
-    if pricing_rules.exists():
-        apply_pricing_rules.delay(
-            pricing_rules=pricing_rules,
-            order=order,
-        )
+    send_order_confirmation_email.delay(order=order)
 
     assign_fulfillment_center(order)
     return order
 
 
 @celery_app.task
-def apply_pricing_rules(pricing_rules, order):
+def send_order_confirmation_email(order):
     ...
 ```
 
@@ -81,32 +69,26 @@ Three processes, two network hops, no shared memory. Every guarantee you had ins
 Look again at what we sent:
 
 ```python
-apply_pricing_rules.delay(
-    pricing_rules=pricing_rules,  # a QuerySet
-    order=order,                  # a model instance
+send_order_confirmation_email.delay(
+    order=order,   # a model instance
 )
 ```
 
-Since Celery 4.0 the default serializer is JSON, which supports a restricted set of types. QuerySets and model instances are not among them. Pickle would accept them, and pickle is a remote code execution hole, so that is not a fix. Keep the arguments to integers, strings, lists and dicts.
+Since Celery 4.0 the default serializer is JSON, which supports a restricted set of types. Model instances and QuerySets are not among them. Pickle would accept them, and pickle is a remote code execution hole, so that is not a fix. Keep the arguments to integers, strings, lists and dicts.
 
 ```python
-if pricing_rules.exists():
-    apply_pricing_rules.delay(
-        pricing_rule_ids=[str(pk) for pk in pricing_rules.values_list("id", flat=True)],
-        order_id=str(order.id),
-    )
+send_order_confirmation_email.delay(order_id=str(order.id))
 
 
 @celery_app.task
-def apply_pricing_rules(pricing_rule_ids, order_id):
+def send_order_confirmation_email(order_id):
     order = Order.objects.get(id=order_id)
-    rules = PricingRule.objects.filter(id__in=pricing_rule_ids)
     ...
 ```
 
 Serialization is only half the reason. The other half is staleness. A model instance is a snapshot of a row at the moment you queued the task. By the time a worker picks it up, the row may have changed, or somebody may have deleted it. Passing an ID forces the task to read the world as it is now instead of as it was.
 
-Which leads to a consequence worth writing down: your task has to handle `DoesNotExist`. The row you queued for might be gone by the time anyone looks.
+So your task has to handle `DoesNotExist`. The row you queued for might be gone by the time anyone looks.
 
 ### Keep the payload small
 
@@ -135,10 +117,9 @@ This is the bug I see most often, and the one that hides best.
 def create_order(cart, customer, ...):
     order = Order.objects.create(...)        # not committed yet
 
-    if pricing_rules.exists():
-        apply_pricing_rules.delay(           # message sent right now
-            order_id=str(order.id),
-        )
+    send_order_confirmation_email.delay(     # message sent right now
+        order_id=str(order.id),
+    )
 
     assign_fulfillment_center(order)         # slow, and might raise
     return order
@@ -147,15 +128,15 @@ def create_order(cart, customer, ...):
 The message goes out while the transaction is still open. What happens next depends on timing:
 
 1. Django opens the transaction and inserts the order, uncommitted.
-2. Django publishes `apply_pricing_rules(order_id)`.
+2. Django publishes `send_order_confirmation_email(order_id)`.
 3. The broker delivers it to a worker.
 4. The worker runs `Order.objects.get(id=...)` and gets `DoesNotExist`, because from its connection the row does not exist yet.
 5. Meanwhile `assign_fulfillment_center` is still running.
 6. Django commits, several hundred milliseconds too late.
 
-The worse version of this is when `assign_fulfillment_center` raises. Then the transaction rolls back, the order never existed at all, and the task ran anyway.
+The worse version of this is when `assign_fulfillment_center` raises. Then the transaction rolls back, so the order never existed, and you have emailed the customer to confirm it. That is the part worth sitting with: the database undid its half, and the email provider cannot undo yours.
 
-What makes it nasty is that it is timing dependent. On your laptop, with one worker and a fast local database, the commit usually wins the race and everything passes. Under production load it starts failing, and the traceback points at the task, which is not where the bug is.
+It is timing dependent, and that is what makes it nasty. On your laptop, with one worker and a fast local database, the commit usually wins the race and everything passes. Under production load it starts failing, and the traceback points at the task, which is not where the bug is.
 
 The fix is `transaction.on_commit`, which defers the publish until the transaction actually commits.
 
@@ -164,13 +145,11 @@ The fix is `transaction.on_commit`, which defers the publish until the transacti
 def create_order(cart, customer, ...):
     order = Order.objects.create(...)
 
-    if pricing_rules.exists():
-        transaction.on_commit(
-            lambda: apply_pricing_rules.delay(
-                pricing_rule_ids=rule_ids,
-                order_id=str(order.id),
-            )
+    transaction.on_commit(
+        lambda: send_order_confirmation_email.delay(
+            order_id=str(order.id),
         )
+    )
 
     assign_fulfillment_center(order)
     return order
@@ -185,25 +164,25 @@ This one is easy to get wrong, and I have written it myself:
 ```python
 # wrong
 transaction.on_commit(
-    apply_pricing_rules.delay(order_id=oid)
+    send_order_confirmation_email.delay(order_id=oid)
 )
 
 # right
 transaction.on_commit(
-    lambda: apply_pricing_rules.delay(order_id=oid)
+    lambda: send_order_confirmation_email.delay(order_id=oid)
 )
 ```
 
-In the wrong version, `.delay()` runs immediately, exactly as it did before, so the race is still there. What you hand to `on_commit` is the resulting `AsyncResult`. If the transaction commits, Django tries to call it and you get `TypeError: 'AsyncResult' object is not callable`. If the transaction rolls back, Django never runs the callback, so there is no error at all. Just a task that fired for a transaction that never happened.
+In the wrong version, `.delay()` runs immediately, exactly as it did before, so the race is still there. You hand `on_commit` the resulting `AsyncResult` instead. If the transaction commits, Django tries to call it and you get `TypeError: 'AsyncResult' object is not callable`. If the transaction rolls back, Django never runs the callback, so there is no error at all. Just a task that fired for a transaction that never happened.
 
 `on_commit` wants a callable. Pass a lambda, or `functools.partial`.
 
 Celery 5.4 added a shortcut that removes the trap:
 
 ```python
-apply_pricing_rules.delay_on_commit(order_id=str(order.id))
+send_order_confirmation_email.delay_on_commit(order_id=str(order.id))
 
-apply_pricing_rules.apply_async_on_commit(
+send_order_confirmation_email.apply_async_on_commit(
     kwargs={"order_id": str(order.id)},
     countdown=30,
 )
@@ -378,9 +357,9 @@ Explicit retries look like this:
 
 ```python
 @celery_app.task(bind=True, default_retry_delay=60, max_retries=5)
-def apply_pricing_rules(self, pricing_rule_ids, order_id):
+def send_order_confirmation_email(self, order_id):
     try:
-        response = pricing_api.evaluate(order_id=order_id)
+        response = email_provider.send(order_id=order_id)
 
         if response.status_code == 429:  # rate limited
             raise self.retry(
@@ -407,17 +386,17 @@ For the common case you can skip the `try/except` entirely:
     retry_backoff_max=600,
     retry_jitter=True,
 )
-def apply_pricing_rules(pricing_rule_ids, order_id):
+def send_order_confirmation_email(order_id):
     ...
 ```
 
-`retry_jitter` deserves a mention of its own. When a dependency goes down, thousands of tasks fail at the same instant. Without jitter they all retry at the same instant too, and the retry storm keeps the dependency down.
+When a dependency goes down, thousands of tasks fail at the same instant. Without jitter they all retry at the same instant too, and the retry storm keeps the dependency down.
 
 The judgement call is what deserves a retry at all. Connection timeouts, 429 and 503 from an upstream API, deadlocks and lock timeouts, a dependency in the middle of a deploy: all worth retrying. A `ValidationError`, a `DoesNotExist` for a row somebody deleted, a `TypeError` in your own code: retrying those five times just produces a slower failure, and it hides the error from whoever is reading the dashboard.
 
 ## Making retries safe
 
-Here is the thread running through everything above. Every mechanism in this post makes duplicate execution more likely, not less. `acks_late`, `reject_on_worker_lost`, visibility timeouts, retries, Beat sweeps: all of them can run your task twice. At-least-once delivery is the guarantee you get, so the task has to be safe to run twice.
+Every mechanism in this post makes duplicate execution more likely, not less. `acks_late`, `reject_on_worker_lost`, visibility timeouts, retries, Beat sweeps: all of them can run your task twice. At-least-once delivery is the guarantee you get, so the task has to be safe to run twice.
 
 ### Idempotency
 
@@ -425,35 +404,38 @@ A task is idempotent when running it twice with the same arguments has the same 
 
 ```python
 # not idempotent: three redeliveries, three emails
-def send_confirmation_email(user_id):
-    user = get_user(user_id)
-    send_email(user.email, "Welcome!")
+def send_order_confirmation_email(order_id):
+    order = Order.objects.get(id=order_id)
+    send_email(order.customer.email, "Order confirmed!")
 
 
 # better: the database decides whether the work is still needed
-def send_confirmation_email(user_id):
-    user = get_user(user_id)
-    if not user.email_sent:
-        send_email(user.email, "Welcome!")
-        user.email_sent = True
-        user.save()
+def send_order_confirmation_email(order_id):
+    order = Order.objects.get(id=order_id)
+    if not order.confirmation_email_sent_at:
+        send_email(order.customer.email, "Order confirmed!")
+        order.confirmation_email_sent_at = timezone.now()
+        order.save()
 ```
 
 Useful tools for this: `get_or_create` and `update_or_create` instead of a blind `create()`; unique constraints, so the database rejects the duplicate for you; idempotency keys, which most payment and messaging APIs accept and which the task ID fits nicely; state flags and timestamps like `confirmation_email_sent_at`.
 
-The second version above still has a hole, and it is worth staring at:
+The second version above still has a hole:
 
 ```python
-if not user.email_sent:        # worker A and worker B both read False
-    send_email(...)            # both send
-    user.email_sent = True
-    user.save()
+if not order.confirmation_email_sent_at:   # worker A and worker B both read None
+    send_email(...)                        # both send
+    order.confirmation_email_sent_at = timezone.now()
+    order.save()
 ```
 
 Check-then-act is not atomic. Two workers can both pass the check before either writes. Close it by making the check and the write a single statement:
 
 ```python
-updated = User.objects.filter(pk=user_id, email_sent=False).update(email_sent=True)
+updated = Order.objects.filter(
+    pk=order_id, confirmation_email_sent_at__isnull=True
+).update(confirmation_email_sent_at=timezone.now())
+
 if updated:                    # only one worker gets 1 here
     send_email(...)
 ```
@@ -531,14 +513,14 @@ A queue is a buffer of messages written by the old code and read by the new code
 ```python
 # old workers are running this
 @celery_app.task
-def apply_pricing_rules(pricing_rule_ids, order_id): ...
+def send_order_confirmation_email(order_id): ...
 
 # you deploy this
 @celery_app.task
-def apply_pricing_rules(rule_ids, order_id, currency): ...
+def send_order_confirmation_email(order_id, locale): ...
 ```
 
-Every message already in the queue now fails with `TypeError`. Add new arguments with defaults, and never rename or remove one in the same deploy that starts using the new name. If you cannot avoid a breaking change, drain the queue first, or ship `apply_pricing_rules_v2` alongside the old one and delete the old one a release later.
+Every message already in the queue now fails with `TypeError`. Add new arguments with defaults, and never rename or remove one in the same deploy that starts using the new name. If you cannot avoid a breaking change, drain the queue first, or ship `send_order_confirmation_email_v2` alongside the old one and delete the old one a release later.
 
 ### Knowing when to stop
 
@@ -593,7 +575,7 @@ While operating it:
 - Logs carry opaque IDs, never customer data
 - Task signatures change in a backward compatible way
 
-If there is one thing to keep from all of this: assume every task can be lost, duplicated, or run out of order, and design so that none of the three ruins your day.
+Assume every task can be lost, duplicated, or run out of order, and design for all three.
 
 ## References
 
