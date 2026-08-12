@@ -44,34 +44,6 @@ what de-risks it.
 CLAUDE.md — read the theme diff before merging a `gomod` bump. Same window,
 no moving parts.
 
-### Watch for fallout from the action major upgrades
-**Done 2026-07-29** — Dependabot opened PRs #1–#5 immediately and all five major
-upgrades were merged the same day:
-
-| action | was | now |
-|---|---|---|
-| `actions/checkout` | v4.4.0 | v7.0.1 |
-| `actions/setup-go` | v5.6.0 | v7.0.0 |
-| `actions/configure-pages` | v5.0.0 | v6.0.0 |
-| `actions/upload-pages-artifact` | v3.0.1 | v5.0.0 |
-| `actions/deploy-pages` | v4.0.5 | v5.0.0 |
-
-Two good outcomes worth recording: Dependabot **preserved SHA pinning** (all
-five are still 40-char SHAs with version comments, not tags), and all four
-hardening measures survived the bumps untouched — `persist-credentials: false`,
-the hardcoded `HUGO_DEB_SHA256`, the checksum step, and the per-job permission
-split.
-
-The upgraded workflow **has since built and deployed successfully** — a fresh
-deployment landed at 21:55:42 UTC on 2026-07-29 and the full URL set, the
-alias redirect, both images and the homepage overrides all verified against it.
-So the five bumps are proven working, not just merged.
-
-They were still five major-version jumps merged together, so if the build starts
-misbehaving later, this is the first place to look — `upload-pages-artifact`
-v3→v5 and `deploy-pages` v4→v5 are the likeliest to have changed behaviour.
-`git revert` of the relevant merge commit is the fast way back.
-
 ---
 
 ## Site hygiene
