@@ -1,11 +1,9 @@
 {{/*
   Overrides the theme's post template for two things upstream has no hook for:
 
-  1. A Github link beside Linkedin and Twitter. The theme renders only those
-     two; the pre-2026 site showed all three, in the order
-     Linkedin // Twitter // Github (see the pre-hugo-rebuild tag). The URL
+  1. A Github link beside Linkedin. The theme renders no such link; the URL
      comes from a `github` param, set once for every post by the [cascade] in
-     content/posts/_index.md, exactly like the other two.
+     content/posts/_index.md, exactly like Linkedin.
   2. The post's tags, linking to /tags/<term>/. The theme prints tags nowhere,
      so before this there was no path from a post to a tag page and the
      taxonomy was unreachable. Note the theme cannot emit article:tag OG meta
@@ -22,9 +20,6 @@
 {{ .Date | time.Format ":date_medium" }}
 {{ with .Params.linkedin }}
     // <a href="{{ . }}">Linkedin</a>
-{{ end }}
-{{ with .Params.twitter }}
-    // <a href="{{ . }}">Twitter</a>
 {{ end }}
 {{ with .Params.github }}
     // <a href="{{ . }}">Github</a>

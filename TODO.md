@@ -75,5 +75,5 @@ so you stop publishing two empty pages.
 Not tasks. Recorded so nobody later mistakes them for bugs.
 
 - The `// Github` link is gone from post headers; the current theme reads only
-  `linkedin` and `twitter`. Restoring it needs a `layouts/posts/single.html`
-  override, declined as not worth the maintenance.
+  `linkedin`. Restoring it needs a `layouts/posts/single.html` override,
+  declined as not worth the maintenance.

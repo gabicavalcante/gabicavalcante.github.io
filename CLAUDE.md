@@ -33,11 +33,14 @@ go.mod / go.sum           theme module, pinned by commit
 layouts/index.html        homepage override — see below, do not delete
 layouts/posts/single.html post override: Github link + tag links
 layouts/_default/terms.html  /tags/ index — see Taxonomy below
+layouts/partials/twitter_cards.html  empty on purpose; the theme's baseof calls
+                          this partial unconditionally and it emitted twitter:
+                          meta on every page. og:* still covers link previews.
 .github/workflows/hugo.yml
 content/
   about/index.md              page bundle; no image (me2.jpg was removed)
   cv.md                      
-  posts/_index.md             cascades linkedin/twitter/github to every post
+  posts/_index.md             cascades linkedin/github to every post
   posts/<slug>/index.md       one bundle per post
 ```
 
@@ -48,8 +51,8 @@ content/
   the post that uses them. The theme's image render hook resolves plain relative
   paths, so `![alt](plot1.png)` just works inside a bundle.
 - **Social links come from `content/posts/_index.md`'s `[cascade]`**, not from
-  eight copies of the same front matter. The theme reads `.Params.linkedin` and
-  `.Params.twitter` per page.
+  eight copies of the same front matter. The theme reads `.Params.linkedin` per
+  page.
 - **`<!--more-->` in every published page.** Summaries are explicit rather than
   dependent on Hugo's 70-word counting, which pulls a second paragraph into
   listings and shifts if the prose is edited.
@@ -91,8 +94,8 @@ the hash. Pin a new commit deliberately; don't float.
 
 Known limits, all upstream:
 
-- Only `linkedin` and `twitter` render in post headers, and tags render
-  nowhere at all. Both are fixed by `layouts/posts/single.html`, which is why
+- Only `linkedin` renders in post headers, and tags render nowhere at all.
+  Both are fixed by `layouts/posts/single.html`, which is why
   that override now exists. The Github link had been declined on its own as
   not worth the maintenance; tags needed the same file, so it came along.
 - The theme can never emit `article:tag` OpenGraph meta.
