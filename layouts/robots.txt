@@ -1,0 +1,13 @@
+{{- /*
+  Overrides Hugo's built-in robots.txt, which emits only `User-agent: *` and no
+  Sitemap line -- so nothing connected the generated sitemap.xml to the first
+  file a crawler reads. Requires `enableRobotsTXT = true` in hugo.toml.
+
+  absURL is what makes the Sitemap line correct in CI: the workflow passes
+  --baseURL from the Pages API, which beats hugo.toml, so a hardcoded domain
+  here would silently disagree with the deployed one. See CLAUDE.md > Domain.
+*/ -}}
+User-agent: *
+Allow: /
+
+Sitemap: {{ "sitemap.xml" | absURL }}
