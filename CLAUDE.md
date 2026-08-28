@@ -44,6 +44,10 @@ layouts/partials/seo-description.html  returns one page's description. Its own
                           identical string and must not drift.
 layouts/partials/opengraph.html  fixes empty og:description and missing
                           article:tag — see Theme below.
+layouts/partials/schema.html  JSON-LD: BlogPosting on posts, Person on /about/.
+                          Identity comes from [params.author] in hugo.toml,
+                          which is separate from the linkedin/github cascade —
+                          that one drives the visible per-post links.
 layouts/robots.txt        adds the Sitemap line Hugo's built-in one omits.
 layouts/partials/twitter_cards.html  empty on purpose; the theme's baseof calls
                           this partial unconditionally and it emitted twitter:
@@ -60,6 +64,14 @@ content/
 ## Conventions
 
 - **TOML front matter** (`+++`), matching the theme's own examples.
+- **In `hugo.toml`, table headers go below the scalar keys they share a section
+  with.** A TOML table header captures every scalar that follows it until the
+  next header, so a `[params.author]` declared above `animateStyle` turns it
+  into `params.author.animateStyle` and whatever reads it silently gets
+  nothing. This has bitten twice: once as `capitalizeListTitles` landing under
+  `[params]` (see Taxonomy), once as `animateStyle` landing under
+  `[params.author]`, which dropped the theme's load animation from every page.
+  Neither fails the build. Check with `hugo config --format json`.
 - **Every post is a page bundle** (`posts/<slug>/index.md`), so images sit beside
   the post that uses them. The theme's image render hook resolves plain relative
   paths, so `![alt](plot1.png)` just works inside a bundle.

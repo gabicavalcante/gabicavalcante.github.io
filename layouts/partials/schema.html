@@ -1,0 +1,78 @@
+{{- /*
+  Emits JSON-LD structured data: a machine-readable statement of what the page
+  is. The site had none -- the only machine-readable markup was the theme's
+  BreadcrumbList RDFa on the nav.
+
+  Two types, which is all a personal blog needs:
+
+  - BlogPosting on posts. A subtype of Article; Google treats every Article
+    subtype the same for rich results. TechArticle would also be defensible for
+    the tutorials, but it exists for technical documentation and adds
+    properties this site would leave empty.
+  - Person on /about/, carrying sameAs to Github and Linkedin. This is the one
+    that matters here: it is what lets a search engine resolve "Gabriela
+    Cavalcante", this domain and those profiles as ONE entity rather than three
+    unrelated pages.
+
+  Both Person nodes -- the standalone one and the author on each post -- carry
+  the same @id and the same url. Without a shared @id a consumer has to infer
+  from name and sameAs that they are the same person, which defeats the point.
+  The author node is repeated inline rather than reduced to an {"@id": ...}
+  reference, because consumers that do not resolve references still get the
+  whole node.
+
+  No `image`: the site has no og:image either and inventing one is worse than
+  omitting it. Article has no REQUIRED properties, so this costs the image
+  treatment in a result and disqualifies nothing.
+
+  Built as a dict and passed through jsonify rather than written as literal
+  JSON, so quotes and accents in a title cannot produce invalid JSON. jsonify
+  uses Go's encoding/json with HTML escaping on, so the angle brackets and
+  ampersand come out as \u003c \u003e \u0026 -- a literal </script> inside a
+  title therefore cannot terminate the block. safeJS is required: without it
+  the escaper quotes the whole JSON into a single string literal.
+
+  htmlUnescape on the description is NOT optional. seo-description.html ends in
+  `truncate`, which HTML-escapes and returns template.HTML -- correct for an
+  HTML attribute, wrong here, because jsonify would then encode the already
+  escaped text and a consumer would read back `&amp;` for `&`.
+*/ -}}
+{{- $author := .Site.Params.author -}}
+{{- $personID := printf "%s#person" (absURL "about/") -}}
+{{- $person := dict
+    "@type" "Person"
+    "@id" $personID
+    "name" $author.name
+    "url" (absURL "about/")
+    "sameAs" $author.sameAs
+-}}
+{{- $schema := false -}}
+
+{{- if and .IsPage (eq .Section "posts") -}}
+  {{- $s := dict
+      "@context" "https://schema.org"
+      "@type" "BlogPosting"
+      "headline" .Title
+      "description" (partial "seo-description.html" . | htmlUnescape)
+      "url" .Permalink
+      "mainEntityOfPage" .Permalink
+      "datePublished" (.Date.Format "2006-01-02")
+      "inLanguage" (.Params.contentLang | default .Site.Language.Locale)
+      "author" $person
+  -}}
+  {{- if not .Lastmod.IsZero }}{{ $s = merge $s (dict "dateModified" (.Lastmod.Format "2006-01-02")) }}{{ end -}}
+  {{- with .Params.tags }}{{ $s = merge $s (dict "keywords" .) }}{{ end -}}
+  {{- $schema = $s -}}
+{{- else if and .File (eq .File.Path "about/index.md") -}}
+  {{- /* Keyed off the source path, not .RelPermalink: under a subpath baseURL
+       a "/about/" comparison quietly stops matching and the one block this
+       partial exists for vanishes instead of failing loudly. */ -}}
+  {{- $schema = merge $person (dict
+      "@context" "https://schema.org"
+      "jobTitle" $author.jobTitle
+      "description" (partial "seo-description.html" . | htmlUnescape)
+      "mainEntityOfPage" .Permalink
+  ) -}}
+{{- end -}}
+
+{{- with $schema }}<script type="application/ld+json">{{ . | jsonify | safeJS }}</script>{{ end -}}

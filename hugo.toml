@@ -51,6 +51,24 @@ capitalizeListTitles = false
   titleCutting = false
   animateStyle = "animated zoomIn fast"
 
+  # Identity for the JSON-LD in partials/schema.html. Deliberately separate
+  # from the linkedin/github cascade in content/posts/_index.md: that drives
+  # the visible per-post links, while these are the sameAs profiles a search
+  # engine uses to resolve the author as one entity across sites.
+  #
+  # Placement matters, for the same reason capitalizeListTitles has to stay at
+  # the top level: a TOML table header captures every scalar key that follows
+  # it. Declared above titleCutting/animateStyle, this swallowed both --
+  # animateStyle became params.author.animateStyle and every page silently lost
+  # the theme's load animation. Keep table headers below the scalars.
+  [params.author]
+    name = "Gabi Cavalcante"
+    jobTitle = "Full-stack engineer and tech lead"
+    sameAs = [
+      "https://github.com/gabicavalcante",
+      "https://www.linkedin.com/in/gabrielacavalcante/",
+    ]
+
   [[params.navlinks]]
     name = "about/"
     url = "about/"
