@@ -13,10 +13,23 @@
 
   Kept deliberately close to the upstream template otherwise, so diffing
   against it after a theme update stays easy.
+
+  Heading levels are NOT upstream. The homepage used to ship six <h1>s: About,
+  Latest posts, and one per listed post. "About" and "Latest posts" are sibling
+  sections of this page, not parent and child, so neither can be the h1 without
+  misrepresenting the other -- and there is no page-title heading here to be
+  one. So both are h2 and the post titles h3 beneath them, which leaves the
+  homepage with no h1 at all. That is deliberate and allowed: Google does not
+  require an h1, and the alternative was either a wrong nesting or inventing
+  visible text this page has never had. The site name does appear above, in the
+  .logo div, which terminal.css already styles identically to h1.
+
+  Visible text is unchanged -- terminal.css renders h1-h6 at the same
+  font-size, and assets/css/custom.css restores the old spacing.
 */}}
 {{ define "main" }}
 
-<h1>About</h1>
+<h2>About</h2>
 
 {{ with .Site.GetPage "/about" }}
   {{ .Summary }}
@@ -24,14 +37,14 @@
 {{ end }}
 <br/>
 
-<h1>Latest posts</h1>
+<h2>Latest posts</h2>
 
 <div class="posts-list">
 {{ with .Site.GetPage "/posts" }}
     {{ range first 4 (sort .Pages "Date" "desc" (where .Pages ".Params.private" "!=" true)) }}
         <div class="post">
             <div class="date">{{ .Date | time.Format ":date_medium" }}</div>
-            <h1><a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a></h1>
+            <h3><a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a></h3>
             {{ .Summary }}
         </div>
     {{ end }}

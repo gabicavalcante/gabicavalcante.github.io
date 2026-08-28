@@ -9,7 +9,7 @@ I’m a full-stack engineer and tech lead with 9+ years of software engineering 
 
 I’ve been spending a lot of time thinking about API design, PostgreSQL performance, cloud infrastructure, observability, and how to keep software maintainable as a team grows.
 
-# Positions
+## Positions
 
 ### – Vinta Software
 
@@ -125,31 +125,31 @@ With the visibility that cloud computing has been acquiring, it is observed that
 
 ---
 
-# Education
+## Education
 
 | School | Year | Type Major |
 | --- | --- | --- |
 | Université Nice Sophia Antipolis | 2015-2016 | Sandwich Degree (exchange program BRAFITEC), Informatique et Gestion |
 | Federal University of Rio Grande do Norte | 2012-2016 | BSc, Information Technology |
 
-# Languages
+## Languages
 
 | Language | Level |
 | --- | --- |
 | Portuguese | Native |
 | English | Professional working |
 
-# Talks and Workshops
+## Talks and Workshops
 
 - [Web Scraping](https://slides.com/gabicavalcante/web-scraping) (slides)
 
-# Publications
+## Publications
 
 - Multi-Factor Authentication for Shibboleth Identity Providers. Journal of Internet Services and Applications, 2020
 - Google COVID-19 Community Mobility Reports: Insights from Multi-Criteria Decision Making
 - A Multi-Objective Time Series Analysis of Community Mobility Reduction Comparing First and Second COVID-19 Waves
 
-# Articles
+## Articles
 
 - [Build a Secure Twilio Webhook with Python and FastAPI](https://www.twilio.com/blog/build-secure-twilio-webhook-python-fastapi)
 - [Build a Secret Santa Bot for WhatsApp Using Python and Twilio](https://www.twilio.com/blog/build-secret-santa-bot-whatsapp-python-twilio)

@@ -161,3 +161,67 @@
   /* TextWhitespace */ .chroma .w { color:#6e7681 }
 }
 
+
+/* Post entries in listings are <h2>/<h3>, not <h1>.
+ *
+ * They were <h1> until the heading hierarchy was fixed -- /posts/ shipped six
+ * h1s, /tags/ ten, the homepage six. This block exists to make that change
+ * invisible, because it is a semantic fix and not a redesign.
+ *
+ * Type needs nothing: terminal.css renders every heading h1-h6 at
+ * var(--global-font-size). The box and the underline do. An h1 inside .post
+ * computes to a table-cell with `padding: 0 0 20px` -- terminal.css says
+ * `padding:calc(var(--global-space)*2) 0` and console.css`s `.post h1,.post h2`
+ * overrides the top to 0 -- plus `overflow:hidden`, which clips the decoration.
+ *
+ * The underline is the part that is easy to miss. terminal.css draws it with
+ * `h1::after`, gated on --display-h1-decoration, which terminal.css sets to
+ * `none` and console.css then overrides to `1`. `1` is not a valid display
+ * value, so the declaration is invalid at computed-value time and display
+ * falls back to `inline` -- which is how the theme turns the decoration ON.
+ * There is no h2::after or h3::after, so without this every listing entry
+ * would silently lose its ==== rule.
+ *
+ * The `+ *` rule is parity, not a change: terminal.css already carries
+ * h1+* and .logo+* with margin-top zero, so the summary paragraph after an
+ * entry title has always had its top margin removed.
+ */
+.terminal .posts-list h2,
+.terminal .posts-list h3 {
+  position: relative;
+  display: table-cell;
+  padding: 0 0 calc(var(--global-space) * 2);
+  overflow: hidden;
+}
+
+.terminal .posts-list h2::after,
+.terminal .posts-list h3::after {
+  content: "====================================================================================================";
+  position: absolute;
+  bottom: 5px;
+  left: 0;
+  display: var(--display-h1-decoration);
+}
+
+.terminal .posts-list h2 + *,
+.terminal .posts-list h3 + * {
+  margin-top: 0;
+}
+
+/* Vertical separation between listing entries.
+ *
+ * No rule in any of the three stylesheets gives .post a margin or padding --
+ * the gaps came entirely from child margins escaping the block. On /posts/ and
+ * the term pages that child is the summary <p>, so those still separate. On
+ * /tags/ a term entry is just a table-cell h2 plus a bare text node, neither of
+ * which has an applicable margin, and the only thing that had ever separated
+ * them was the self-collapsing empty <p> that the invalid markup produced.
+ * Removing that markup removed the gap with it.
+ *
+ * margin-top rather than margin-bottom because that is what the empty <p>
+ * contributed. Safe on the pages that never lost it: adjacent margins collapse
+ * to max(20, 20).
+ */
+.terminal .posts-list .post {
+  margin-top: calc(var(--global-space) * 2);
+}

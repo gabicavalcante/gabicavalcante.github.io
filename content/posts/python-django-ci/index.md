@@ -52,7 +52,7 @@ After all of the above command run successfully, let’s run:
 
 And visit the web browser with http://127.0.0.1:8000
 
-# Environment variables
+## Environment variables
 
 The following environment variables can be set to override defaults:
 
@@ -64,7 +64,7 @@ The following environment variables can be set to override defaults:
 - `DB_USER`: database user.
 - `DB_PASSWORD`: database password.
 
-# Test with PyTest
+## Test with PyTest
 
 To tell `pytest` which Django settings that should be used for tests runs, we need to setup a `pytest` configuration file, called `pytest.ini` in our project root directory. The file contains:
 

@@ -10,6 +10,11 @@
     /tags/         kind `taxonomy`  ->  _default/terms.html     (this file)
     /tags/python/  kind `term`      ->  _default/taxonomy.html
 
+  Each term used to be an <h1>, so /tags/ shipped one per term on top of the
+  page's own -- see _default/list.html for why that matters and why h2 here is
+  visually almost a no-op. The <p> wrapper went for the same reason: it held a
+  <div>, which is invalid and made browsers close the paragraph early.
+
   Term pages are deliberately NOT overridden. With no taxonomy.html they fall
   through to the theme's list.html, and a dated list of posts with summaries
   is exactly right there.
@@ -22,10 +27,8 @@
 <div class="posts-list">
 {{ range .Pages.ByTitle }}
     <div class="post">
-        <p>
-            <h1><a href="{{ .Permalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a></h1>
-            {{ $n := len .Pages }}{{ $n }} post{{ if ne $n 1 }}s{{ end }}
-        </p>
+        <h2><a href="{{ .Permalink }}" title="{{ .LinkTitle }}">{{ .LinkTitle }}</a></h2>
+        {{ $n := len .Pages }}{{ $n }} post{{ if ne $n 1 }}s{{ end }}
     </div>
 {{ end }}
 </div>

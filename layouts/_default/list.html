@@ -1,0 +1,37 @@
+{{/*
+  Overrides the theme's list template, which drives /posts/ and every
+  /tags/<term>/ page. Two problems, both structural:
+
+  1. Each post in the list was an <h1>. With the page's own title also an <h1>,
+     /posts/ shipped six of them and a term page one per post. A crawler reads
+     headings as the page's outline, so a page with six h1s states six
+     competing subjects. The page title stays h1; the entries are h2 beneath it.
+  2. The entries were wrapped in <p>, with a <div> inside. A <div> is not
+     allowed inside <p>, so every browser silently closed the paragraph early
+     and left an empty <p> behind. Dropped rather than repaired -- nothing
+     needed it.
+
+  Visually this is close to a no-op: terminal.css sets every heading h1-h6 to
+  var(--global-font-size), so h2 is not smaller than h1. Only the box differs,
+  and assets/css/custom.css restores h1's spacing for .posts-list h2.
+
+  Otherwise upstream verbatim, so it stays easy to diff after a theme bump.
+*/}}
+{{ define "main" }}
+<h1>{{ .Page.Title }}</h1>
+<br/>
+{{ .Content }}
+
+<div class="posts-list">
+{{ range sort .Pages "Date" "desc" }}
+    {{ if not .Params.private }}
+        <div class="post">
+            <div class="date">{{ .PublishDate.Format "Jan. 2, 2006" }}</div>
+            <h2><a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a></h2>
+            {{ .Summary }}
+        </div>
+    {{ end }}
+{{ end }}
+</div>
+
+{{ end }}
