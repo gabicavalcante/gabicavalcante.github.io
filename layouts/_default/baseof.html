@@ -1,0 +1,89 @@
+{{/*
+  Overrides the theme's baseof for the <head> only. Everything from <body> down
+  is upstream verbatim, so this stays easy to diff after a theme bump.
+
+  Four fixes, none of which upstream gives a hook for:
+
+  1. The title element was `{{ .Site.Title }}{{ $url.Path }}` -- the site name
+     plus the URL path, so every page told Google
+     "gabi cavalcante/posts/reliability-in-django-and-celery/" rather than the
+     post's real title. It suits the terminal aesthetic; it is also the single
+     worst thing on this site for search.
+  2. No canonical link anywhere. gabicavalcante.github.io still resolves and
+     redirects here, so more than one address per page is real, not theoretical.
+  3. The description meta came only from a site-wide Params.description, which
+     was never set -- so no page had one, and og:description rendered empty on
+     every page. Now per-page.
+  4. The lang attribute was .Site.LanguageCode for every page, so the
+     Portuguese post was served labelled en-us. Now per-page via a
+     `contentLang` param -- NOT `lang`, which is a reserved key Hugo removed in
+     v0.144 and which fails the build. That line was ALSO the real source of the `.Site.LanguageCode was
+     deprecated` build warning -- not Hugo's internal rss.xml, which is what
+     CLAUDE.md used to claim.
+*/}}
+{{- $desc := partial "seo-description.html" . -}}
+<!DOCTYPE html>
+<html lang="{{ .Params.contentLang | default .Site.Language.Locale }}">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>{{ if .IsHome }}{{ .Site.Title }}{{ with .Site.Params.tagline }} &middot; {{ . }}{{ end }}{{ else if eq .Kind "term" }}Posts tagged {{ .LinkTitle }} &middot; {{ .Site.Title }}{{ else if eq .Kind "taxonomy" }}Tags &middot; {{ .Site.Title }}{{ else }}{{ .Title }} &middot; {{ .Site.Title }}{{ end }}</title>
+    <link rel="canonical" href="{{ .Permalink }}">
+    {{ with $desc }}<meta name="description" content="{{ . }}">{{ end }}
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="all,follow">
+    <meta name="googlebot" content="index,follow,snippet,archive">
+    <link rel="stylesheet" href="{{ "hugo-theme-console/css/terminal-0.7.4.min.css" | absURL }}">
+    <link rel="stylesheet" href="{{ "hugo-theme-console/css/animate-4.1.1.min.css" | absURL }}">
+    <link rel="stylesheet" href="{{ "hugo-theme-console/css/console.css" | absURL }}">
+    {{ with resources.Get "css/custom.css" }}
+      {{ $css := . | minify | fingerprint }}
+      <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+    {{ end }}
+    {{ `
+      <!--[if lt IE 9]>
+          <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+          <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+      <![endif]-->
+    ` | safeHTML }}
+
+    {{- partial "favicon.html" . -}}
+    {{ with .OutputFormats.Get "RSS" }}
+      {{ printf `<link href="%s" rel="%s" type="%s" title="%s" />` .Permalink .Rel .MediaType.Type $.Site.Title | safeHTML }}
+    {{ end }}
+    {{- partial "opengraph.html" . -}}
+    {{- partial "twitter_cards.html" . -}}
+    {{ template "_internal/google_analytics.html" . }}
+
+    {{- partial "header.html" . -}}
+</head>
+<body class="terminal">
+    <div class="container">
+        <div class="terminal-nav">
+          <header class="terminal-logo">
+            <div class="logo terminal-prompt">
+              {{ $url := replace .Permalink ( printf "%s" .Site.BaseURL) "" }}
+              {{ $.Scratch.Add "path" .Site.BaseURL }}
+              <a href="{{ .Site.BaseURL }}" class="no-style {{ with .Site.Params.TitleCutting }}site-name{{ end }}">{{ .Site.Title }}</a>:~# 
+              {{ range $index, $element := split $url "/" }}{{ $.Scratch.Add "path" $element }}{{ if ne $element "" }}<a href='{{ $.Scratch.Get "path" | absURL }}'>{{ . }}</a>/{{ $.Scratch.Add "path" "/" }}{{ end }}{{ end }}</div></header>
+          <nav class="terminal-menu">
+            <ul vocab="https://schema.org/" typeof="BreadcrumbList">
+                {{ range $index, $element := .Site.Params.navlinks }}
+                <li property="itemListElement" typeof="ListItem">
+                    <a property="item" typeof="WebPage" href="{{ absURL .url }}">
+                    <span property="name">{{ .name }}</span></a>
+                    <meta property="position" content="{{ add $index 1}}" />
+                </li>
+                {{ end }}
+            </ul>
+          </nav>
+        </div>
+    </div>
+
+    <div class="container {{ .Site.Params.animateStyle }}" >
+        {{ block "main" . }}
+        {{ end }}
+        {{ partial "footer.html" . }}
+    </div>
+  </body>
+</html>

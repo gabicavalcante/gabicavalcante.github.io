@@ -39,6 +39,14 @@ capitalizeListTitles = false
     noClasses = false
 
 [params]
+  # Read by layouts/_default/baseof.html. `description` is the fallback for the
+  # meta description on pages that set none of their own -- the home page above
+  # all, which has no summary to fall back to. `tagline` is appended to the
+  # home page's title element only, so the one page whose title would otherwise
+  # be the bare site name says what the site is about.
+  description = "Gabi Cavalcante — full-stack engineer and tech lead in Brazil. Notes on Python, Django, Celery, PostgreSQL, and keeping platforms reliable."
+  tagline = "Python, Django, and the platform around it"
+
   # The original site rendered the full site name, not the two-char mobile form.
   titleCutting = false
   animateStyle = "animated zoomIn fast"

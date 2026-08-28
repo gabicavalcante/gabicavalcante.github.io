@@ -1,0 +1,22 @@
+{{- /*
+  Returns the description for one page, as a plain string. Lives in its own
+  partial because two places need the identical value and they must not drift:
+  the description meta in _default/baseof.html, and og:description in
+  partials/opengraph.html.
+
+  Precedence: explicit front matter, then the page summary, then a generated
+  line for tag pages, then the site default. In that order so no two pages
+  share a description unless they genuinely have nothing of their own.
+
+  Call as: {{ partial "seo-description.html" . }}
+*/ -}}
+{{- $desc := .Description -}}
+{{- if not $desc }}{{ with .Summary }}{{ $desc = . }}{{ end }}{{ end -}}
+{{- if not $desc }}{{ if eq .Kind "term" }}{{ $desc = printf "Every post tagged %s, newest first." .LinkTitle }}{{ end }}{{ end -}}
+{{- if not $desc }}{{ $desc = .Site.Params.description }}{{ end -}}
+{{- /* htmlUnescape is not optional: plainify strips tags but leaves character
+     references as literal text, and html/template then escapes the & a second
+     time on the way into the attribute -- so an & in a summary shipped as
+     &amp;amp; and a crawler read back "&amp;". It also inflated the length, cutting
+     the description early. */ -}}
+{{- return ($desc | plainify | htmlUnescape | replaceRE `\s+` " " | strings.TrimSpace | truncate 160) -}}

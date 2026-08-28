@@ -36,6 +36,15 @@ go.mod / go.sum           theme module, pinned by commit
 layouts/index.html        homepage override — see below, do not delete
 layouts/posts/single.html post override: Github link + tag links
 layouts/_default/terms.html  /tags/ index — see Taxonomy below
+layouts/_default/baseof.html  <head> override — see Theme below. Upstream verbatim
+                          from <body> down; keep it that way so it stays
+                          diffable after a theme bump.
+layouts/partials/seo-description.html  returns one page's description. Its own
+                          partial because baseof and opengraph both need the
+                          identical string and must not drift.
+layouts/partials/opengraph.html  fixes empty og:description and missing
+                          article:tag — see Theme below.
+layouts/robots.txt        adds the Sitemap line Hugo's built-in one omits.
 layouts/partials/twitter_cards.html  empty on purpose; the theme's baseof calls
                           this partial unconditionally and it emitted twitter:
                           meta on every page. og:* still covers link previews.
@@ -63,14 +72,19 @@ content/
 - **Renaming a slug requires an `aliases` entry.** `matplotlib-seaborn-relplot`
   carries `aliases = ["/posts/matplotlib-searborn-replot/"]` so the old
   misspelled URL still redirects. Do the same for any future rename.
-- **2 posts are drafts** (`notes-about-multi-objective-algorithms`,
-  `take-picture-with-opencv-galileo`) and produce no pages. Confirm with
+- **3 posts are drafts** (`notes-about-multi-objective-algorithms`,
+  `take-picture-with-opencv-galileo`, `parse-dont-validate-in-python` — the
+  last still untracked) and produce no pages. Confirm with
   `hugo list drafts` rather than trusting this line. The theme's own demo
   content (`introduction`, `what-is-hugo`, `my-first-post`), copied in during
   the 2020 setup, was deleted in 54ece1d; it still exists at the
   `pre-hugo-rebuild` tag, which is why the old site has those URLs.
 - Post content is mixed English and Brazilian Portuguese while the site declares
-  `en-us`. Keep a post in whatever language it already uses.
+  `en-us`. Keep a post in whatever language it already uses — **and set
+  `contentLang = "pt-br"` in its front matter** when it is not English, so the
+  page ships the right `<html lang>`. Without it a Portuguese post is served
+  labelled `en-us`, and search engines hand it to English readers who bounce.
+  The key is `contentLang`; `lang` is reserved and fails the build.
 
 ## Why `layouts/index.html` exists
 
@@ -102,16 +116,28 @@ Known limits, all upstream:
   Both are fixed by `layouts/posts/single.html`, which is why
   that override now exists. The Github link had been declined on its own as
   not worth the maintenance; tags needed the same file, so it came along.
-- The theme can never emit `article:tag` OpenGraph meta.
-  `partials/opengraph.html` nests the tag loop inside
-  `range .Site.Params.Authors`, which rebinds `.` to the author map, so
-  `.Params.tags` is empty inside it. Setting `[[params.Authors]]` does not
-  help; it only makes the sibling line emit an empty `article:section`.
-  Fixing it means overriding the partial, which is not worth it.
-- The build prints a `.Site.LanguageCode was deprecated` warning. It is neither
-  this config (which uses `locale`) nor the theme (no `rss.xml`, and its
-  `sitemap.xml` doesn't reference it) — it comes from Hugo's own embedded
-  `_internal/rss.xml`. Nothing to fix locally.
+- The theme's `partials/opengraph.html` emitted no `article:tag` and an empty
+  `og:description` on every page. Both are fixed by
+  `layouts/partials/opengraph.html`. The tag bug is that upstream nests the tag
+  loop inside `range .Site.Params.Authors`, which rebinds `.` to the author
+  map, so `.Params.tags` is always empty there; the override lifts the loop out
+  of that range. Lifting it also frees the sibling `article:section` line,
+  which then has to be guarded with `with` — `/about/` and `/cv/` have no
+  section and emitted `content=""`. This was previously recorded here as not
+  worth an override; the empty `og:description` changed that calculation.
+  The same override also fixes `og:title`, which on tag pages was the bare term
+  ("python") rather than the title element's "Posts tagged python", and
+  `og:site_name`, which never emitted because upstream reads
+  `.Site.Params.title` while the site title is a top-level key.
+- The build used to print a `.Site.LanguageCode was deprecated` warning. It was
+  the theme after all — the first line of its `_default/baseof.html` is
+  `<html lang="{{ .Site.LanguageCode }}">`. (This file previously blamed Hugo's
+  embedded `_internal/rss.xml`; that was wrong.) The baseof override replaces
+  that line, so the warning is gone and the lang attribute is now per page, via
+  `.Params.contentLang | default .Site.Language.Locale`. **The param is `contentLang`, never `lang`:**
+  `lang` in front matter is reserved — Hugo deprecated it in v0.144 and removed
+  it, and using it does not fall back silently, it fails the build with
+  `error building site`.
 
 ## CI security posture — don't undo these
 
