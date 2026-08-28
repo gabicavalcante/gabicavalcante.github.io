@@ -1,5 +1,6 @@
 +++
 title = "A guide to setting up seaborn FacetGrid and relplot charts"
+description = "Setting up seaborn relplot and FacetGrid end to end with the Google Global Mobility Report: reshaping with melt, then making the chart readable."
 date = "2020-08-15"
 aliases = ["/posts/matplotlib-searborn-replot/"]
 tags = ["python", "data-visualization"]

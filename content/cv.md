@@ -1,5 +1,6 @@
 +++
 title = "Curriculum"
+description = "Curriculum of Gabi Cavalcante: 9+ years in software engineering, 5+ leading Python and Django SaaS platform teams on Azure. Positions, education, talks."
 date = "2026-07-30"
 +++
 

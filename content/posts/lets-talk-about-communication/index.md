@@ -1,5 +1,6 @@
 +++
 title = "Vamos trocar umas ideias sobre comunicação"
+description = "Sugestões práticas para quem vai dar uma palestra, aula ou curso, reunidas a partir da experiência no PyLadies Brasil e no PyLadies Natal."
 date = "2019-12-22"
 tags = ["community", "speaking"]
 

@@ -1,5 +1,6 @@
 +++
 title = "Creating PDFs with LaTeX and Django"
+description = "Generating PDF reports from Django with django-tex and LaTeX templates, instead of positioning every element by hand in centimeters."
 date = "2019-10-01"
 tags = ["python", "django", "latex"]
 +++

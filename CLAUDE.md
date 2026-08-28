@@ -246,5 +246,11 @@ the **top level** of `hugo.toml`; appended after `[params]` it silently becomes
 a param that nothing reads.
 
 Tags are lowercase and hyphenated, and posts carry two to four. Adding one is
-just `tags = [...]` in the post's front matter; every page under `/tags/` is
-generated, so never create files there.
+just `tags = [...]` in the post's front matter. **Never create term files**
+(`content/tags/python.md`) — every term page is generated, and a hand-written
+one shadows the generated page. A taxonomy `content/tags/_index.md` is a
+supported Hugo hook rather than a term file, but it comes with a trap: without
+an explicit `title` key it overrides the auto-generated title with an empty
+string, and `terms.html` then renders `<h1></h1>`. `/tags/` gets its meta
+description from `partials/seo-description.html` instead, which is why no such
+file exists.

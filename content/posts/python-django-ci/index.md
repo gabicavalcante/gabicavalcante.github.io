@@ -1,5 +1,6 @@
 +++
 title = "Python, Django and GitHub CI"
+description = "Continuous integration for a Django project with GitHub Actions: workflow triggers, environment variables, and running the suite with pytest."
 date = "2019-09-30"
 tags = ["python", "django", "ci-cd"]
 +++

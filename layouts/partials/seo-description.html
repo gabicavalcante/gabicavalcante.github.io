@@ -13,6 +13,11 @@
 {{- $desc := .Description -}}
 {{- if not $desc }}{{ with .Summary }}{{ $desc = . }}{{ end }}{{ end -}}
 {{- if not $desc }}{{ if eq .Kind "term" }}{{ $desc = printf "Every post tagged %s, newest first." .LinkTitle }}{{ end }}{{ end -}}
+{{- /* The /tags/ index has no front matter to carry a description; CLAUDE.md >
+     Taxonomy explains why there is no content/tags/_index.md. So it is built
+     here, the same way term pages get theirs. Without this it falls through to
+     the site default and duplicates the home page. */ -}}
+{{- if not $desc }}{{ if eq .Kind "taxonomy" }}{{ $desc = "Every tag used on this blog, with the number of posts under each." }}{{ end }}{{ end -}}
 {{- if not $desc }}{{ $desc = .Site.Params.description }}{{ end -}}
 {{- /* htmlUnescape is not optional: plainify strips tags but leaves character
      references as literal text, and html/template then escapes the & a second

@@ -1,5 +1,6 @@
 +++
 title = "About"
+description = "Gabi Cavalcante: full-stack engineer and tech lead at Vinta Software, leading the data platform and infrastructure team. 9+ years of Python and Django."
 date = "2026-07-30"
 +++
 

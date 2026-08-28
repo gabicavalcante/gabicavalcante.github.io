@@ -1,5 +1,6 @@
 +++
 title = "Reliability in Django and Celery: how tasks get lost"
+description = "Every way a Celery task can be lost between Django and the worker: transaction timing, broker failures, dead workers, and how to make retries safe."
 date = "2026-08-12"
 tags = ["python", "django", "celery", "reliability"]
 +++
