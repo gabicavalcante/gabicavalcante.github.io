@@ -3,7 +3,10 @@
 ## What this repo is
 
 The Hugo **source** for a personal blog published at
-<https://gabicavalcante.github.io> via GitHub Pages.
+<https://gabicavalcante.dev> via GitHub Pages. The apex is the canonical
+address; the old `gabicavalcante.github.io` still resolves, because GitHub
+redirects it to the custom domain. The repo name — and so the `go.mod` module
+path — keeps the `github.io` spelling and should not be changed to match.
 
 `public/` is **built by CI and never committed.** Pages is configured with
 Source = "GitHub Actions", not "deploy from a branch". Committing build output
@@ -36,6 +39,7 @@ layouts/_default/terms.html  /tags/ index — see Taxonomy below
 layouts/partials/twitter_cards.html  empty on purpose; the theme's baseof calls
                           this partial unconditionally and it emitted twitter:
                           meta on every page. og:* still covers link previews.
+static/CNAME              the custom domain; see Domain below
 .github/workflows/hugo.yml
 content/
   about/index.md              page bundle; no image (me2.jpg was removed)
@@ -154,8 +158,40 @@ Actions compromises rely on.
   the repo (`.local/`, gitignored). **That PDF is the source of truth for dates**
   — it is what settled two one-month disagreements the old page had. Update it
   first, then the page.
-- If a `CNAME` is ever re-added, `baseURL` in `hugo.toml` must change with it.
-  That mismatch is why the old `gabicavalcante.me` domain misbehaved.
+
+## Domain
+
+The custom domain `gabicavalcante.dev` was configured in Settings → Pages on
+2026-08-28. Two things hold it in place, and they are independent:
+
+- **`static/CNAME`** — one line, `gabicavalcante.dev`, no `www`, no blank
+  second line. Hugo copies `static/` into `public/` on every build, so the file
+  rides along in the Pages artifact. Without it a deploy can clear the custom
+  domain setting, because with Source = "GitHub Actions" there is no branch
+  holding a `CNAME` for GitHub to read back.
+- **`baseURL` in `hugo.toml`** — `https://gabicavalcante.dev/`, trailing slash.
+  It feeds absolute URLs, `og:url`, the sitemap, RSS, and alias redirects. A
+  mismatch between the served domain and `baseURL` is why the old
+  `gabicavalcante.me` domain misbehaved.
+
+**But the CI build overrides `baseURL`.** The workflow runs
+
+```
+hugo --gc --minify --baseURL "${{ steps.pages.outputs.base_url }}/"
+```
+
+and the flag beats the config file. So `hugo.toml`'s `baseURL` governs local
+builds only; in CI the domain comes from `actions/configure-pages`, which reads
+it from the Pages API — i.e. from the custom domain setting. Both are correct
+today and agree with each other. The consequence worth knowing: if the custom
+domain is ever cleared in Settings, CI silently goes back to emitting
+`github.io` links even though `hugo.toml` still says `.dev`. Dropping the
+`--baseURL` flag would make `hugo.toml` the single source of truth; that has
+not been done.
+
+Verify a change to either with `hugo --gc --minify` into a throwaway
+`--destination` and grep the output for the old domain — never build into
+`public/` just to check.
 
 ## Taxonomy
 
