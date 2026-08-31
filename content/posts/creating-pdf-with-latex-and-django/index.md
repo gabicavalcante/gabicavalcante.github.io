@@ -84,3 +84,5 @@ def view(request):
 The default LaTeX interpreter is `lualatex`, but you can change it with the `LATEX_INTERPRETER` setting, for instance: `LATEX_INTERPRETER = 'pdflatex'`. Whichever one you pick has to be installed on the machine that runs the compile, which is worth remembering when you deploy.
 
 I did end up refactoring the reports to LaTeX templates, and generating a PDF came down to a few seconds. The bigger win was that a new report became a template I could read, instead of a list of coordinates.
+
+A few seconds is still a few seconds, though, and a report only gets bigger. Once a compile is too slow to sit inside a request, the obvious move is to hand it to a background worker, which trades a slow page for [a whole category of new ways to lose the work]({{< relref "reliability-in-django-and-celery" >}}).

@@ -35,6 +35,8 @@ def create_order(cart, customer, source=ORDER_SOURCE.web, created_by=None):
 
 Right now this code is correct. It is only slow. The request takes four seconds, because the email goes out through a third party provider and assigning fulfillment scans inventory, and the customer is watching a spinner. So we move the slow part to Celery.
 
+Report generation is the other classic case. I hit it [building PDFs out of LaTeX templates]({{< relref "creating-pdf-with-latex-and-django" >}}), and it ages into this same problem.
+
 ```python
 @transaction.atomic
 def create_order(cart, customer, source=ORDER_SOURCE.web, created_by=None):
