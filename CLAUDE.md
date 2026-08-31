@@ -44,10 +44,12 @@ layouts/partials/seo-description.html  returns one page's description. Its own
                           identical string and must not drift.
 layouts/partials/opengraph.html  fixes empty og:description and missing
                           article:tag — see Theme below.
-layouts/partials/schema.html  JSON-LD: BlogPosting on posts, Person on /about/.
-                          Identity comes from [params.author] in hugo.toml,
-                          which is separate from the linkedin/github cascade —
-                          that one drives the visible per-post links.
+layouts/partials/schema.html  JSON-LD, as a single @graph on each page that
+                          gets any: BlogPosting on posts, Person on /about/,
+                          BreadcrumbList everywhere with real ancestors. The
+                          home page, 404 and the alias stub emit nothing. Identity comes from [params.author] in
+                          hugo.toml, which is separate from the linkedin/github
+                          cascade — that one drives the visible per-post links.
 layouts/robots.txt        adds the Sitemap line Hugo's built-in one omits.
 layouts/partials/twitter_cards.html  empty on purpose; the theme's baseof calls
                           this partial unconditionally and it emitted twitter:
@@ -141,6 +143,16 @@ Known limits, all upstream:
   ("python") rather than the title element's "Posts tagged python", and
   `og:site_name`, which never emitted because upstream reads
   `.Site.Params.title` while the site title is a top-level key.
+- The theme marks the **nav menu** up as a schema.org `BreadcrumbList` in RDFa.
+  It is not a breadcrumb: the same three links in the same order on every page,
+  never containing the page you are on. Search Console flagged it as *"field id
+  is missing in itemListElement.item"*. `layouts/_default/baseof.html` strips
+  that markup and `partials/schema.html` emits a real trail from `.Ancestors`.
+  Worth knowing if you ever re-derive this: a conformant RDFa parser resolves
+  `@href` fine (RDFa Core 1.1 §7.5, verified with pyRdfa3) — the blank node is
+  a last resort. Google's extractor just is not conformant; it reads RDFa
+  through microdata's nested-entity path. The markup was wrong on the merits
+  regardless, which is the reason it went.
 - The build used to print a `.Site.LanguageCode was deprecated` warning. It was
   the theme after all — the first line of its `_default/baseof.html` is
   `<html lang="{{ .Site.LanguageCode }}">`. (This file previously blamed Hugo's

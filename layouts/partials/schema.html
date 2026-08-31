@@ -1,7 +1,8 @@
 {{- /*
   Emits JSON-LD structured data: a machine-readable statement of what the page
   is. The site had none -- the only machine-readable markup was the theme's
-  BreadcrumbList RDFa on the nav.
+  BreadcrumbList RDFa on the nav, which this same file's breadcrumb block
+  replaced; see the note further down.
 
   Two types, which is all a personal blog needs:
 
@@ -50,7 +51,6 @@
 
 {{- if and .IsPage (eq .Section "posts") -}}
   {{- $s := dict
-      "@context" "https://schema.org"
       "@type" "BlogPosting"
       "headline" .Title
       "description" (partial "seo-description.html" . | htmlUnescape)
@@ -68,11 +68,40 @@
        a "/about/" comparison quietly stops matching and the one block this
        partial exists for vanishes instead of failing loudly. */ -}}
   {{- $schema = merge $person (dict
-      "@context" "https://schema.org"
       "jobTitle" $author.jobTitle
       "description" (partial "seo-description.html" . | htmlUnescape)
       "mainEntityOfPage" .Permalink
   ) -}}
 {{- end -}}
 
-{{- with $schema }}<script type="application/ld+json">{{ . | jsonify | safeJS }}</script>{{ end -}}
+{{- /* A real BreadcrumbList, built from the page's actual ancestors. The theme
+     marked up the NAV MENU as one: the same three links in the same order on
+     every page, never containing the page you are on. Search Console rejected
+     it as well: "field id is missing in itemListElement.item". The mechanism
+     is not the obvious one. RDFa Core 1.1 §7.5 resolves @href as the typed
+     resource, and a conformant parser reads the old markup as schema:item
+     <IRI> (verified with pyRdfa3); the blank node is only the last-resort
+     fallback when no @resource/@href/@src is present. The rest is deduction rather than
+     measurement -- Google's extractor is closed -- but the only reading that
+     fits the error string is that it normalises RDFa through microdata's
+     nested-entity path, where identity comes only from an explicit itemid. That
+     markup is gone from baseof.
+     This emits the trail the .logo line already shows visually, with each item
+     a URL, which cannot lack an identity. */ -}}
+{{- $crumbs := slice -}}
+{{- range (.Ancestors.Reverse) }}{{ $crumbs = $crumbs | append (dict "name" (cond .IsHome "Home" .LinkTitle) "url" .Permalink) }}{{ end -}}
+{{- if and (not .IsHome) (ne .Kind "404") }}{{ $crumbs = $crumbs | append (dict "name" .LinkTitle "url" .Permalink) }}{{ end -}}
+
+{{- $nodes := slice -}}
+{{- with $schema }}{{ $nodes = $nodes | append . }}{{ end -}}
+{{- if gt (len $crumbs) 1 -}}
+  {{- $items := slice -}}
+  {{- range $i, $c := $crumbs -}}
+    {{- $items = $items | append (dict "@type" "ListItem" "position" (add $i 1) "name" $c.name "item" $c.url) -}}
+  {{- end -}}
+  {{- $nodes = $nodes | append (dict "@type" "BreadcrumbList" "itemListElement" $items) -}}
+{{- end -}}
+
+{{- /* One @graph rather than several script blocks: the nodes share a context
+     and a consumer reads them as one description of the page. */ -}}
+{{- with $nodes }}<script type="application/ld+json">{{ (dict "@context" "https://schema.org" "@graph" .) | jsonify | safeJS }}</script>{{ end -}}

@@ -20,6 +20,21 @@
      v0.144 and which fails the build. That line was ALSO the real source of the `.Site.LanguageCode was
      deprecated` build warning -- not Hugo's internal rss.xml, which is what
      CLAUDE.md used to claim.
+
+  5. The nav menu was marked up as a schema.org BreadcrumbList in RDFa. It is
+     not a breadcrumb: it is the same three links in the same order on every
+     page, and it never contains the page you are on. Search Console rejected
+     it too: "field id is missing in itemListElement.item". Note the mechanism,
+     because it is NOT what it looks like -- RDFa Core 1.1 §7.5 does resolve
+     @href as the typed resource, and a conformant parser (verified with
+     pyRdfa3) reads the old markup as schema:item <IRI>, not a blank node.
+     The half below is deduction, not measurement: Google's extractor is closed,
+     and the only reading that fits the error string is that it normalises RDFa
+     through microdata's nested-entity path, where itemprop + itemscope on an
+     <a href> genuinely yields an identity-less node because microdata has no
+     href-to-identity rule at all. The
+     markup is gone either way; the real trail is emitted as JSON-LD by
+     partials/schema.html. Visual output unchanged.
 */}}
 {{- $desc := partial "seo-description.html" . -}}
 <!DOCTYPE html>
@@ -69,12 +84,10 @@
               <a href="{{ .Site.BaseURL }}" class="no-style {{ with .Site.Params.TitleCutting }}site-name{{ end }}">{{ .Site.Title }}</a>:~# 
               {{ range $index, $element := split $url "/" }}{{ $.Scratch.Add "path" $element }}{{ if ne $element "" }}<a href='{{ $.Scratch.Get "path" | absURL }}'>{{ . }}</a>/{{ $.Scratch.Add "path" "/" }}{{ end }}{{ end }}</div></header>
           <nav class="terminal-menu">
-            <ul vocab="https://schema.org/" typeof="BreadcrumbList">
-                {{ range $index, $element := .Site.Params.navlinks }}
-                <li property="itemListElement" typeof="ListItem">
-                    <a property="item" typeof="WebPage" href="{{ absURL .url }}">
-                    <span property="name">{{ .name }}</span></a>
-                    <meta property="position" content="{{ add $index 1}}" />
+            <ul>
+                {{ range .Site.Params.navlinks }}
+                <li>
+                    <a href="{{ absURL .url }}">{{ .name }}</a>
                 </li>
                 {{ end }}
             </ul>
