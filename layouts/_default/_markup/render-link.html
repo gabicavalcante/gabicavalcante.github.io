@@ -1,0 +1,18 @@
+{{- /*
+  Overrides the theme's link render hook for one character: upstream ends the
+  template with `</a> `, a trailing space, so every inline link emits one after
+  it. Between words it collapses and is invisible; before punctuation it is
+  not, and the site had 29 links rendering as `link text .` or `link text ,`.
+  Visible in the theme's own output, not something this site introduced.
+
+  Otherwise upstream verbatim, including target=_blank + rel=noopener on
+  external links. Note that check is `strings.HasPrefix .Destination "http"`,
+  so relref-generated internal links (which start with /) correctly stay in the
+  same tab.
+
+  THIS FILE MUST NOT END IN A NEWLINE. Hugo emits the template verbatim, so a
+  final newline is whitespace after the </a> and puts the space straight back.
+  Any editor or hook with "insert final newline" silently undoes the fix and
+  the build stays green. .editorconfig pins it off for this directory.
+*/ -}}
+<a href="{{ .Destination | safeURL }}"{{ with .Title}} title="{{ . }}"{{ end }}{{ if strings.HasPrefix .Destination "http" }} target="_blank" rel="noopener"{{ end }}>{{ .Text | safeHTML }}</a>

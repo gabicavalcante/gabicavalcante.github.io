@@ -1,0 +1,17 @@
+# Hugo render hooks are emitted verbatim, so trailing whitespace in the
+# template is trailing whitespace in the HTML. layouts/_default/_markup/
+# render-link.html deliberately ends WITHOUT a final newline: upstream's
+# version ends in `</a> ` and that space renders before punctuation as
+# `link text .`. A final newline here puts it back, silently, with a green
+# build. See the comment at the top of that file.
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+
+[layouts/_default/_markup/*.html]
+insert_final_newline = false
+trim_trailing_whitespace = false
