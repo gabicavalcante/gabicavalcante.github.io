@@ -6,10 +6,11 @@
      content/posts/_index.md, exactly like Linkedin.
   2. The post's tags, linking to /tags/<term>/. The theme prints tags nowhere,
      so before this there was no path from a post to a tag page and the
-     taxonomy was unreachable. Note the theme cannot emit article:tag OG meta
-     either: partials/opengraph.html nests the tag loop inside
-     `range .Site.Params.Authors`, which rebinds `.` to the author, so
-     .Params.tags is always empty there. Not worth a second override.
+     taxonomy was unreachable. (This used to add that the theme could not emit
+     article:tag OG meta either, and that fixing it was not worth a second
+     override. That decision was reversed: layouts/partials/opengraph.html now
+     exists and emits article:tag, because the same file had to be overridden
+     for an empty og:description anyway.)
 
   Otherwise identical to upstream, so it stays easy to diff after a theme
   update.

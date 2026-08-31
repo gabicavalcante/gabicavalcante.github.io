@@ -5,6 +5,18 @@ locale = "en-us"
 defaultContentLanguage = "en"
 enableRobotsTXT = true
 
+# plot1_original.png is the pre-2026 render of the mobility FacetGrid, kept in
+# the bundle on purpose (928541d) so the before/after comparison survives next
+# to the post it belongs to. Nothing references it, but Hugo publishes every
+# non-page file in a bundle, so it was shipping 321KB of unreachable weight in
+# every deploy. Ignored here rather than deleted: the file stays where it was
+# deliberately put, and just stops being copied into the build -- which also
+# drops it from .Resources, so it can no longer be referenced from the post.
+#
+# The pattern is matched against the ABSOLUTE filesystem path, so it must stay
+# unanchored: `^content/...` matches nothing.
+ignoreFiles = ["content/posts/matplotlib-seaborn-relplot/plot1_original\\.png$"]
+
 # Term pages are titled from the term itself, so without this Hugo title-cases
 # them and `data-visualization` renders as `Data-Visualization`. Must stay at
 # the top level -- putting it after [params] makes it a param, where nothing

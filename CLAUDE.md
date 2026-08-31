@@ -31,7 +31,14 @@ hugo mod get -u github.com/mrmierzejewski/hugo-theme-console   # update theme
 ## Layout
 
 ```
-hugo.toml                 baseURL, nav (params.navlinks), monokai highlighting
+hugo.toml                 baseURL, nav (params.navlinks), monokai highlighting,
+                          [taxonomies], [params.author] for the JSON-LD, and
+                          ignoreFiles. Careful in here: key placement and
+                          anchoring both bite. See Conventions for the TOML
+                          table rule, Taxonomy for capitalizeListTitles, and
+                          the ignoreFiles comment itself — that one is matched
+                          against the ABSOLUTE path, so anchoring it with ^ is
+                          what breaks it.
 go.mod / go.sum           theme module, pinned by commit
 layouts/index.html        homepage override — see below, do not delete
 layouts/posts/single.html post override: Github link + tag links
@@ -47,9 +54,10 @@ layouts/partials/opengraph.html  fixes empty og:description and missing
 layouts/partials/schema.html  JSON-LD, as a single @graph on each page that
                           gets any: BlogPosting on posts, Person on /about/,
                           BreadcrumbList everywhere with real ancestors. The
-                          home page, 404 and the alias stub emit nothing. Identity comes from [params.author] in
-                          hugo.toml, which is separate from the linkedin/github
-                          cascade — that one drives the visible per-post links.
+                          home page, 404 and the alias stub emit nothing.
+                          Identity comes from [params.author] in hugo.toml,
+                          separate from the linkedin/github cascade — that one
+                          drives the visible per-post links.
 layouts/robots.txt        adds the Sitemap line Hugo's built-in one omits.
 layouts/partials/twitter_cards.html  empty on purpose; the theme's baseof calls
                           this partial unconditionally and it emitted twitter:
@@ -83,6 +91,13 @@ content/
 - **`<!--more-->` in every published page.** Summaries are explicit rather than
   dependent on Hugo's 70-word counting, which pulls a second paragraph into
   listings and shifts if the prose is edited.
+- **A materially revised post gets `lastmod`.** Without it Hugo falls back to
+  `.Date`, so the JSON-LD `dateModified` just repeats `datePublished` and the
+  revision is invisible to a crawler. Set it to the date of the commit that
+  made the change, not today, and only for edits a reader would notice — a
+  typo or a front-matter tweak does not count. `matplotlib-seaborn-relplot` is
+  the worked example. `enableGitInfo` is off, so the front matter is the only
+  source.
 - **Renaming a slug requires an `aliases` entry.** `matplotlib-seaborn-relplot`
   carries `aliases = ["/posts/matplotlib-searborn-replot/"]` so the old
   misspelled URL still redirects. Do the same for any future rename.

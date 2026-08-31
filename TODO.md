@@ -48,10 +48,17 @@ no moving parts.
 
 ## Site hygiene
 
-### Empty `/categories/` and `/tags/` pages
-Both build and sit in `sitemap.xml`, and both list nothing — no post declares
-any term. Either start tagging posts, or suppress the taxonomies in `hugo.toml`
-so you stop publishing two empty pages.
+### ~~Empty `/categories/` and `/tags/` pages~~ — done
+All five published posts are tagged, `[taxonomies]` declares only `tag`, so
+`/categories/` no longer builds, and `layouts/_default/terms.html` renders
+`/tags/` as a real term index. Left here only so nobody acts on the old advice:
+suppressing the taxonomies now would undo working tag pages.
+
+### Nine tag pages for five posts
+**Seven of the nine list exactly one post**: `celery`, `ci-cd`, `community`,
+`data-visualization`, `latex`, `reliability`, `speaking`. Only `python` (4) and
+`django` (3) have more. Not urgent and not a bug, but thin term pages are index
+bloat, and it is worth deciding whether every tag earns its own page.
 
 ---
 
@@ -74,6 +81,37 @@ so you stop publishing two empty pages.
 
 Not tasks. Recorded so nobody later mistakes them for bugs.
 
-- The `// Github` link is gone from post headers; the current theme reads only
-  `linkedin`. Restoring it needs a `layouts/posts/single.html` override,
-  declined as not worth the maintenance.
+- ~~The `// Github` link is gone from post headers.~~ No longer true: the
+  `layouts/posts/single.html` override exists — tags needed the same file, so
+  the Github link came along with them.
+
+---
+
+## SEO — remaining
+
+Eight groups were worked through in Aug 2026; seven are in `main`. What is left:
+
+### Mobile / Core Web Vitals
+Google indexes mobile-first, so this is ranking, not polish.
+- `console.css` sets `--global-font-size: 14px` below 850px, against 16px on
+  desktop. Shrinking the text on the smaller screen is backwards.
+- The theme's `render-image.html` emits only `src`/`alt`/`class`, and the CSS
+  sets `img{width:100%}`. With no intrinsic dimensions the browser cannot
+  reserve height, so every image shifts the layout when it lands — the CLS half
+  of Core Web Vitals.
+- No `loading="lazy"` anywhere.
+- `plot1.png` is 1969x1190 and 597KB for a ~390px screen. It is the LCP element
+  of that post on a phone.
+- `pre{word-break:break-all}` splits identifiers mid-token
+  (`send_order_confirmation_email(orde` / `r)`). Readability, not SEO.
+
+### `og:type="article"` on `/about/` and `/cv/`
+They are not articles, and they also carry `article:published_time`. Wrong
+signal on two high-value pages. Lives in `layouts/partials/opengraph.html`.
+
+### Search Console
+- After the breadcrumb fix (bf1552c) deploys, press **Validate fix** on the
+  "field id is missing in itemListElement.item" report.
+- Expect a new *warning* (not error) in the Articles report: `image` is missing
+  on all five posts. Deliberate — see `layouts/partials/schema.html`. It goes
+  away when the image work above is done.
