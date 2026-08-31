@@ -225,3 +225,119 @@
 .terminal .posts-list .post {
   margin-top: calc(var(--global-space) * 2);
 }
+
+/* Mobile and Core Web Vitals. Google indexes mobile-first, so what a phone
+ * gets is what ranks.
+ *
+ * height:auto is REQUIRED by the width/height attributes that
+ * layouts/_default/_markup/render-image.html now emits. terminal.css sets
+ * `img{width:100%}` with no height rule, so a height attribute would be taken
+ * literally and stretch the image. With height:auto the browser uses the two
+ * attributes only as an aspect ratio, reserves the right space before the
+ * bytes arrive, and stops the page jumping when they land -- the CLS half of
+ * Core Web Vitals.
+ */
+.terminal img {
+  height: auto;
+}
+
+/* console.css drops --global-font-size to 14px below 850px, against 16px on
+ * desktop. That is backwards: the small screen is where the text wants to be
+ * bigger, not smaller, and 14px monospace on a phone is below what Google
+ * treats as legible. Restores 16px. custom.css loads after console.css, so
+ * this wins without touching the theme.
+ */
+@media only screen and (max-width: 850px) {
+  :root {
+    --global-font-size: 16px;
+  }
+}
+
+/* Code blocks broke mid-identifier on narrow screens --
+ * `send_order_confirmation_email(orde` / `r)` -- because terminal.css sets
+ * `word-break:break-all` on pre. That is a rule for prose, not for code.
+ *
+ * `word-break: normal` ALONE is not the fix, and it is worth writing down why,
+ * because it looks like it should be. `pre code` is `display:inline-block;
+ * min-width:100%`, so it is shrink-to-fit and sized by its MIN-CONTENT width.
+ * Under break-all that min-content is one character; under normal it becomes
+ * the longest unbreakable token, the box grows past `pre` and `.container`
+ * (both `overflow: visible`), and the PAGE scrolls sideways. Measured at 390px
+ * with only this rule changed: the Celery post goes from 203px of overflow to
+ * 306px, the seaborn post from 143px to 313px, and the `pre code` box from
+ * 328px to about 670px. (Not the django-ci post -- its 47px is the prompt,
+ * not `pre`.)
+ * `pre code{overflow-x:scroll}` does not save it -- the element that overflows
+ * is that same shrink-to-fit box, and `pre` is `white-space: pre-wrap`, so
+ * nothing ever wanted to scroll.
+ *
+ * `overflow-wrap: anywhere` is what closes it: unlike `break-word`, it DOES
+ * participate in intrinsic sizing (CSS Text 3), so min-content collapses again
+ * and the box fits. Tokens still stay whole wherever they fit.
+ */
+.terminal pre {
+  word-break: normal;
+  overflow-wrap: anywhere;
+}
+
+/* The theme's terminal prompt -- `gabi cavalcante:~# posts/<slug>/` -- is
+ * `display: table-cell` (it shares terminal.css's `h1,.logo` rule), so it is
+ * sized to min-content, and a slug is one unbreakable run. At 390px it is
+ * 450-517px wide depending on the slug, 513-589px once the font is restored
+ * to 16px, and pushes the page sideways on its own.
+ *
+ * `white-space` is the declaration that is easy to miss and the one that does
+ * the work: the same element also carries `.terminal-prompt`, which sets
+ * `white-space: nowrap`, and nowrap defeats `word-break` outright. Overriding
+ * the table-cell is NOT needed -- measured, dropping `display: block` leaves
+ * overflow at 0 and the box identical at 350x71 -- so it is not here.
+ *
+ * Measured at 390px, page overflow on the six pages in this state:
+ * 47/143/219/202/171/56 -> 0. `break-all` rather than `overflow-wrap:
+ * anywhere` because it wraps the longest prompt in 2 lines instead of 3.
+ */
+@media only screen and (max-width: 850px) {
+  .terminal .logo {
+    word-break: break-all;
+    white-space: normal;
+  }
+}
+
+
+/* console.css declares `--page-width: 60em` inside its
+ * `@media (prefers-color-scheme: dark)` block, in among the colours. Nothing
+ * about a dark theme wants a narrower page, and the light block does not set
+ * it, so the site silently renders 160px narrower in dark mode than in light.
+ * Treating it as the stray it is keeps one layout in both schemes -- and keeps
+ * the `sizes` attribute in render-image.html honest, since sizes cannot be
+ * conditional on colour scheme and was over-declaring by 160px in the dark.
+ *
+ * 70em rather than 60em on purpose: 70em is what light mode -- the default --
+ * already renders, so unifying upward changes nothing anyone currently sees.
+ * 60em for both would be defensible on line length (1080px is ~107 monospace
+ * characters, above the 45-90 comfort range) and would let `sizes` declare
+ * 920px, but that is a design change to the whole site, not a bug fix.
+ */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --page-width: 70em;
+  }
+}
+
+
+/* Markdown tables overflowed the page on a phone. A table is sized to its
+ * min-content and cannot be squeezed below it, so `table{width:100%}` from
+ * terminal.css does nothing once the columns need more room than the
+ * viewport: the Celery post's table measured 649px in a 390px viewport once
+ * the font is restored to 16px, 279px of page overflow and the worst on the
+ * site. At the theme's own 14px it was already 573px.
+ *
+ * layouts/_default/_markup/render-table.html wraps every table in this
+ * element so the TABLE keeps its own layout and semantics and only the wrapper
+ * scrolls. Sideways scrolling inside a bounded box is fine; the whole document
+ * sliding under your thumb is not.
+ */
+.table-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+}

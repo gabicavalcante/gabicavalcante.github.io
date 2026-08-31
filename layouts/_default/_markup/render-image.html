@@ -1,0 +1,49 @@
+{{- /*
+  Overrides the theme's image render hook, which emits only src, alt, an
+  optional title and class="img-responsive". Three problems, all of them
+  Core Web Vitals problems on a phone, which is what Google ranks by:
+
+  1. No width/height. Combined with `img{width:100%}` the browser cannot know
+     the aspect ratio before the bytes arrive, so it reserves no height and
+     everything below the image jumps when it lands. That is CLS.
+  2. No loading="lazy".
+  3. The full-size original is served to every screen. plot1.png is 1969x1190
+     and 597KB for a viewport around 390px wide.
+
+  So: intrinsic dimensions from the resource, a WebP srcset the browser picks
+  from, and the original as src for anything that cannot read the srcset.
+  Widths are only generated up to the original width -- upscaling a raster
+  just makes a bigger blurry file.
+
+  height="" needs `height:auto` in CSS or the attribute is taken literally
+  against `width:100%` and the image is stretched. That rule is in
+  assets/css/custom.css, next to this comment in spirit.
+
+  Images that are not page resources (an absolute URL, or a path that does not
+  resolve) fall through to markup equivalent to upstream, minus its trailing
+  space. Like render-link.html, THIS FILE MUST NOT END IN A NEWLINE.
+*/ -}}
+{{- $img := .PageInner.Resources.GetMatch .Destination -}}
+{{- /* Only raster formats Hugo can measure and resize. An SVG resolves as a
+     resource but has no .Width, and calling it is a HARD BUILD FAILURE, not a
+     warning -- one diagram dropped into a bundle would turn a content commit
+     into a red deploy. GIF is excluded too: .Resize would silently flatten an
+     animation to its first frame. Both fall through to the plain <img>. */ -}}
+{{- if and $img (reflect.IsImageResourceProcessable $img) (ne $img.MediaType.SubType "gif") -}}
+  {{- /* Steps up to the original width, plus the original width itself when no
+       step reached it -- otherwise an image narrower than the largest step
+       leaves a retina phone upscaling the biggest candidate it has. Never
+       above the original: upscaling a raster only makes a bigger blurry file.
+       WebP even at full width is far smaller than the source PNG. */ -}}
+  {{- $widths := slice -}}
+  {{- range (slice 480 960 1440) }}{{ if le . $img.Width }}{{ $widths = $widths | append . }}{{ end }}{{ end -}}
+  {{- if or (not $widths) (lt (index (last 1 $widths) 0) $img.Width) }}{{ $widths = $widths | append $img.Width }}{{ end -}}
+  {{- $srcset := slice -}}
+  {{- range $widths -}}
+    {{- $r := $img.Resize (printf "%dx webp q80" .) -}}
+    {{- $srcset = $srcset | append (printf "%s %dw" $r.RelPermalink $r.Width) -}}
+  {{- end -}}
+  <img src="{{ $img.RelPermalink }}"{{ with $srcset }} srcset="{{ delimit . ", " }}" sizes="(min-width: 1120px) 1080px, calc(100vw - 40px)"{{ end }} width="{{ $img.Width }}" height="{{ $img.Height }}" alt="{{ .Text }}"{{ with .Title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async" class="img-responsive">
+{{- else -}}
+  <img src="{{ .Destination | safeURL }}" alt="{{ .Text }}"{{ with .Title }} title="{{ . }}"{{ end }} loading="lazy" decoding="async" class="img-responsive">
+{{- end -}}

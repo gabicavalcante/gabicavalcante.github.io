@@ -91,8 +91,8 @@ Not tasks. Recorded so nobody later mistakes them for bugs.
 
 Eight groups were worked through in Aug 2026; seven are in `main`. What is left:
 
-### Mobile / Core Web Vitals
-Google indexes mobile-first, so this is ranking, not polish.
+### ~~Mobile / Core Web Vitals~~ — done
+Fixed and measured. Kept for the record; the numbers below are the before.
 - `console.css` sets `--global-font-size: 14px` below 850px, against 16px on
   desktop. Shrinking the text on the smaller screen is backwards.
 - The theme's `render-image.html` emits only `src`/`alt`/`class`, and the CSS
@@ -100,10 +100,19 @@ Google indexes mobile-first, so this is ranking, not polish.
   reserve height, so every image shifts the layout when it lands — the CLS half
   of Core Web Vitals.
 - No `loading="lazy"` anywhere.
-- `plot1.png` is 1969x1190 and 597KB for a ~390px screen. It is the LCP element
-  of that post on a phone.
+- `plot1.png` is 1969x1190 and 597KB for a ~390px screen.
 - `pre{word-break:break-all}` splits identifiers mid-token
   (`send_order_confirmation_email(orde` / `r)`). Readability, not SEO.
+
+### Fonts — the biggest remaining LCP item
+Four unsubsetted TTFs totalling 473 kB ship with the theme; two are actually
+fetched (`RobotoMono-Regular` + `-Bold`, 224 KiB), the italics never are. No
+`font-display`, no preload, no WOFF2. Measured LCP is 1.32-1.60 s on throttled
+mobile. The image work moved LCP only on the one post that has images
+(-614 ms); on the other six it did not, because fonts are what block. WOFF2
+plus `font-display: swap` should therefore beat the image work on LCP across
+the site -- a subsetted WOFF2 saves on every page where the images saved on
+one -- though it does nothing for the mobile-usability half of that group.
 
 ### `og:type="article"` on `/about/` and `/cv/`
 They are not articles, and they also carry `article:published_time`. Wrong

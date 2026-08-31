@@ -1,0 +1,30 @@
+{{- /*
+  Wraps every markdown table in a horizontally scrollable box.
+
+  A table is sized to its min-content and cannot be squeezed below it, so
+  terminal.css's `table{width:100%}` cannot save a wide one: the table in the
+  Celery post measured 649px inside a 390px viewport and dragged the whole
+  document sideways, which is a mobile-usability failure and the worst single
+  overflow on the site. Wrapping keeps the table's own layout and semantics
+  intact and confines the scrolling to the box. See .table-scroll in
+  assets/css/custom.css.
+
+  tabindex so the box is keyboard-scrollable, which a bare overflow container
+  is not (WCAG 2.1.1). Deliberately NO role="region"/aria-label: /cv/ has ten
+  tables and measurement showed nine never scroll at any viewport, so that
+  would have created ten landmarks all named "Table" -- generic landmark noise
+  is worse than none. The extra tab stops are the accepted cost of the one
+  table that does scroll.
+
+  .Attributes is forwarded so this stays equivalent to Hugo's built-in hook.
+  It is a no-op while markup.goldmark.parser.attribute.block is unset, but
+  without it turning block attributes on would silently drop table IDs.
+
+  The theme ships no render-table hook, so nothing upstream is being replaced.
+*/ -}}
+<div class="table-scroll" tabindex="0">
+<table{{ range $k, $v := .Attributes }} {{ $k }}="{{ $v }}"{{ end }}>
+  {{- with .THead }}<thead>{{ range . }}<tr>{{ range . }}<th{{ with .Alignment }} style="text-align: {{ . }}"{{ end }}>{{ .Text }}</th>{{ end }}</tr>{{ end }}</thead>{{ end }}
+  {{- with .TBody }}<tbody>{{ range . }}<tr>{{ range . }}<td{{ with .Alignment }} style="text-align: {{ . }}"{{ end }}>{{ .Text }}</td>{{ end }}</tr>{{ end }}</tbody>{{ end }}
+</table>
+</div>

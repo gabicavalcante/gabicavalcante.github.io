@@ -23,7 +23,7 @@ Both tools are already installed and on the interactive `PATH`:
   Module and Hugo shells out to the Go toolchain
 
 ```bash
-hugo server -D          # local preview; -D is required to see the 4 drafts
+hugo server -D          # local preview; -D is required to see the 3 drafts
 hugo --gc --minify      # production build, same flags CI uses
 hugo mod get -u github.com/mrmierzejewski/hugo-theme-console   # update theme
 ```
@@ -59,6 +59,14 @@ layouts/partials/schema.html  JSON-LD, as a single @graph on each page that
                           separate from the linkedin/github cascade — that one
                           drives the visible per-post links.
 layouts/robots.txt        adds the Sitemap line Hugo's built-in one omits.
+layouts/_default/_markup/render-link.html   drops upstream's trailing space —
+                          MUST NOT end in a newline, see the file.
+layouts/_default/_markup/render-image.html  width/height, lazy loading and a
+                          WebP srcset — see Mobile below. Pairs with
+                          `height:auto` in assets/css/custom.css.
+layouts/_default/_markup/render-table.html  wraps tables in a scrollable box;
+                          the theme ships no such hook, so nothing upstream is
+                          replaced.
 layouts/partials/twitter_cards.html  empty on purpose; the theme's baseof calls
                           this partial unconditionally and it emitted twitter:
                           meta on every page. og:* still covers link previews.
@@ -129,6 +137,93 @@ It is not decoration — the theme's homepage is unusable without it. Upstream
    stray empty heading.
 
 Keep it close to upstream so it stays easy to diff after a theme update.
+
+## Mobile
+
+Google indexes mobile-first, so the phone rendering is what ranks. Every number
+here was measured in headless Chromium — 19 pages x 15 viewports x 2 colour
+schemes — because reasoning from the CSS got it wrong three times running.
+
+**No page scrolls sideways any more.** It used to, and worse than a first pass
+suggests: at 390px five pages overflowed (147/105/80/203/4 px), and at 320px
+seven did, the worst by 272px. Two causes at baseline, plus one the font
+restore introduced:
+
+- The terminal prompt (`.logo`) is `display: table-cell` **and** carries
+  `.terminal-prompt`'s `white-space: nowrap`. Two overrides fix it,
+  `word-break: break-all` and `white-space: normal` — nowrap alone defeats
+  word-break, which is why the obvious one-liner does nothing. Overriding the
+  table-cell is **not** needed and is deliberately absent: measured, dropping
+  it leaves overflow at 0 and the box identical.
+- A markdown table cannot be squeezed below its min-content, so
+  `table{width:100%}` cannot save a wide one. The Celery post's table was 573px
+  in a 390px viewport at the theme's own 14px, and 649px once the font is
+  restored. `layouts/_default/_markup/render-table.html` wraps every table in a
+  `.table-scroll` box, so the table scrolls and the document does not. That
+  wrapper keeps `tabindex="0"` (a scrollable box has to be keyboard-reachable)
+  but deliberately carries **no** `role="region"`/`aria-label`: `/cv/` has ten
+  tables and nine of them never scroll at any viewport, so that would have
+  meant ten landmarks all named "Table". Do not re-add it.
+- `console.css` drops `--global-font-size` to 14px below 850px, against 16px on
+  desktop. Restored to 16px. On its own this made both overflows worse, which
+  is why it and the `.logo` rule belong in the same change.
+
+`terminal.css` also sets `word-break: break-all` on `pre`, which splits
+identifiers mid-token. Setting it to `normal` **alone makes things worse**, and
+this is the trap: `pre code` is `inline-block; min-width:100%`, so it is sized
+by its min-content, which under `normal` becomes the longest token — the Celery
+post went 203px -> 306px of overflow in testing. `pre code{overflow-x:scroll}`
+does not save it. `overflow-wrap: anywhere` is the fix, because unlike
+`break-word` it participates in intrinsic sizing. It also *improves* code
+readability: mid-token breaks at 390px went 45 -> 11 on the seaborn post and
+56 -> 28 on the Celery one, and to zero at desktop widths.
+
+**`--page-width` differed between light and dark.** `console.css` declares
+`--page-width: 60em` inside its `@media (prefers-color-scheme: dark)` block,
+among the colour variables, and the light block does not set it — so the site
+rendered 160px narrower in the dark at viewports above ~1000px. Overridden back
+to 70em so there is one layout, which also makes `sizes` correct in both
+schemes. 70em rather than 60em because it unifies on the value light mode --
+the default -- already uses, rather than introducing a third width; dark-mode
+readers above ~1000px do see the change. 60em for both would be defensible on
+line length but is a design change, not a bug fix.
+
+**Images** get intrinsic width/height, `loading="lazy"`, `decoding="async"` and
+a WebP `srcset` (480/960/1440, filtered to the original width, plus the
+original when no step reaches it, never above it). First load of the seaborn
+post went from **1136 kB to 362 kB** at 390px; the PNGs are not fetched at all.
+CLS on that post was an intermittent shift -- up to 0.00114, absent on most
+loads, nonzero in 3 of 8 runs -- and is now a consistent **0** across every
+run. Its LCP went from 2064 ms to
+1406 ms on throttled mobile, because 775 kB of PNG had been competing with the
+fonts for bandwidth.
+
+`height: auto` in `custom.css` is load-bearing, not tidiness: `terminal.css`
+sets `img{width:100%}` and no height, so the height attribute would be taken
+literally and stretch the image to 350x1190. With it the attributes act only as
+an aspect ratio, which is what reserves the space.
+
+`sizes` is `(min-width: 1120px) 1080px, calc(100vw - 40px)`. The `- 40px` is
+`.container`'s padding, and it matters: with a bare `100vw` the 481-520px band
+at DPR 1 fetched 80 kB where 30 kB was enough.
+
+The image hook is guarded with `reflect.IsImageResourceProcessable`, which is
+the check Hugo's own error message names. An **SVG resolves as a resource but
+has no `.Width`, and calling it fails the build outright** — one diagram in a
+bundle would turn a content commit into a red deploy. GIF is excluded
+separately: it is processable, but `Resize` would flatten an animation to frame
+one. Both fall through to a plain `<img>`.
+
+Known and deliberate: the hook lazy-loads unconditionally. Measured, the LCP
+element is a `<p>` on every page, so nothing is harmed today — but the first
+above-the-fold image ever added (a hero, or `me2.jpg` returning to `/about/`)
+would be lazy-loaded as its own LCP element. Add an `.Ordinal` guard then.
+
+Still open, and the largest remaining LCP item: the theme ships four
+unsubsetted TTFs totalling 473 kB, of which **two are ever fetched**
+(`RobotoMono-Regular` + `-Bold`, 224 KiB); the italics are declared and never
+used. No `font-display`, no preload, no WOFF2. LCP is 1.32-1.60 s on throttled
+mobile and 0.14-0.21 s unthrottled desktop. See TODO.md.
 
 ## Theme
 
