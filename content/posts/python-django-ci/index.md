@@ -9,7 +9,7 @@ GitHub Actions was introduced last year, and it’s an API for cause and effect 
 
 <!--more-->
 
-I’m working in a Django project and when I started I found a problem: there was no CI/CD working or integration/unit test. In the past I used the GitLab CI/CD, but now the code was hosted on GitHub. So, my challenge was create tests to my Django project (it was implemented before I got the job) and create CI/CD pipeline for integrating it with GitHub CI/CD. For this tutorial, the application that I’m gonna show you, demonstrates CRUD operations using class based views in Django (you can find here). It also includes UI for all CRUD views and it’s based on the semaphoreci.com tutorial.
+I’m working in a Django project and when I started I found a problem: there was no CI/CD working or integration/unit test. In the past I used the GitLab CI/CD, but now the code was hosted on GitHub. So, my challenge was create tests to my Django project (it was implemented before I got the job) and create CI/CD pipeline for integrating it with GitHub CI/CD. For this tutorial, the application that I’m gonna show you, demonstrates CRUD operations using class based views in Django (you can find it [here](https://github.com/gabicavalcante/django-test-ci)). It also includes UI for all CRUD views and it’s based on the semaphoreci.com tutorial.
 
 - Local project setup
 

@@ -2,6 +2,13 @@
 title = "A guide to setting up seaborn FacetGrid and relplot charts"
 description = "Setting up seaborn relplot and FacetGrid end to end with the Google Global Mobility Report: reshaping with melt, then making the chart readable."
 date = "2020-08-15"
+
+# The post carries a visible "Update, August 2026" note about the mobility
+# report having changed. Without lastmod, Hugo falls back to .Date and the
+# JSON-LD dateModified just repeats datePublished, so the revision is invisible
+# to a crawler. Date taken from the commit that added the note (b3741b6), not
+# estimated.
+lastmod = "2026-08-12"
 aliases = ["/posts/matplotlib-searborn-replot/"]
 tags = ["python", "data-visualization"]
 +++
