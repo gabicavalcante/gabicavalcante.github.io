@@ -8,4 +8,10 @@
 # Agent tooling and local-only files (the CV PDF that /cv/ is written from).
 .agents/
 .local/
-.claude/
+# Everything under .claude/ is local except the skills, which are versioned with
+# the blog they operate on. Listing the directory contents rather than .claude/
+# itself is deliberate: git does not descend into an ignored directory, so a
+# negation inside one never matches.
+.claude/*
+!.claude/skills/
+.claude/settings*.json

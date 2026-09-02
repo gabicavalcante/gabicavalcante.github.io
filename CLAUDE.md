@@ -23,7 +23,7 @@ Both tools are already installed and on the interactive `PATH`:
   Module and Hugo shells out to the Go toolchain
 
 ```bash
-hugo server -D          # local preview; -D is required to see the 3 drafts
+hugo server -D          # local preview; -D is required to see the drafts
 hugo --gc --minify      # production build, same flags CI uses
 hugo mod get -u github.com/mrmierzejewski/hugo-theme-console   # update theme
 ```
@@ -72,6 +72,11 @@ layouts/partials/twitter_cards.html  empty on purpose; the theme's baseof calls
                           meta on every page. og:* still covers link previews.
 static/CNAME              the custom domain; see Domain below
 .github/workflows/hugo.yml
+.claude/skills/review-post/   the /review-post editorial review. The only part of
+                          .claude/ that is versioned, because it calibrates against
+                          the posts in content/ and belongs with them. Its
+                          references/voice-metrics.py deliberately hardcodes no
+                          target numbers; see the skill.
 content/
   about/index.md              page bundle; no image (me2.jpg was removed)
   cv.md                      
@@ -109,13 +114,12 @@ content/
 - **Renaming a slug requires an `aliases` entry.** `matplotlib-seaborn-relplot`
   carries `aliases = ["/posts/matplotlib-searborn-replot/"]` so the old
   misspelled URL still redirects. Do the same for any future rename.
-- **3 posts are drafts** (`notes-about-multi-objective-algorithms`,
-  `take-picture-with-opencv-galileo`, `parse-dont-validate-in-python` — the
-  last still untracked) and produce no pages. Confirm with
-  `hugo list drafts` rather than trusting this line. The theme's own demo
-  content (`introduction`, `what-is-hugo`, `my-first-post`), copied in during
-  the 2020 setup, was deleted in 54ece1d; it still exists at the
-  `pre-hugo-rebuild` tag, which is why the old site has those URLs.
+- **Some posts are drafts** and produce no pages. `hugo list drafts` is the
+  only answer worth trusting; a count written down here goes stale on the next
+  post. The theme's own demo content (`introduction`, `what-is-hugo`,
+  `my-first-post`), copied in during the 2020 setup, was deleted in 54ece1d; it
+  still exists at the `pre-hugo-rebuild` tag, which is why the old site has
+  those URLs.
 - Post content is mixed English and Brazilian Portuguese while the site declares
   `en-us`. Keep a post in whatever language it already uses — **and set
   `contentLang = "pt-br"` in its front matter** when it is not English, so the
