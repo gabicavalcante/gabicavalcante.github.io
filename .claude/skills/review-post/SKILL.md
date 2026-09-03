@@ -143,6 +143,24 @@ The author's own standards, from `lets-talk-about-communication`, applied to pro
   first used and whether it is glossed there. A reader should not have to already know
   the answer to follow the question.
 - **Gloss English jargon in a Portuguese post, and vice versa.** Her rule.
+- **Watch for metaphor used as terminology.** A word whose meaning cannot be derived
+  from its parts, because it comes from an unrelated domain: *hedging* (betting),
+  *runway* (aviation), *low-hanging fruit*, *boil the ocean*, *moving the goalposts*.
+  This is distinct from ordinary jargon, which a reader can look up and which usually
+  means one thing. Most of her readers are engineers reading English as a second
+  language, so this recurs. The test: would a fluent reader who has not met the idiom
+  guess wrong? Then replace it, or let the surrounding sentence define it.
+
+  Two things that are **not** findings. A metaphor that explains itself in the next
+  clause is doing its job ("frameworks are scaffolding" followed by what scaffolding
+  does here). And a metaphor the author reached for herself, in her own register,
+  is voice rather than an obstacle: leave it.
+
+  The opposite failure is worth naming too, because it showed up the first time this
+  rule was applied. "It is after emotional buy-in: you want the room to care how you
+  did it" glosses itself, which sounds correct, but the gloss made the jargon
+  redundant rather than clear. When a sentence defines its own metaphor, check
+  whether the metaphor is still earning its place.
 - **The responsibility is the writer's.** "If that is unclear, reread it" is the prose
   version of "did you understand?". The fix is to write it more clearly.
 
