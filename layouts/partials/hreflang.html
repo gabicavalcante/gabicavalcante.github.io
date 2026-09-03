@@ -1,0 +1,27 @@
+{{/*
+  Emits rel="alternate" hreflang links for a translated post.
+
+  The site is deliberately NOT in Hugo's multilingual mode -- one post out of
+  nine has a translation, and turning on [languages] for it would either move
+  the Portuguese post's live-since-2019 URL or generate a whole thin /pt-br/
+  skeleton (home, /posts/, /tags/, its own RSS) around a single page. So the
+  two versions are ordinary sibling bundles, paired by a `translationGroup`
+  param they both set. This partial finds every page sharing the value and
+  emits one link per page.
+
+  It emits a link for the CURRENT page too, which is not redundant: hreflang
+  requires each version to be self-referencing, and a set that omits its own
+  page is ignored wholesale by Google.
+
+  The language comes from `contentLang`, the same param baseof uses for
+  <html lang>, defaulting to "en" rather than to .Site.Language.Locale --
+  hreflang="en-us" would offer the English version to US readers only.
+
+  Nothing is emitted for the eight untranslated posts, which is correct: a
+  page with no alternate has nothing to declare.
+*/}}
+{{- with .Params.translationGroup -}}
+  {{- range where site.RegularPages "Params.translationGroup" . }}
+    <link rel="alternate" hreflang="{{ .Params.contentLang | default "en" }}" href="{{ .Permalink }}">
+  {{- end }}
+{{ end -}}

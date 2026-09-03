@@ -51,6 +51,8 @@ layouts/partials/seo-description.html  returns one page's description. Its own
                           identical string and must not drift.
 layouts/partials/opengraph.html  fixes empty og:description and missing
                           article:tag — see Theme below.
+layouts/partials/hreflang.html  rel="alternate" links pairing a post with its
+                          translation — see Translations below.
 layouts/partials/schema.html  JSON-LD, as a single @graph on each page that
                           gets any: BlogPosting on posts, Person on /about/,
                           BreadcrumbList everywhere with real ancestors. The
@@ -113,7 +115,10 @@ content/
   source.
 - **Renaming a slug requires an `aliases` entry.** `matplotlib-seaborn-relplot`
   carries `aliases = ["/posts/matplotlib-searborn-replot/"]` so the old
-  misspelled URL still redirects. Do the same for any future rename.
+  misspelled URL still redirects. Do the same for any future rename — with one
+  exception, recorded under Translations: never alias a path that another page
+  now occupies. Hugo does not refuse it, it overwrites that page with the
+  redirect stub, and prints nothing.
 - **Some posts are drafts** and produce no pages. `hugo list drafts` is the
   only answer worth trusting; a count written down here goes stale on the next
   post. The theme's own demo content (`introduction`, `what-is-hugo`,
@@ -356,6 +361,53 @@ not been done.
 Verify a change to either with `hugo --gc --minify` into a throwaway
 `--destination` and grep the output for the old domain — never build into
 `public/` just to check.
+
+## Translations
+
+One post exists in two languages, as two ordinary sibling bundles:
+
+| URL | Language | Bundle |
+|---|---|---|
+| `/posts/vamos-conversar-sobre-comunicacao/` | pt-br, the original | `vamos-conversar-sobre-comunicacao/` |
+| `/posts/lets-talk-about-communication/` | en, the translation | `lets-talk-about-communication/` |
+
+**This site is deliberately not in Hugo's multilingual mode.** Turning on
+`[languages]` for one post out of nine costs more than it gives: with
+`defaultContentLanguage = "en"` the English version takes the root path and the
+Portuguese one moves under `/pt-br/`, and it also generates a whole thin
+`/pt-br/` skeleton — home page, `/pt-br/posts/`, `/pt-br/tags/`, its own RSS —
+around a single page, with `about/`, `cv/` and the nav still in English.
+Revisit only if several posts end up translated.
+
+The two are paired by a **`translationGroup`** param they both set to the same
+value. `layouts/partials/hreflang.html` collects every page sharing the value
+and emits one `rel="alternate"` per page, **including the current page** —
+hreflang sets must be self-referencing or Google ignores them wholesale. The
+language comes from `contentLang` and defaults to `"en"`, not to
+`.Site.Language.Locale`: `hreflang="en-us"` would offer the English version to
+US readers only. Untranslated posts set no `translationGroup` and emit nothing,
+which is correct.
+
+The name is `translationGroup` and **not `translationKey`** — that one is
+Hugo's own multilingual field, and handing it two pages in the same language is
+asking a feature we are not using to do something it does not mean.
+
+**The 2019 URL `/posts/lets-talk-about-communication/` now serves the English
+translation, not the Portuguese original**, and there is deliberately no alias
+for it — the one exception to the rename rule above. Do not "fix" this by
+adding `aliases = ["/posts/lets-talk-about-communication/"]` to the Portuguese
+post. Measured on 0.164: Hugo does not detect the collision, does not warn, and
+does not skip the alias. It writes the redirect stub **over** the English post,
+so `/posts/lets-talk-about-communication/` becomes a meta-refresh to the
+Portuguese one and the English translation disappears from the site. The build
+still reports success; the only visible difference is the alias count going
+1 → 2.
+
+The cost of having no alias is real but small: a Portuguese reader following an
+old link lands on English and has to take the `em português` link at the top.
+Nothing 404s, and it is the same piece either way. Both posts carry that
+cross-link in the body, right after `<!--more-->` so it stays out of listings
+and summaries.
 
 ## Taxonomy
 

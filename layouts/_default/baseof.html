@@ -35,6 +35,11 @@
      href-to-identity rule at all. The
      markup is gone either way; the real trail is emitted as JSON-LD by
      partials/schema.html. Visual output unchanged.
+
+  6. No hreflang, so the one post that exists in two languages had no way to
+     tell a crawler the two are the same piece. partials/hreflang.html emits
+     the alternates; see that file for why the site is not in Hugo's
+     multilingual mode.
 */}}
 {{- $desc := partial "seo-description.html" . -}}
 <!DOCTYPE html>
@@ -44,6 +49,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{{ if .IsHome }}{{ .Site.Title }}{{ with .Site.Params.tagline }} &middot; {{ . }}{{ end }}{{ else if eq .Kind "term" }}Posts tagged {{ .LinkTitle }} &middot; {{ .Site.Title }}{{ else if eq .Kind "taxonomy" }}Tags &middot; {{ .Site.Title }}{{ else }}{{ .Title }} &middot; {{ .Site.Title }}{{ end }}</title>
     <link rel="canonical" href="{{ .Permalink }}">
+    {{- partial "hreflang.html" . -}}
     {{ with $desc }}<meta name="description" content="{{ . }}">{{ end }}
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="robots" content="all,follow">
