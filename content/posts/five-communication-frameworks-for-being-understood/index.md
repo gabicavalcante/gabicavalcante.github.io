@@ -1,8 +1,7 @@
 +++
 title = "Five frameworks for being understood"
 description = "Five structures I use to make an idea land: PREP, BLUF, before-after-bridge, observation-impact-question and GROW, and what leading a team taught me about when each one helps."
-date = "2026-09-02"
-draft = true
+date = "2026-09-03"
 tags = ["communication", "career", "writing"]
 +++
 
