@@ -145,10 +145,11 @@ content/
 email-reply convention, and **nothing on this site is a quotation of someone
 else.** Audited when the rule was added: the seaborn post's "Update, August
 2026" note and the three margin notes on the multi-objective post are asides
-in the author's own voice, and the BLUF example is a chat message. The
-`take-picture-with-opencv-galileo` post's `>` lines are a shell heredoc
-inside a fenced code block, not blockquotes at all. The gutter also renders
-the blank line between two paragraphs as a lone `>` floating in the margin.
+in the author's own voice, and the BLUF examples are status messages. The
+`take-picture-with-opencv-galileo` post's `>` lines are a shell
+heredoc inside a fenced code block, not blockquotes at all. The gutter also
+renders the blank line between two paragraphs as a lone `>` floating in the
+margin.
 
 `custom.css` replaces it with a 2px `--primary-color` rule down the left,
 keeping terminal.css's own `2ch` indent so the text does not move. Not a box

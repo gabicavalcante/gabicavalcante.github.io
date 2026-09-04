@@ -280,6 +280,26 @@
   overflow-wrap: anywhere;
 }
 
+/* Every code block reserved a horizontal scrollbar it never used.
+ *
+ * terminal.css sets `pre code{overflow-x:scroll}`, and `scroll` -- unlike
+ * `auto` -- renders the track unconditionally, whether or not there is
+ * anything to scroll to. There never is: `pre` is `white-space: pre-wrap`
+ * and the rule above wraps the long tokens too, so the content always fits.
+ *
+ * Measured in headless Chromium, 57 code blocks across four posts at 1200px
+ * and at 390px: scrollWidth equals clientWidth on every one of them -- zero
+ * overflow -- while all 57 reserved a 15px gutter. That is 420px of empty
+ * space down the Celery post alone, which has 28 blocks.
+ *
+ * `auto` rather than dropping the property, so a block that somehow does
+ * overflow still scrolls instead of being clipped by the `overflow-y` that
+ * a single `overflow-x` value implies.
+ */
+pre code {
+  overflow-x: auto;
+}
+
 /* The theme's terminal prompt -- `gabi cavalcante:~# posts/<slug>/` -- is
  * `display: table-cell` (it shares terminal.css's `h1,.logo` rule), so it is
  * sized to min-content, and a slug is one unbreakable run. At 390px it is
