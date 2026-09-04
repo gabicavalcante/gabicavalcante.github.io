@@ -1,8 +1,10 @@
 {{/*
-  Overrides the theme's baseof for the <head> only. Everything from <body> down
-  is upstream verbatim, so this stays easy to diff after a theme bump.
+  Overrides the theme's baseof. The <head> is ours outright. Everything from
+  <body> down is upstream verbatim EXCEPT the two changes recorded as 5 and 8
+  below, so that half stays easy to diff after a theme bump -- keep it that
+  way, and add to this list rather than editing quietly.
 
-  Four fixes, none of which upstream gives a hook for:
+  Fixes, none of which upstream gives a hook for:
 
   1. The title element was `{{ .Site.Title }}{{ $url.Path }}` -- the site name
      plus the URL path, so every page told Google
@@ -42,9 +44,19 @@
      multilingual mode.
 
   7. The one <script> on the site, for the code-block copy buttons. It lives
-     here because this half of the file is ours -- everything from <body> down
-     is upstream verbatim and must stay diffable. `defer` so it does not block
-     the render and so the DOM is parsed when it runs.
+     in the <head> because that half of the file is ours. `defer` so it does
+     not block the render and so the DOM is parsed when it runs.
+
+  8. No <main> element, so every page had a `banner` landmark and a `navigation`
+     one and no way to skip past them to the content. Lighthouse reports it as
+     "Document does not have a main landmark" (axe rule landmark-one-main).
+     Do not confuse the two senses of the word: `block "main"` is a Go template
+     block that happens to be named main, and emits no element at all. The
+     wrapper goes around that block and NOT around the footer partial, which
+     is content-info and belongs outside. Purely additive to the rendered
+     output: neither terminal.css nor console.css contains the string `main`
+     or any child combinator under .container, so nothing is restyled and
+     nothing moves. Verified by diffing the whole build before and after.
 */}}
 {{- $desc := partial "seo-description.html" . -}}
 <!DOCTYPE html>
@@ -111,8 +123,10 @@
     </div>
 
     <div class="container {{ .Site.Params.animateStyle }}" >
+        <main>
         {{ block "main" . }}
         {{ end }}
+        </main>
         {{ partial "footer.html" . }}
     </div>
   </body>

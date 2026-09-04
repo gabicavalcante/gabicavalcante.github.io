@@ -48,9 +48,12 @@ layouts/_default/list.html  /posts/ and every /tags/<term>/ page. Fixes the
                           rest of the site does — see the file. Otherwise
                           upstream verbatim.
 layouts/_default/terms.html  /tags/ index — see Taxonomy below
-layouts/_default/baseof.html  <head> override — see Theme below. Upstream verbatim
-                          from <body> down; keep it that way so it stays
-                          diffable after a theme bump.
+layouts/_default/baseof.html  <head> override — see Theme below. Below <body>
+                          it is upstream verbatim apart from two documented
+                          changes, the stripped RDFa breadcrumb and the <main>
+                          wrapper (see Landmarks); keep it that way so it stays
+                          diffable after a theme bump, and add to the numbered
+                          list in the file rather than editing quietly.
 layouts/partials/seo-description.html  returns one page's description. Its own
                           partial because baseof and opengraph both need the
                           identical string and must not drift.
@@ -362,6 +365,37 @@ unsubsetted TTFs totalling 473 kB, of which **two are ever fetched**
 (`RobotoMono-Regular` + `-Bold`, 224 KiB); the italics are declared and never
 used. No `font-display`, no preload, no WOFF2. LCP is 1.32-1.60 s on throttled
 mobile and 0.14-0.21 s unthrottled desktop. See TODO.md.
+
+## Landmarks
+
+The theme ships a `<header>` and a `<nav>` and then puts the page content in a
+bare `<div class="container">`, so there was **no `main` landmark** — a screen
+reader had banner and navigation and no way to skip past them to the article.
+Lighthouse reports it under Accessibility as *"Document does not have a main
+landmark"* (axe rule `landmark-one-main`). `layouts/_default/baseof.html` now
+wraps the template block in one.
+
+Two traps, both worth knowing before touching this:
+
+- **`block "main"` is not `<main>`.** It is a Go template block that happens to
+  carry that name, and it emits no element whatsoever. Searching the templates
+  for "main" finds it and makes the landmark look present when it is not.
+- **The footer belongs outside.** `partials/footer.html` is `content-info`; it
+  is a sibling of the block inside the same `.container`, and the wrapper goes
+  around the block only. Wrapping both would bury the footer inside `main`.
+
+Purely additive to the rendered output, and measured rather than assumed:
+neither `terminal.css` nor `console.css` contains the string `main` or any
+child combinator under `.container`, and a full build diffed before and after
+is byte-identical across all 26 HTML pages once `<main>`/`</main>` are removed
+— RSS, sitemap and CSS untouched. Exactly one per page; the alias stub has
+none, which is right, since it is a meta-refresh with no content.
+
+Still missing, and deliberately not fixed: the footer is a `<div class=footer>`
+rather than a `<footer>`, so there is no `content-info` landmark either. No axe
+rule requires one and nothing flags it. Fixing it means either a new override
+of a two-line theme partial or a third divergence below `<body>`; neither is
+worth it for a "Powered by Hugo" line.
 
 ## Theme
 
