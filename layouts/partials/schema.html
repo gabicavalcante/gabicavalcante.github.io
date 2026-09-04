@@ -26,6 +26,35 @@
   omitting it. Article has no REQUIRED properties, so this costs the image
   treatment in a result and disqualifies nothing.
 
+  Dates are RFC 3339 with an offset, not the bare `2006-01-02` this used to
+  emit. A date-only value is legal ISO 8601 and Google accepts it, but the Rich
+  Results Test reports it twice per date -- "datetime value is not valid" plus
+  "missing timezone" -- and the Article docs ask for a time. The layout string
+  matches the one the theme's opengraph partial already uses for
+  article:published_time, so the two blocks on the same page cannot disagree
+  about the same date. Front matter is date-only, so Hugo parses it as midnight
+  UTC and this renders as ...T00:00:00+00:00.
+
+  dateModified is guarded by `.Lastmod.After .Date`, so it is emitted only for
+  a post that actually carries a later `lastmod`. Two guards that look right
+  and are not, both verified on 0.164:
+
+  - `not .Lastmod.IsZero` -- the original -- is DEAD CODE. With enableGitInfo
+    off, Hugo's date handler falls back .Lastmod -> .Date, and every post has
+    a date, so it is never false. dateModified was emitted on every post,
+    repeating datePublished, which erased the distinction CLAUDE.md's lastmod
+    convention exists to make: a genuinely revised post looked no different to
+    a crawler.
+  - `with .Params.lastmod` fails the same way. Hugo does not leave Params
+    holding only what the front matter wrote -- the resolved lastmod is put
+    back into it, so the key is present on posts whose front matter never set
+    it. Measured: reliability-in-django-and-celery and
+    creating-pdf-with-latex-and-django still emitted dateModified under it.
+
+  Comparing the two parsed times is the only check that reflects the front
+  matter, and it says the true thing anyway: a document modified at the
+  instant it was published has no modification to report.
+
   Built as a dict and passed through jsonify rather than written as literal
   JSON, so quotes and accents in a title cannot produce invalid JSON. jsonify
   uses Go's encoding/json with HTML escaping on, so the angle brackets and
@@ -56,11 +85,11 @@
       "description" (partial "seo-description.html" . | htmlUnescape)
       "url" .Permalink
       "mainEntityOfPage" .Permalink
-      "datePublished" (.Date.Format "2006-01-02")
+      "datePublished" (.Date.Format "2006-01-02T15:04:05-07:00")
       "inLanguage" (.Params.contentLang | default .Site.Language.Locale)
       "author" $person
   -}}
-  {{- if not .Lastmod.IsZero }}{{ $s = merge $s (dict "dateModified" (.Lastmod.Format "2006-01-02")) }}{{ end -}}
+  {{- if .Lastmod.After .Date }}{{ $s = merge $s (dict "dateModified" (.Lastmod.Format "2006-01-02T15:04:05-07:00")) }}{{ end -}}
   {{- with .Params.tags }}{{ $s = merge $s (dict "keywords" .) }}{{ end -}}
   {{- $schema = $s -}}
 {{- else if and .File (eq .File.Path "about/index.md") -}}

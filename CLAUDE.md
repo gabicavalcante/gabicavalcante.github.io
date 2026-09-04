@@ -133,13 +133,15 @@ content/
   "Sep 3, 2026" on the same post elsewhere — and console.css gives the date a
   130px absolute gutter, so the extra period cut the gap to the title from
   14.8px to 5.2px on any two-digit day and made the column look ragged.
-- **A materially revised post gets `lastmod`.** Without it Hugo falls back to
-  `.Date`, so the JSON-LD `dateModified` just repeats `datePublished` and the
-  revision is invisible to a crawler. Set it to the date of the commit that
+- **A materially revised post gets `lastmod`.** It is the only way the revision
+  reaches a crawler: `enableGitInfo` is off, so the front matter is the only
+  source, and `partials/schema.html` emits JSON-LD `dateModified` only when
+  `.Lastmod` is actually after `.Date`. Set it to the date of the commit that
   made the change, not today, and only for edits a reader would notice — a
   typo or a front-matter tweak does not count. `matplotlib-seaborn-relplot` is
-  the worked example. `enableGitInfo` is off, so the front matter is the only
-  source.
+  the worked example. Do **not** test for the revision with `.Lastmod.IsZero`
+  or `.Params.lastmod`; both are true on every post regardless, for two
+  different reasons recorded in `schema.html`.
 - **Renaming a slug requires an `aliases` entry.** `matplotlib-seaborn-relplot`
   carries `aliases = ["/posts/matplotlib-searborn-replot/"]` so the old
   misspelled URL still redirects. Do the same for any future rename — with one
