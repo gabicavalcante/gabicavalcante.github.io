@@ -11,7 +11,7 @@ I lead a team, and the thing we come back to most often is not a technical probl
 
 <!--more-->
 
-Have you ever written a message and noticed that something was off? Several items about different things, and a question that needs an answer, all in one block, with the question somewhere in the middle. And surprisingly, no one replied with the answer you wanted. That is the common one, but the more I worked leading teams, the more I realized the challenge was the same, but the structure was not.
+Have you ever written a report message and noticed that something was off? Several items confirming that things are fine, and a question that needs an answer, all in one block, with the question somewhere in the middle. And surprisingly, no one replied with the answer you wanted. That is the common one, but the more I worked leading teams, the more I realized the challenge was the same, but the structure was not.
 
 You might think AI would have solved this by now, right? Sometimes it makes it worse. You get back something longer and better polished, carrying the same buried question, and now it takes more of the reader's time to reach the same confusion. Everyone is already reading more than they can absorb. Being direct is what earns attention, and no tool will do that part for you.
 
@@ -34,7 +34,7 @@ This post is my study guide, and also a place to collect what I have picked up l
 
 The case I had to make recently was for the boring solution over the ambitious one. Building it properly meant about six months, a refactor of most of the project, and a real chance it would not work at the end of that. The unglamorous option put the same capability in production in a week. The version I want to avoid sounds like this: *"the custom approach is one option, and it would probably give us more control, though the timeline is a concern, and of course there is the refactor to think about..."* Every clause is true and none of it is a recommendation.
 
-The trick is not the structure, it is being willing to have an opinion inside it. *"We should ship the simple version first"* is a sentence someone can disagree with. A suggestion is not, and that is what the softer version costs you: when your position is not clear, nobody feels they owe you an answer. They can nod and move on, because nothing was actually asked of them. Being clear gives the other person something concrete to agree with, reject, or challenge, and that is how a decision gets made instead of deferred.
+Now, what do you feel about this other way to start: *"We should ship the simple version first"*. This sentence someone can disagree with. A suggestion is not, and that is what the softer version costs you: when your position is not clear, nobody feels they owe you an answer. They can nod and move on, because nothing was actually asked of them. Being clear gives the other person something concrete to agree with, reject, or challenge, and that is how a decision gets made instead of deferred.
 
 I used to worry the closing restatement would sound repetitive. It does not. By the time you have given the reason and the example, the person has been thinking about the example, and saying the point again is what they leave with.
 
@@ -42,11 +42,17 @@ I used to worry the closing restatement would sound repetitive. It does not. By 
 
 Start with the point, the question, or the request. Add only the context that supports it. Do not build up to the ask.
 
-This is the fix for the status update I opened with. Here is roughly what I suggested instead:
+This is the fix for the confusing report message I opened with. 
+<!--
+[Gabi's comment]: can you add a example of cofusing msg to show before X after?
+-->
+Here is roughly what I suggested instead:
 
-> I need a decision on the import batch size before Thursday.
->
-> We process 5,000 rows per run today and the job times out roughly once a week. At 1,000 the run is reliable and takes about 40 minutes longer. My suggestion is 1,000.
+{{< quote channel="#slack-channel" >}}
+I need a decision on the import batch size before Thursday.
+
+We process 5,000 rows per run today and the job times out roughly once a week. At 1,000 the run is reliable and takes about 40 minutes longer. My suggestion is 1,000.
+{{< /quote >}}
 
 Two things changed. The decision I need comes first, and the items reporting that things were fine are gone. Confirming something the reader never knew was in question does not inform them, it just costs them a paragraph. The rest of the context is still available if they want it, and the point of leading with the ask is that they get to decide. They can answer in one line, or they can ask why, which is a better conversation than one where they had to read everything first.
 

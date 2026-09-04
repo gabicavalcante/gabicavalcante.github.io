@@ -341,3 +341,62 @@
   overflow-x: auto;
   max-width: 100%;
 }
+
+/* Blockquotes: an accent rule instead of the ">" gutter.
+ *
+ * terminal.css paints every blockquote with a column of ">" characters
+ * (blockquote::after, a hundred of them separated by \A). That is the
+ * email-reply convention -- "text I am quoting back at you" -- and nothing
+ * on this site is that. Every blockquote here is either an aside in the
+ * author's own voice (the "Update, August 2026" note on the seaborn post,
+ * the margin notes on the multi-objective one) or a chat message. The
+ * gutter also renders the blank line between two paragraphs as a lone ">"
+ * floating in the margin.
+ *
+ * A left rule and no background: the theme paints `pre` with a border AND
+ * --block-background-color, so a bordered box mid-paragraph would compete
+ * with every code block on the page. --primary-color rather than
+ * --secondary-color because the grey is what the ">" gutter already used,
+ * and the point is to look like a different kind of thing.
+ *
+ * 2ch of padding is terminal.css's own blockquote indent, kept so the body
+ * text does not shift from where it has always sat.
+ */
+blockquote {
+  padding-left: 2ch;
+  border-left: 2px solid var(--primary-color);
+}
+
+blockquote::after {
+  content: none;
+}
+
+/* terminal.css gives `p` a bottom margin and blockquote `overflow: hidden`,
+ * so the child margin cannot collapse out of the block. With no border that
+ * was invisible; with one, the rule ran a full line-height past the last
+ * word. `> :last-child` rather than `> p:last-child` so a quote ending in a
+ * list or a code block ends the rule too.
+ */
+blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+/* The attribution line from layouts/shortcodes/quote.html -- author, time,
+ * channel. flex + gap rather than spaces in the template: consecutive
+ * whitespace collapses to a single character in HTML, which in a monospace
+ * face is a one-character gap between fields, too tight to read as separate
+ * ones. wrap keeps a long channel name from pushing the page sideways on a
+ * phone.
+ */
+.quote-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 2ch;
+  margin-bottom: var(--global-line-height);
+  color: var(--secondary-color);
+}
+
+.quote-from {
+  color: var(--font-color);
+  font-weight: 600;
+}

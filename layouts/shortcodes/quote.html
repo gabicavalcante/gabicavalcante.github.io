@@ -1,0 +1,33 @@
+{{- /* A blockquote carrying an attribution line: who said it, when, where.
+
+  The bar down the left comes from the plain `blockquote` rules in
+  assets/css/custom.css, so `> ` in markdown and this shortcode render
+  identically. Reach for this one only when the quote needs the meta line --
+  a Slack message wants its channel, a person wants their name.
+
+  Usage -- every param is optional, and the meta line disappears entirely
+  when none is given, at which point plain markdown is the better tool:
+
+    {{< quote from="gabi" time="09:14" channel="#data-platform" >}}
+    First paragraph.
+
+    Second paragraph.
+    {{< /quote >}}
+
+  .Inner is markdownified so the body takes normal markdown -- paragraphs,
+  emphasis, inline code. Keep the inner block flush left; leading spaces
+  would turn it into a code block.
+*/ -}}
+{{- $from := .Get "from" -}}
+{{- $time := .Get "time" -}}
+{{- $channel := .Get "channel" -}}
+<blockquote>
+{{- if or $from $time $channel }}
+  <div class="quote-meta">
+    {{- with $from }}<span class="quote-from">{{ . }}</span>{{ end }}
+    {{- with $time }}<span class="quote-time">{{ . }}</span>{{ end }}
+    {{- with $channel }}<span class="quote-channel">{{ . }}</span>{{ end }}
+  </div>
+{{- end }}
+  {{ .Inner | markdownify }}
+</blockquote>

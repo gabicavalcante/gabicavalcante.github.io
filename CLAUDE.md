@@ -69,6 +69,12 @@ layouts/_default/_markup/render-image.html  width/height, lazy loading and a
 layouts/_default/_markup/render-table.html  wraps tables in a scrollable box;
                           the theme ships no such hook, so nothing upstream is
                           replaced.
+layouts/shortcodes/quote.html  a blockquote plus an attribution line —
+                          author, time, channel. Only for quotes that need
+                          that line; plain `> ` markdown renders identically
+                          otherwise, because custom.css styles `blockquote`
+                          itself. See Blockquotes below for why the theme's
+                          ">" gutter is gone.
 layouts/partials/twitter_cards.html  empty on purpose; the theme's baseof calls
                           this partial unconditionally and it emitted twitter:
                           meta on every page. og:* still covers link previews.
@@ -131,6 +137,30 @@ content/
   page ships the right `<html lang>`. Without it a Portuguese post is served
   labelled `en-us`, and search engines hand it to English readers who bounce.
   The key is `contentLang`; `lang` is reserved and fails the build.
+
+## Blockquotes
+
+`terminal.css` paints every blockquote with a column of `>` characters
+(`blockquote::after`, a hundred of them separated by `\A`). That is the
+email-reply convention, and **nothing on this site is a quotation of someone
+else.** Audited when the rule was added: the seaborn post's "Update, August
+2026" note and the three margin notes on the multi-objective post are asides
+in the author's own voice, and the BLUF example is a chat message. The
+`take-picture-with-opencv-galileo` post's `>` lines are a shell heredoc
+inside a fenced code block, not blockquotes at all. The gutter also renders
+the blank line between two paragraphs as a lone `>` floating in the margin.
+
+`custom.css` replaces it with a 2px `--primary-color` rule down the left,
+keeping terminal.css's own `2ch` indent so the text does not move. Not a box
+and not a background: the theme paints `pre` with a border *and*
+`--block-background-color`, so a bordered box mid-paragraph competes with
+every code block on the page.
+
+`layouts/shortcodes/quote.html` is the same element with an attribution line
+on top — `from`, `time`, `channel`, all optional. It emits a real
+`<blockquote>`, so it and plain `> ` markdown are the same thing to a reader
+and to a screen reader; the shortcode only earns its keep when the meta line
+is wanted. With no params it renders identically to markdown, so use markdown.
 
 ## Why `layouts/index.html` exists
 
