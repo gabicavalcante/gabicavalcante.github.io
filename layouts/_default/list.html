@@ -10,6 +10,20 @@
      allowed inside <p>, so every browser silently closed the paragraph early
      and left an empty <p> behind. Dropped rather than repaired -- nothing
      needed it.
+  3. The date was upstream's `.PublishDate.Format "Jan. 2, 2006"`, the only
+     place on the site that formatted one that way -- layouts/index.html and
+     layouts/posts/single.html both use `.Date | time.Format ":date_medium"`,
+     so the same post read "Sep. 3, 2026" here and "Sep 3, 2026" everywhere
+     else. It also looked worse, for a reason worth writing down: console.css
+     puts the date in a 130px absolute gutter, and the extra period pushed a
+     13-character date to 124.8px of it. The gap to the title then ran 5.2px
+     on a two-digit day against 14.8px on a one-digit day -- the same 9.6px of
+     ragged that the homepage has, but measured against a gap a third the
+     size, which is what made it read as irregular. Dropping the period puts
+     this list on the homepage's 14.8-24.4px.
+     `.Date` rather than `.PublishDate` for the same reason: it is what the
+     other two templates use. Nothing here sets publishDate, so no rendered
+     date changes.
 
   Visually this is close to a no-op: terminal.css sets every heading h1-h6 to
   var(--global-font-size), so h2 is not smaller than h1. Only the box differs,
@@ -26,7 +40,7 @@
 {{ range sort .Pages "Date" "desc" }}
     {{ if not .Params.private }}
         <div class="post">
-            <div class="date">{{ .PublishDate.Format "Jan. 2, 2006" }}</div>
+            <div class="date">{{ .Date | time.Format ":date_medium" }}</div>
             <h2><a href="{{ .Permalink }}" title="{{ .Title }}">{{ .Title }}</a></h2>
             {{ .Summary }}
         </div>

@@ -42,6 +42,11 @@ hugo.toml                 baseURL, nav (params.navlinks), monokai highlighting,
 go.mod / go.sum           theme module, pinned by commit
 layouts/index.html        homepage override — see below, do not delete
 layouts/posts/single.html post override: Github link + tag links
+layouts/_default/list.html  /posts/ and every /tags/<term>/ page. Fixes the
+                          heading hierarchy (entries were h1), drops upstream's
+                          <div>-inside-<p>, and formats the date the way the
+                          rest of the site does — see the file. Otherwise
+                          upstream verbatim.
 layouts/_default/terms.html  /tags/ index — see Taxonomy below
 layouts/_default/baseof.html  <head> override — see Theme below. Upstream verbatim
                           from <body> down; keep it that way so it stays
@@ -118,6 +123,13 @@ content/
 - **`<!--more-->` in every published page.** Summaries are explicit rather than
   dependent on Hugo's 70-word counting, which pulls a second paragraph into
   listings and shifts if the prose is edited.
+- **One date format, `:date_medium`, everywhere.** `layouts/index.html`,
+  `layouts/posts/single.html` and `layouts/_default/list.html` all use
+  `.Date | time.Format ":date_medium"`. The listing used to keep upstream's
+  `.PublishDate.Format "Jan. 2, 2006"`, which read "Sep. 3, 2026" against
+  "Sep 3, 2026" on the same post elsewhere — and console.css gives the date a
+  130px absolute gutter, so the extra period cut the gap to the title from
+  14.8px to 5.2px on any two-digit day and made the column look ragged.
 - **A materially revised post gets `lastmod`.** Without it Hugo falls back to
   `.Date`, so the JSON-LD `dateModified` just repeats `datePublished` and the
   revision is invisible to a crawler. Set it to the date of the commit that
@@ -224,6 +236,30 @@ Still deliberately untouched: **inline code is double-marked**, with literal
 backtick glyphs from `terminal.css`'s `code::before/after` *plus* the tint.
 Two signals for one thing, but it is the theme's terminal conceit rather than
 a defect.
+
+## The ==== under headings
+
+Upstream switches it on with an **invalid value**, and that is not a typo to
+tidy up — it is load-bearing. `terminal.css` draws the rule with
+`h1::after { display: var(--display-h1-decoration) }` and sets the variable to
+`none`; `console.css` overrides it with `1`. `1` is not a display value, so
+the declaration is invalid at computed-value time, and `display` — not an
+inherited property — falls back to its initial value, `inline`. The decoration
+is on *because* the value is broken.
+
+`custom.css` now sets `--display-h1-decoration: inline`, so the site no longer
+depends on that. Nothing moves: `inline` is what the fallback already computed,
+and absolute positioning blockifies it to `block` either way. The variable is
+still the switch — set it to `none` to turn every ==== off.
+
+Worth knowing when something looks wrong in production: this was investigated
+after the decoration appeared missing on the live home page. It was not
+missing. Prod rendered it correctly in a clean browser at the time, with
+byte-identical markup and the same `custom.min.<hash>.css` as the local build.
+The HTML is served with `cache-control: max-age=600` through Fastly, so a page
+loaded within ten minutes of a deploy can be a stale copy. **Compare the
+fingerprinted asset hash against a local build before chasing a CSS
+difference.**
 
 ## Why `layouts/index.html` exists
 

@@ -162,6 +162,27 @@
 }
 
 
+/* The ==== under a heading is switched on by an INVALID value, upstream.
+ *
+ * terminal.css draws it with `h1::after { display: var(--display-h1-decoration) }`
+ * and sets that variable to `none`. console.css then overrides it with `1`.
+ * `1` is not a display value, so the declaration is invalid at computed-value
+ * time, and display -- not an inherited property -- falls back to its INITIAL
+ * value, `inline`. Falling back is the entire switch: the decoration is on
+ * because the value is broken.
+ *
+ * That is defined behaviour (CSS Variables 1, §3.1) and every current browser
+ * does it, so this is hardening rather than a bug fix. It is still one
+ * spec-reading away from every ==== on the site disappearing at once, in the
+ * listings and under each post title, with nothing in the build to catch it.
+ * `inline` is what the fallback already computes to, so nothing moves --
+ * absolute positioning then blockifies it to `block` either way -- and the
+ * variable stays a real switch: set it to `none` to turn the decoration off.
+ */
+:root {
+  --display-h1-decoration: inline;
+}
+
 /* Post entries in listings are <h2>/<h3>, not <h1>.
  *
  * They were <h1> until the heading hierarchy was fixed -- /posts/ shipped six
