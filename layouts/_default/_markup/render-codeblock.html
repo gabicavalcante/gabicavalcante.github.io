@@ -1,0 +1,27 @@
+{{- /* Wraps every fenced code block so it can carry a header row.
+
+  The theme ships no such hook, so nothing upstream is replaced. Hugo already
+  puts the language on the <code> element as data-lang, so a stylesheet could
+  almost do this alone -- but `content: attr(data-lang)` would only ever be a
+  pseudo-element, and the row also has to hold the copy button. A wrapper is
+  simpler than fighting for a positioning context inside Chroma's markup.
+
+  The label is rendered here, on the server, so it survives with JavaScript
+  off. The copy button is NOT: assets/js/code-copy.js adds it at runtime, so a
+  reader without JS sees no button rather than a dead one.
+
+  .code-head is emitted even when the fence carries no language -- 14 of the
+  96 blocks on this site do not -- because the button still needs somewhere
+  to land. Empty, it collapses to nothing.
+
+  transform.HighlightCodeBlock rather than the `highlight` function: it takes
+  the hook context directly, so the block keeps whatever per-fence options
+  were written in the markdown, and it honours [markup.highlight] in
+  hugo.toml. Do not pass options here; that would override the config
+  silently.
+*/ -}}
+{{- $result := transform.HighlightCodeBlock . -}}
+<div class="code-block"{{ with .Type }} data-lang="{{ . }}"{{ end }}>
+  <div class="code-head">{{ with .Type }}<span class="code-lang">{{ . }}</span>{{ end }}</div>
+  {{ $result.Wrapped }}
+</div>

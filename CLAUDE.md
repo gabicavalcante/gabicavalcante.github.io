@@ -69,6 +69,12 @@ layouts/_default/_markup/render-image.html  width/height, lazy loading and a
 layouts/_default/_markup/render-table.html  wraps tables in a scrollable box;
                           the theme ships no such hook, so nothing upstream is
                           replaced.
+layouts/_default/_markup/render-codeblock.html  wraps each fenced block so it
+                          can carry a header row — language label, copy
+                          button. See Code blocks below.
+assets/js/code-copy.js    the only JavaScript on the site. Adds the copy
+                          buttons; loaded with `defer` from the <head> half of
+                          baseof.html. See Code blocks below.
 layouts/shortcodes/quote.html  a blockquote plus an attribution line —
                           author, time, channel. Only for quotes that need
                           that line; plain `> ` markdown renders identically
@@ -162,6 +168,62 @@ on top — `from`, `time`, `channel`, all optional. It emits a real
 `<blockquote>`, so it and plain `> ` markdown are the same thing to a reader
 and to a screen reader; the shortcode only earns its keep when the meta line
 is wanted. With no params it renders identically to markdown, so use markdown.
+
+## Code blocks
+
+Four things were wrong at once, and they compounded. Measured in headless
+Chromium across three code-heavy posts at 1200px and 390px, in both schemes.
+
+- **A block had no surface.** `terminal.css` declares
+  `--block-background-color: var(--background-color)` and nothing overrode it,
+  so a code block was exactly page-coloured and existed only as a 1px
+  hairline — while *inline* `code` got a real tint from `--code-bg-color`. A
+  two-word snippet in a sentence was more distinct than a thirty-line block.
+  `custom.css` now sets the variable: `#f6f8fa` light (1.065:1 against the
+  page), `#2a2a2e` dark (1.110:1). **Set the theme's variable, never Chroma's
+  own background** — `terminal.css` paints `pre` and `pre code` separately, so
+  a background that reaches only the `pre` shows up as a frame in the padding.
+  That is the bug the `[markup.highlight]` comment in `hugo.toml` records.
+- **The border was 1.5x louder in the dark.** `#727578` on white is 4.63:1;
+  `#a3abba` on `#222225` is 6.87:1, so the Celery post read as a ladder of 28
+  bright frames. With a surface underneath, the border only marks an edge:
+  `--block-border-color`, `#dfe3e8` / `#3a3a42`.
+- **Code was set at prose leading.** `--global-line-height` is 1.6em, so every
+  line of Python got 25.6px of box. Now 1.45. `pre code` has to be named
+  alongside `pre`, because `terminal.css` sets line-height on a
+  `blockquote,code,em,strong` group and `code` would otherwise keep its own.
+- **Padding was 10px against a 16px font** — loose vertically, cramped
+  horizontally, at the same time. 1em, and 0.75em below 850px because
+  horizontal padding on a phone comes straight out of the line length, which
+  the Mobile section works hard to protect.
+
+The header row is a real cost, not free: at the theme's own leading it was
+24.5px a block, 686px on the Celery post, which would have handed back most of
+what the tighter code leading saved. It is pinned to `line-height: 1.4` for
+that reason. Net on that post: 17043px -> 17775px of page, for 28 language
+labels and 28 copy buttons.
+
+`.code-head` is emitted even for the 14 fences that carry no language (11 in
+the postgres draft, 3 in Celery), because the button still needs somewhere to
+land; empty, it collapses.
+
+**The label is server-rendered and the button is not.** A reader with
+JavaScript off keeps the language and simply has no button, rather than one
+that does nothing. `code-copy.js` also returns early when
+`navigator.clipboard` is missing — that API needs a secure context, so it is
+absent over plain http on a LAN address. **This means the button does not
+appear if you preview with `hugo server --bind` on a LAN IP; localhost is a
+secure context and works.**
+
+The copy is the block's text exactly as rendered, prompts included. Some bash
+blocks open with `$ ` and the Galileo post has a heredoc whose continuation
+lines start with `> `. Stripping those would produce something that looks
+pasteable and is not, so nothing is stripped.
+
+Still deliberately untouched: **inline code is double-marked**, with literal
+backtick glyphs from `terminal.css`'s `code::before/after` *plus* the tint.
+Two signals for one thing, but it is the theme's terminal conceit rather than
+a defect.
 
 ## Why `layouts/index.html` exists
 

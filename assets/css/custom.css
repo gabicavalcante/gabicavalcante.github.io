@@ -420,3 +420,130 @@ blockquote > :last-child {
   color: var(--font-color);
   font-weight: 600;
 }
+
+
+/* Code blocks: give them a surface of their own.
+ *
+ * terminal.css declares `--block-background-color: var(--background-color)`
+ * and nothing overrides it, so a code block was painted exactly the colour of
+ * the page in BOTH schemes and existed only as a 1px hairline. Inline `code`
+ * meanwhile gets a real tint from --code-bg-color, which left a two-word
+ * snippet in a sentence more visually distinct than a thirty-line block.
+ *
+ * This is the theme's own variable, so `pre` and `pre code` -- which
+ * terminal.css paints separately -- move together. That is what makes it safe
+ * where shipping Chroma's own background is not: Chroma paints only the
+ * `pre`, `pre code` stays page-coloured on top of it, and the difference
+ * shows up as a frame in the padding. See the [markup.highlight] comment in
+ * hugo.toml for the time that actually happened.
+ *
+ * Tints measured against the page: #f6f8fa on white is 1.065:1, #2a2a2e on
+ * #222225 is 1.110:1. Felt rather than seen, which is the whole job.
+ *
+ * The border comes down with it. It was carrying the block alone, and it was
+ * doing so unevenly: #727578 on white is 4.63:1, but #a3abba on #222225 is
+ * 6.87:1, half again as loud, so a post like the Celery one read as a ladder
+ * of 28 bright frames in dark mode and 28 soft ones in light. With a surface
+ * underneath, the border only has to mark an edge.
+ */
+:root {
+  --block-background-color: #f6f8fa;
+  --block-border-color: #dfe3e8;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --block-background-color: #2a2a2e;
+    --block-border-color: #3a3a42;
+  }
+}
+
+/* Code is set at prose leading otherwise: --global-line-height is 1.6em, so
+ * every line of Python got 25.6px of box. Code wants to be tighter than
+ * prose -- the indentation is the structure, and loose leading pulls it
+ * apart. 1.45 is 23.2px, which takes the Celery post's 28 blocks from 6228px
+ * to 5644px, about 9% of that page.
+ *
+ * `pre code` has to be named too: terminal.css sets line-height on a
+ * `blockquote,code,em,strong` group, so `code` carries its own 1.6em and
+ * would not inherit this.
+ *
+ * Padding was 10px against a 16px font, which had the block loose vertically
+ * and cramped horizontally at once. 1em matches the vertical rhythm; 0.75em
+ * below 850px, because horizontal padding there comes straight out of the
+ * line length and this file works hard elsewhere to keep code from wrapping
+ * mid-token on a phone.
+ */
+.terminal pre,
+.terminal pre code {
+  line-height: 1.45;
+}
+
+.terminal pre {
+  padding: 1em;
+  border-color: var(--block-border-color);
+}
+
+@media only screen and (max-width: 850px) {
+  .terminal pre {
+    padding: 0.75em;
+  }
+}
+
+/* The header row above each block: language on the left, copy button on the
+ * right. layouts/_default/_markup/render-codeblock.html emits the row and the
+ * label; assets/js/code-copy.js adds the button.
+ *
+ * No margin on .code-block on purpose. terminal.css leaves `pre` at margin 0
+ * -- it is not in the `blockquote,h1,ol,p,ul` group -- so the space around a
+ * code block has always come from the bottom margin of the paragraph above
+ * it. Adding one here would open a second gap on top of that one.
+ *
+ * The row is emitted even for the 14 fences that carry no language, so the
+ * button has somewhere to land; empty and with no button it collapses to
+ * nothing, which is why there is no min-height.
+ */
+.code-head {
+  display: flex;
+  align-items: baseline;
+  gap: 0 1ch;
+  margin-bottom: 2px;
+  /* Not --global-line-height. This is a label, not prose, and at 1.6em the
+   * row cost 24.5px a block -- on the Celery post's 28 blocks that is 686px,
+   * which would have handed back most of what the tighter code leading just
+   * saved. */
+  line-height: 1.4;
+  font-size: 0.8em;
+  color: var(--secondary-color);
+}
+
+/* margin-left rather than justify-content: space-between, so the button sits
+ * right whether or not a language label precedes it.
+ */
+.code-copy {
+  margin-left: auto;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  cursor: pointer;
+}
+
+/* Brackets in CSS, not in the button text, so the JS can swap the label for
+ * "copied" without having to rebuild them. terminal.css's backtick rule is
+ * scoped to `code`, so it does not reach this.
+ */
+.code-copy::before {
+  content: "[";
+}
+
+.code-copy::after {
+  content: "]";
+}
+
+.code-copy:hover,
+.code-copy:focus-visible {
+  color: var(--font-color);
+}

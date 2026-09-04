@@ -40,6 +40,11 @@
      tell a crawler the two are the same piece. partials/hreflang.html emits
      the alternates; see that file for why the site is not in Hugo's
      multilingual mode.
+
+  7. The one <script> on the site, for the code-block copy buttons. It lives
+     here because this half of the file is ours -- everything from <body> down
+     is upstream verbatim and must stay diffable. `defer` so it does not block
+     the render and so the DOM is parsed when it runs.
 */}}
 {{- $desc := partial "seo-description.html" . -}}
 <!DOCTYPE html>
@@ -60,6 +65,10 @@
     {{ with resources.Get "css/custom.css" }}
       {{ $css := . | minify | fingerprint }}
       <link rel="stylesheet" href="{{ $css.RelPermalink }}" integrity="{{ $css.Data.Integrity }}">
+    {{ end }}
+    {{ with resources.Get "js/code-copy.js" }}
+      {{ $js := . | minify | fingerprint }}
+      <script src="{{ $js.RelPermalink }}" integrity="{{ $js.Data.Integrity }}" defer></script>
     {{ end }}
     {{ `
       <!--[if lt IE 9]>
