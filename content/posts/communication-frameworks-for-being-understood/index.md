@@ -4,6 +4,7 @@ description = "The three communication frameworks I actually use: PREP, BLUF and
 date = "2026-09-03"
 lastmod = "2026-09-04"
 tags = ["communication", "career", "writing"]
+aliases = ["/posts/five-communication-frameworks-for-being-understood/"]
 +++
 
 I lead a team, and the thing we come back to most often is not a technical problem. People know their work. What they usually do not know is how to communicate it: an idea nobody buys into, a question that does not get answered, a piece of work nobody realizes was hard, an opinion that never quite lands as an opinion, and feedback that was never given.
