@@ -2,7 +2,7 @@
 title = "Communication frameworks for being understood"
 description = "The three communication frameworks I actually use: PREP, BLUF and before-after-bridge, and what leading a team taught me about when each one helps."
 date = "2026-09-03"
-lastmod = "2026-09-04"
+lastmod = "2026-09-08"
 tags = ["communication", "career", "writing"]
 aliases = ["/posts/five-communication-frameworks-for-being-understood/"]
 +++
@@ -15,7 +15,7 @@ Have you ever written a status report and noticed that something was off? Severa
 
 You might think AI would have solved this by now, right? Sometimes it makes it worse. You get back something longer and better polished, carrying the same buried question, and now it takes more of the reader's time to reach the same confusion. Everyone is already reading more than they can absorb. Being direct is what earns attention, and no tool will do that part for you.
 
-This post is my study guide, and also a place to collect what I have picked up leading a team. I thought about writing up my experience after reading Jordan Cutler's [Top 5 Communication Frameworks for Engineers](https://read.highgrowthengineer.com/p/top-5-communication-framework), which is where I found them gathered in one place.
+This post is where I collect what I have picked up leading a team. The three frameworks are not mine, I found them gathered in Jordan Cutler's [Top 5 Communication Frameworks for Engineers](https://read.highgrowthengineer.com/p/top-5-communication-framework), and what is here is what they look like after I have spent a while using them.
 
 ## PREP: making the case
 
@@ -24,11 +24,19 @@ This post is my study guide, and also a place to collect what I have picked up l
 - **Example.** Back it with something concrete.
 - **Point.** State the argument again.
 
-The case I had to make recently was for the boring solution over the ambitious one. Building it properly meant about six months, a refactor of most of the project, and a real chance it would not work at the end of that. The unglamorous option put the same capability in production in a week. The version I want to avoid sounds like this: *"the custom approach is one option, and it would probably give us more control, though the timeline is a concern, and of course there is the refactor to think about..."* Every clause is true and none of it is a recommendation.
+The case I had to make recently was for the boring solution over the overengineered one. Building it meant about six months, a refactor of most of the project, and a real chance it would not work at the end of that. The unglamorous option put the same capability in production in a week. The version I want to avoid sounds like this: *"the custom approach is one option, and it would probably give us more control, though the timeline is a concern, and of course there is the refactor to think about..."* Every clause is true and none of it is a recommendation.
 
 Now compare it with this: *"We should ship the simple version first"*. This is a sentence someone can disagree with. A suggestion is not, and that is what the softer version costs you: when your position is not clear, nobody feels they owe you an answer. They can nod and move on, because nothing was actually asked of them. Being clear gives the other person something concrete to agree with, reject, or challenge, and that is how a decision gets made instead of deferred. The trick is not the structure, it is being willing to have an opinion inside it.
 
-I used to worry the closing restatement would sound repetitive. It does not. By the time you have given the reason and the example, the person has been thinking about the example, and saying the point again is what they leave with.
+In full, the case sounded roughly like this:
+
+> **Point.** We should ship the simple version first.
+>
+> **Reason.** The custom one is six months and a refactor of most of the project. The simple one gives us a usable solution next week, and we are familiar with setting it up quickly. It does not stop us from evaluating the custom one while we deliver value to our customers.
+>
+> **Example.** We did this with the export feature last year. The basic version was enough for almost everyone, and we were able to improve it after gathering more usage data.
+>
+> **Point.** So: simple version first, and we revisit the custom one when we know how it is actually used.
 
 ## BLUF: bottom line up front
 
@@ -80,7 +88,7 @@ Frameworks are scaffolding. They are useful because they stop you rambling, and 
 
 The thing I most want to teach is not any of these three. It is that the goal is to be understood, and being understood means taking the focus off yourself and what you want to say, and putting it on the person in front of you and what they need in order to know, act or decide. The same idea explained to a staff engineer, a product manager and a client is three different messages. Adapting between them is the actual skill, and you cannot adapt to a room you are not paying attention to.
 
-I wrote in [Let's talk about communication]({{< relref "lets-talk-about-communication" >}}) that what changed my teaching was noticing the room rather than finding a better structure: asking "am I explaining this well?" instead of "did you understand?", and dropping the word "easy." That is the skill none of these three can give you. A framework can make you more convincing while making you less attentive, and being convincing about the wrong thing is not an improvement.
+I wrote in [Let's talk about communication]({{< relref "lets-talk-about-communication" >}}) that what changed my teaching was noticing the room rather than finding a better structure: asking "am I explaining this well?" instead of "did you understand?" That is the skill none of these three can give you. A framework can make you more convincing while making you less attentive, and being convincing about the wrong thing is not an improvement.
 
 So the order matters: listen first, then pick the structure that fits what you heard. Reaching for a framework before you know your audience is how you end up with a very well organized message that answers a question nobody asked.
 
