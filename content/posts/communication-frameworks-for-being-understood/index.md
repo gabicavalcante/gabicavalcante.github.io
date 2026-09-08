@@ -1,6 +1,6 @@
 +++
 title = "Communication frameworks for being understood"
-description = "The three communication frameworks I actually use: PREP, BLUF and before-after-bridge, and what leading a team taught me about when each one helps."
+description = "Three communication frameworks I use leading an engineering team: PREP to argue a case, BLUF for status updates, before-after-bridge for demos."
 date = "2026-09-03"
 lastmod = "2026-09-08"
 tags = ["communication", "career", "writing"]
