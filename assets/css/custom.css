@@ -443,6 +443,57 @@ blockquote > :last-child {
 }
 
 
+/* Checklists: markdown `- [ ]`, drawn as text rather than as a control.
+ *
+ * Goldmark's task list extension is on by default and needs no config. It
+ * renders `<li><input disabled type="checkbox"> text</li>` in a plain <ul>,
+ * with no class of its own, which is why these select on the input.
+ *
+ * Two problems come with that markup here. terminal.css draws every bullet
+ * itself -- `ul>li::after{content:"-"}`, absolutely positioned at left 0 --
+ * so an untouched task list reads `- [ ] item`, two markers for one item. And
+ * a native checkbox is the wrong shape for this theme: bullets are `-`,
+ * inline code carries literal backticks, and the whole conceit is text. So
+ * the theme's dash is replaced rather than removed, with `[ ]` in its place.
+ *
+ * The marker goes on `li::after` and NOT on the input. Generated content on
+ * an <input> is what you reach for first, and Firefox does not render
+ * ::before/::after on form controls at all, so half your readers would see
+ * the text with no marker.
+ *
+ * The input is visually hidden rather than `display: none`, so a screen
+ * reader still announces the item as a checkbox and still says whether it is
+ * checked. `[x]` is then not the only carrier of that state. Nothing is
+ * clickable: Goldmark writes `disabled`, and this is a picture of a
+ * checklist.
+ *
+ * `:has()` carries the whole thing, so a browser without it drops these rules
+ * and gets the theme's ordinary dashed list back.
+ */
+li:has(> input[type="checkbox"]) {
+  /* 3ch for the marker, 1ch of gap. The theme's 20px assumes a 1ch dash and
+   * would run the text into the `]`. */
+  padding-left: 4ch;
+}
+
+li:has(> input[type="checkbox"])::after {
+  content: "[ ]";
+}
+
+li:has(> input[type="checkbox"]:checked)::after {
+  content: "[x]";
+}
+
+li > input[type="checkbox"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+
 /* Code blocks: give them a surface of their own.
  *
  * terminal.css declares `--block-background-color: var(--background-color)`

@@ -152,6 +152,13 @@ content/
   exception, recorded under Translations: never alias a path that another page
   now occupies. Hugo does not refuse it, it overwrites that page with the
   redirect stub, and prints nothing.
+- **A checklist is markdown `- [ ]`.** Goldmark's task list extension is on by
+  default, no config. `custom.css` replaces the theme's `-` bullet with a text
+  `[ ]` — the theme draws every marker as text, and a native checkbox is the
+  wrong shape for it. The boxes are not clickable: Goldmark writes `disabled`,
+  and making them tick means a second JS file on a site that has one. See the
+  checklist rules in `custom.css` for why the marker is on `li::after` and not
+  on the input; Firefox is the reason.
 - **Some posts are drafts** and produce no pages. `hugo list drafts` is the
   only answer worth trusting; a count written down here goes stale on the next
   post. The theme's own demo content (`introduction`, `what-is-hugo`,

@@ -280,13 +280,13 @@ One decision worth making deliberately: these tests need a database, so they can
 
 What I check now before a Supabase project goes live:
 
-- Every table the API exposes has RLS turned on, with a policy for each command the app uses.
-- `anon` and `authenticated` hold only the table privileges the app needs. `TRUNCATE`, `REFERENCES` and `TRIGGER` are revoked, because RLS does not limit them.
-- Every `update` policy has both `using` and `with check`. Every `insert` policy has `with check`.
-- Every table has a `user_id` column that defaults to `auth.uid()`, and every join table has a composite foreign key that includes it.
-- The secret key stays on servers I control. It never goes in the browser, a shipped app or the repo.
-- Nothing that connects as the table owner, like an ORM using the standard database URL, is trusted to respect RLS.
-- The policy tests run against a real database and fail when it is unreachable.
+- [ ] Every table the API exposes has RLS turned on, with a policy for each command the app uses.
+- [ ] `anon` and `authenticated` hold only the table privileges the app needs. `TRUNCATE`, `REFERENCES` and `TRIGGER` are revoked, because RLS does not limit them.
+- [ ] Every `update` policy has both `using` and `with check`. Every `insert` policy has `with check`.
+- [ ] Every table has a `user_id` column that defaults to `auth.uid()`, and every join table has a composite foreign key that includes it.
+- [ ] The secret key stays on servers I control. It never goes in the browser, a shipped app or the repo.
+- [ ] Nothing that connects as the table owner, like an ORM using the standard database URL, is trusted to respect RLS.
+- [ ] The policy tests run against a real database and fail when it is unreachable.
 
 ## Where I stop
 
