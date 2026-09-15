@@ -2,11 +2,11 @@
 title = "Demystifying Supabase authorization"
 description = "Supabase decides what a user may do with two Postgres checks: table privileges granted to a role, then Row Level Security (RLS) policies that read the user's id from their JWT."
 date = "2026-09-08"
-draft = true
+draft = false
 tags = ["postgres", "supabase", "security", "rls"]
 +++
 
-I was playing with Supabase and Nextjs, after years of Postgres and Django, and some concepts were new for me. Working out to understand them made pass through Postgres roles, privileges, policies and a couple of things I had assumed for years without checking. Maybe what was new for me, it can be for you too :)
+I was playing with Supabase and Next.js, after years of Postgres and Django, and some concepts were new for me. Working out what they meant took me through Postgres roles, privileges, policies, and a couple of things I had assumed for years without checking. Maybe what was new for me is new for you too :)
 
 <!--more-->
 
@@ -42,9 +42,9 @@ browser  →  PostgREST  →  Postgres   (as anon or authenticated)
 
 The end user's identity now arrives at the database. It arrives as a JWT, a signed token that Supabase Auth issues when someone logs in to the app. The browser keeps it and sends it with every request, and PostgREST checks its signature and puts the user's id on the database connection, where Postgres can read it.
 
-Logging in goes to Supabase Auth, not to PostgREST. The app sends it the email and password. Supabase Auth connects to Postgres as its own role, `supabase_auth_admin`, checks the password against the `auth.users` table and returns the JWT. Until then, every request the app sends to PostgREST carries only the public key, so it runs as `anon`.
+Logging in goes to Supabase Auth, not to PostgREST. The app sends it the email and password. Supabase Auth connects to Postgres as its own role, `supabase_auth_admin`, checks the password against the `auth.users` table and returns the JWT. Until then, every request the app sends to PostgREST carries only the publishable key, so it runs as `anon`.
 
-So the database is where authorization has to happen, and the roles it uses are reachable from the internet. That second part is what I had not thought about. It makes authentication and authorization in Postgres critical. In Django I handled both in the app layer, and Postgres only ever saw my one app role. Every privilege the anonymous role holds in Supabase is a privilege anyone with your public key holds.
+So the database is where authorization has to happen, and the roles it uses are reachable from the internet. That second part is what I had not thought about. It makes authentication and authorization in Postgres critical. In Django I handled both in the app layer, and Postgres only ever saw my one app role. Every privilege the anonymous role holds in Supabase is a privilege anyone with your publishable key holds.
 
 ## Two gates, applied in order
 
