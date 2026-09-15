@@ -511,6 +511,19 @@ blockquote > :last-child {
   }
 }
 
+/* Preformatted text that is not code: layouts/shortcodes/preformatted.html,
+ * a bare <pre> with no <code> inside it.
+ *
+ * terminal.css paints `pre` itself in --secondary-color and gives the real
+ * text colour to `code` instead, through `.terminal code`. A fence has a
+ * <code> and picks that up; this has none, so without this rule it renders
+ * grey beside a black code block on the same surface. Everything else it
+ * needs it already gets from `.terminal pre` above.
+ */
+.preformatted {
+  color: var(--font-color);
+}
+
 /* The header row above each block: language on the left, copy button on the
  * right. layouts/_default/_markup/render-codeblock.html emits the row and the
  * label; assets/js/code-copy.js adds the button.

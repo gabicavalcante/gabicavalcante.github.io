@@ -10,9 +10,15 @@
   off. The copy button is NOT: assets/js/code-copy.js adds it at runtime, so a
   reader without JS sees no button rather than a dead one.
 
-  .code-head is emitted even when the fence carries no language -- 14 of the
-  96 blocks on this site do not -- because the button still needs somewhere
+  .code-head is emitted even when the fence carries no language -- 18 of the
+  108 blocks on this site do not -- because the button still needs somewhere
   to land. Empty, it collapses to nothing.
+
+  Text that is not code does not come through here at all. A drawing or a
+  results listing has no language to label and nothing worth copying, so uses
+  layouts/shortcodes/preformatted.html, which emits a bare <pre> and never
+  touches this hook. The test is whether a machine produced the text or the
+  author composed it.
 
   transform.HighlightCodeBlock rather than the `highlight` function: it takes
   the hook context directly, so the block keeps whatever per-fence options

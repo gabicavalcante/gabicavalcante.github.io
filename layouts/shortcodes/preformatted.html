@@ -1,0 +1,35 @@
+{{- /* Preformatted text the author composed, rather than code.
+
+  A fence means code, in two ways at once:
+  layouts/_default/_markup/render-codeblock.html gives every one of them a
+  header row with a language slot and a copy button, and <pre><code> tells a
+  screen reader the same thing. Two kinds of block on this site are neither:
+  a drawing (a flow line, the Gate 1 / Gate 2 box) and a results listing
+  ("NAIVE   mismatched owner → ACCEPTED (the flaw)"). Both have no language,
+  and copying either gets you nothing.
+
+  The test is authorship, not shape. A machine produced it, so it is a fence:
+  `psql` output keeps its fence even though nobody will paste it back. You
+  composed it, so it comes here. `(the flaw)` is the giveaway -- no `psql`
+  output carries an aside.
+
+  This emits a bare <pre>, which is the older and plainer meaning: text whose
+  spacing matters. Nothing else had to change to make that work. The render
+  hook only fires on markdown fences, and assets/js/code-copy.js only walks
+  .code-block, so neither one reaches a shortcode.
+
+  The look comes from terminal.css's own `pre` rules and the `.terminal pre`
+  block in assets/css/custom.css, so one of these and the code block below it
+  share a surface, a border and a leading, and cannot drift apart. It needs
+  exactly one rule of its own, the text colour; see `.preformatted` in
+  custom.css for why.
+
+  Content is NOT markdownified: every space is load-bearing, and these blocks
+  are aligned in columns. Keep the call flush left, indent the content
+  however it needs, and use real arrows.
+
+    {{< preformatted >}}
+    browser  →  Django view  →  Postgres   (as ONE app role)
+    {{< /preformatted >}}
+*/ -}}
+<pre class="preformatted">{{ trim .Inner "\n" }}</pre>

@@ -83,6 +83,10 @@ layouts/_default/_markup/render-codeblock.html  wraps each fenced block so it
 assets/js/code-copy.js    the only JavaScript on the site. Adds the copy
                           buttons; loaded with `defer` from the <head> half of
                           baseof.html. See Code blocks below.
+layouts/shortcodes/preformatted.html  a bare <pre> for text that is not code
+                          — a drawing, a results listing. Not a fence,
+                          because a fence means code and gets a language
+                          label and a copy button. See Code blocks below.
 layouts/shortcodes/quote.html  a blockquote plus an attribution line —
                           author, time, channel. Only for quotes that need
                           that line; plain `> ` markdown renders identically
@@ -220,9 +224,30 @@ what the tighter code leading saved. It is pinned to `line-height: 1.4` for
 that reason. Net on that post: 17043px -> 17775px of page, for 28 language
 labels and 28 copy buttons.
 
-`.code-head` is emitted even for the 14 fences that carry no language (11 in
-the postgres draft, 3 in Celery), because the button still needs somewhere to
-land; empty, it collapses.
+`.code-head` is emitted even for the 18 fences that carry no language (11 in
+the postgres draft, 4 in the Supabase one, 3 in Celery), because the button
+still needs somewhere to land; empty, it collapses.
+
+**Not everything in a fence is code.** The header row is right for code and
+wrong for a drawing or a results listing: there is no language to label, and
+copying `NAIVE   mismatched owner → ACCEPTED (the flaw)` gets you nothing.
+Those use `layouts/shortcodes/preformatted.html`, which emits a bare `<pre>` —
+the older meaning, text whose spacing matters, rather than `<pre><code>`,
+which tells a screen reader it is code. Nothing in the code block machinery
+had to change to allow it: the render hook only fires on markdown fences and
+`code-copy.js` only walks `.code-block`, so neither reaches a shortcode. It
+shares `.terminal pre` with the code blocks, so surface, border and leading
+cannot drift; the one rule of its own is the text colour, because
+`terminal.css` paints `pre` in `--secondary-color` and gives the real colour
+to `code`, which these blocks do not have.
+
+**The test is authorship, not shape.** A machine produced it — a fence. You
+composed it — the shortcode. The Supabase post splits 4 / 8 on that test: the
+`psql` tables keep their fences even though nobody will paste one back, while
+the two flow lines, the gates diagram and the five results listings do not.
+`(the flaw)` and `(took both tables)` are what settle it; no `psql` output
+carries an editorial aside. Arrows in these blocks are `→`, not `->`, and each
+line holds exactly one, so column alignment survives the swap.
 
 **The label is server-rendered and the button is not.** A reader with
 JavaScript off keeps the language and simply has no button, rather than one

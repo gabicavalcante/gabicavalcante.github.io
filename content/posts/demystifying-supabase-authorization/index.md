@@ -22,9 +22,9 @@ Everything below is real output from a local Supabase stack, Postgres 17. There 
 
 In Django the browser never touches the database:
 
-```
-browser  ->  Django view  ->  Postgres   (as ONE app role)
-```
+{{< preformatted >}}
+browser  →  Django view  →  Postgres   (as ONE app role)
+{{< /preformatted >}}
 
 There is one database user, it holds full privileges, and authorization happens in Python:
 
@@ -36,9 +36,9 @@ Postgres has no idea who the end user is, and does not need to. The security bou
 
 Supabase puts an HTTP server in front of Postgres, so the shape changes. That server is PostgREST, a separate open source project that reads your schema and serves it as a REST API. Supabase runs it for you, and my Next.js app makes HTTP calls to it:
 
-```
-browser  ->  PostgREST  ->  Postgres   (as anon or authenticated)
-```
+{{< preformatted >}}
+browser  →  PostgREST  →  Postgres   (as anon or authenticated)
+{{< /preformatted >}}
 
 The end user's identity now arrives at the database. It arrives as a JWT, a signed token that Supabase Auth issues when someone logs in to the app. The browser keeps it and sends it with every request, and PostgREST checks its signature and puts the user's id on the database connection, where Postgres can read it.
 
@@ -50,13 +50,13 @@ So the database is where authorization has to happen, and the roles it uses are 
 
 There are two independent checks, done by Postgres and applied in order, and they are the key to understanding how Supabase authorization works:
 
-```
+{{< preformatted >}}
         Gate 1: PRIVILEGES     "may this role touch this table at all?"
               granted with GRANT
                     |
         Gate 2: POLICIES       "which rows may it see?"
               Row Level Security, created with CREATE POLICY
-```
+{{< /preformatted >}}
 
 Gate 1 is the lock on the room door. Gate 2 decides which filing cabinets inside you can open.
 
@@ -93,10 +93,10 @@ set local request.jwt.claims = '{"sub":"<the user id>"}';
 
 `authenticator` is deliberately powerless:
 
-```
-authenticator: has SELECT on cards -> false
-authenticated: has SELECT on cards -> true
-```
+{{< preformatted >}}
+authenticator: has SELECT on cards → false
+authenticated: has SELECT on cards → true
+{{< /preformatted >}}
 
 It holds no table privileges of its own. Its only power is membership, the right to become one of the other three. And it is `NOINHERIT`:
 
@@ -113,13 +113,13 @@ That flag is the good part of the design. If `authenticator` inherited, every po
 
 Here is the same query against one row in `cards`, a credit card that belongs to Ana, run as different roles, with and without a user's token. The role and the token are all Postgres has to go on:
 
-```
-as postgres (owner)      -> 1 row
-as authenticated, no JWT -> 0 rows
-as authenticated, Ana    -> 1 row
-as authenticated, Bruno  -> 0 rows
-as service_role          -> ERROR: permission denied for table cards
-```
+{{< preformatted >}}
+as postgres (owner)      → 1 row
+as authenticated, no JWT → 0 rows
+as authenticated, Ana    → 1 row
+as authenticated, Bruno  → 0 rows
+as service_role          → ERROR: permission denied for table cards
+{{< /preformatted >}}
 
 The last line surprised me. The roles table in the previous section shows that `service_role` bypasses RLS, so I expected it to see every row. It never got the chance, because I had granted it nothing, and Gate 1 comes first. Bypassing policies is not the same as holding privileges.
 
@@ -190,9 +190,9 @@ My transactions can carry several tags, so there is a join table. Protect `trans
 
 Giving it a `user_id` column and the same policy looks sufficient. It is not, and this is the part I would have shipped without noticing. A foreign key checks that the parent row **exists**, never who owns it:
 
-```
-NAIVE   mismatched owner -> ACCEPTED (the flaw)
-```
+{{< preformatted >}}
+NAIVE   mismatched owner → ACCEPTED (the flaw)
+{{< /preformatted >}}
 
 Bruno can insert a link row claiming he owns it, pointing at Ana's transaction. Both foreign keys are satisfied. Then his own policy on the join table shows it to him.
 
@@ -217,10 +217,10 @@ create table transaction_tags (
 
 Now the **pair** has to exist:
 
-```
-GUARDED mismatched owner -> REJECTED by the composite FK
-GUARDED matching owner   -> ACCEPTED
-```
+{{< preformatted >}}
+GUARDED mismatched owner → REJECTED by the composite FK
+GUARDED matching owner   → ACCEPTED
+{{< /preformatted >}}
 
 The `unique (id, user_id)` looks redundant, since `id` is already the primary key. Postgres requires a unique constraint on exactly the columns a foreign key references and will not infer it.
 
@@ -230,11 +230,11 @@ I like this better than the alternative, which is deriving ownership with a subq
 
 Supabase leaves `TRUNCATE`, `REFERENCES` and `TRIGGER` granted to `anon` and `authenticated` on new tables. RLS filters rows; `TRUNCATE` empties the table wholesale, so no policy applies to it:
 
-```
-authenticated TRUNCATE transaction_tags      -> SUCCEEDED
-anon          TRUNCATE transaction_tags      -> SUCCEEDED
-authenticated TRUNCATE transactions CASCADE  -> SUCCEEDED (took both tables)
-```
+{{< preformatted >}}
+authenticated TRUNCATE transaction_tags      → SUCCEEDED
+anon          TRUNCATE transaction_tags      → SUCCEEDED
+authenticated TRUNCATE transactions CASCADE  → SUCCEEDED (took both tables)
+{{< /preformatted >}}
 
 I wrote "real hole" in my notes at that point, and then checked whether it was reachable. It is not. PostgREST exposes no truncate verb, and neither role can open a connection, so nothing can get far enough to issue one. It is an unnecessary privilege that RLS cannot mitigate, which is a good enough reason to revoke it, and not a vulnerability. I am recording both the finding and the correction because the gap between them is the whole lesson.
 
